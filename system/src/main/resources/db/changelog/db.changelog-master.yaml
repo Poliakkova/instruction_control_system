@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changesets_create_table/create_instructions_table.sql
+  - include:
+      file: db/changelog/changesets_create_table/create_authkey_table.sql
+  - include:
+      file: db/changelog/changesets_insert_table/insert_instructions_table.yaml

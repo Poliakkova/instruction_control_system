@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.wrapper {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    min-height: 700px;
+}
+
+/* Sidebar */
+.sidebar {
+    width: fit-content;
+    background-color: #fff;
+    padding: 20px;
+}
+
+.sidebar h2 {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.sidebar .menu-item {
+    margin: 5px 0;
+    padding: 10px 33px;
+    display: block;
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar .menu-item:hover {
+    background: #f3f6f8;
+    border-radius: 7px;
+}
+
+.sidebar button {
+    width: 220px;
+    padding: 13px 33px;    
+    background-color: #ffb400;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.sidebar button:hover {
+    background-color: #ff9e00;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    padding: 20px;
+    margin-right: 100px;
+}
+
+.content {
+    padding: 10px;
+    border-radius: 7px;
+    background: white;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.table th {
+    align-content: center;
+    cursor: pointer;
+}
+
+.table th, .table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #dbe5ea;
+    background-color: #fff;
+}
+
+/* tbody tr:hover {
+    background-color: #ff0000;
+    cursor: pointer;
+} */
+
+.status {
+    color: #fff;
+    border-radius: 5px;
+    width: 130px;
+    height: 25px;
+    display: block;
+    text-align: center;
+    align-content: center;
+}
+
+.grey {
+    background-color: #adb5bd;
+}
+
+.green {
+    background-color: #4caf50;
+}
+
+.yellow {
+    background-color: #ffdb4a;
+}
+
+.orange {
+    background-color: #ff834a;
+}
+
+.filters {
+    margin-bottom: 10px;
+}
+
+.filters-button {
+    padding: 10px 30px;
+    background: #fff;
+    color: #087dc1;
+    border: 1px solid #dbe5ea;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.filters-button:hover {
+    background: #eef4ff;
+}
