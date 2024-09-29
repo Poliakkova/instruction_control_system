@@ -12,7 +12,7 @@ const AddUserComponent = () => {
       <div className='wrapper'>
         <div className="sidebar">
           <button onClick={() => navigateCreateUser()}>Додати користувача</button>
-      </div>
+        </div>
 
       <div className="main-content">
         <h2 className='text-center mb-3 text-bold'>Додайте користувача</h2>

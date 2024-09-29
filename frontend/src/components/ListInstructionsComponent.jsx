@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import { listInstructions } from '../sevices/InstructionService'
 import {useNavigate} from 'react-router-dom'
+import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/ListInstructions.css'
 
@@ -69,8 +70,8 @@ const ListInstructionsComponent = () => {
     <div className="wrapper">
         <div className="sidebar">
             <button onClick={() => createInstruction()}>Створити доручення</button>
-            <a className="menu-item" href='/instructions'>Усі</a>
-            <div className="menu-item">Архів</div>
+            <a className="menu-item" href='/instructions'><i class="bi bi-card-list"></i>Усі</a>
+            <a className="menu-item" href='/instructions'><i class="bi bi-archive"></i>Архів</a>
         </div>
 
         <div className="main-content">
@@ -79,7 +80,7 @@ const ListInstructionsComponent = () => {
             </div>
 
             <div className="content">
-                <table className="table table-hover">
+                <Table responsive className="table table-hover">
                     <thead>
                         <tr>
                             <th><input type='checkbox'/></th>
@@ -93,6 +94,8 @@ const ListInstructionsComponent = () => {
                             <th onclick={() => sortTable(6)}>Початок</th>
                             <th onclick={() => sortTable(7)}>Дедлайн</th>
                             <th onclick={() => sortTable(8)}>Статус</th>
+                            <th onclick={() => sortTable(8)}></th>
+                            <th onclick={() => sortTable(8)}></th>
                         </tr>
                     </thead>
                     <tbody>
@@ -108,6 +111,8 @@ const ListInstructionsComponent = () => {
                             <td>12.09.24</td>
                             <td>12.10.24</td>
                             <td><span className="status orange">Назначено</span></td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -121,6 +126,8 @@ const ListInstructionsComponent = () => {
                             <td>16.09.24</td>
                             <td>10.10.24</td>
                             <td><span className="status yellow">В роботі</span></td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -134,6 +141,8 @@ const ListInstructionsComponent = () => {
                             <td>16.11.24</td>
                             <td>10.12.24</td>
                             <td><span className="status green">Очікує затвердження</span></td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -147,9 +156,11 @@ const ListInstructionsComponent = () => {
                             <td>16.10.24</td>
                             <td>10.11.24</td>
                             <td><span className="status grey">Затверджено</span></td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                     </tbody>
-                </table>
+                </Table>
             </div>
         </div>
     </div>

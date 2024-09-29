@@ -31,6 +31,7 @@ const UsersComponent = () => {
                             <th onclick={() => sortTable(1)}>Прізвище</th>
                             <th onclick={() => sortTable(2)}>Ім'я</th>
                             <th onclick={() => sortTable(3)}>По-батькові</th>
+                            <th onclick={() => sortTable(3)}>Пошта</th>
                             <th onclick={() => sortTable(3)}></th>
                             <th onclick={() => sortTable(5)}></th>
                         </tr>
@@ -43,8 +44,9 @@ const UsersComponent = () => {
                             <td>Іванов</td>
                             <td>Іван</td>
                             <td>Іванович</td>
-                            <td>Р</td>
-                            <td>В</td>
+                            <td>email1@gmail.com</td>
+                            <td><a href='/users/edit'><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -53,8 +55,9 @@ const UsersComponent = () => {
                             <td>Петренко</td>
                             <td>Петро</td>
                             <td>Петрович</td>
-                            <td>Р</td>
-                            <td>В</td>
+                            <td>email1@gmail.com</td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -63,8 +66,9 @@ const UsersComponent = () => {
                             <td>Семенков</td>
                             <td>Семен</td>
                             <td>Семенович</td>
-                            <td>Р</td>
-                            <td>В</td>
+                            <td>email1@gmail.com</td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
                             <td><input type='checkbox'/></td>
@@ -73,8 +77,9 @@ const UsersComponent = () => {
                             <td>Тарасенко</td>
                             <td>Тарас</td>
                             <td>Тарасович</td>
-                            <td>Р</td>
-                            <td>В</td>
+                            <td>email1@gmail.com</td>
+                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
+                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                     </tbody>
                 </table>

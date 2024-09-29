@@ -9,8 +9,33 @@
     padding: 10px;
 }
 
+.instruction-control {
+    display: flex;
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.bi-pencil-square, .bi-trash3 {
+    margin-right: 5px;
+    padding: 3px 6px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+
+.bi-pencil-square:hover {
+    color: #50aaff;
+}
+
+.bi-trash3:hover {
+    color: #ff6969;
+}
+
 .instruction .status {
-    margin: 0 0 40px auto;
+    margin: 0 0 0 auto;
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
 }
 
 .uni-name {
@@ -25,4 +50,60 @@
 
 .bold {
     font-weight: 600;
+}
+
+.comment-section {
+    display: flex;
+    background: #fff;
+    border-radius: 7px;
+    padding: 10px;
+    margin-top: 10px;
+}
+
+.image img {
+    height: 40px;
+}
+
+.input-comment-block{
+    margin-left: 10px;
+    width: 100%;
+}
+
+.name {
+    display: inline-block;
+    margin: 5px 0 5px 0;
+    font-weight: 600;
+    color: #3782e2;
+    font-size: 14px;
+}
+
+.input-comment-block textarea {
+    padding: 10px;
+    border: 1px solid #adb5bd;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 100px;
+}
+
+.send-button {
+    height: fit-content;
+    margin-left: 10px;
+    background: #81b8ff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 5px 10px 3px;
+    align-self: end;
+    margin-bottom: 6px;
+}
+
+.send-button:hover{
+    background: #669ee7;
+}
+
+.datetime {
+    margin-left: 10px;
+    color: #797f84;
+    font-weight: normal;
+    font-size: 12px;
 }
