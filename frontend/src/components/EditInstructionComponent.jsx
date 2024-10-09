@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css'
+import '../css/AddInstruction.css'
 
 const EditInstructionComponent = () => {
 
@@ -29,9 +30,9 @@ const EditInstructionComponent = () => {
   return (
     <div className='wrapper'>
         <div className="sidebar">
-          <button onClick={() => createInstruction()}>Створити доручення</button>
-          <a className="menu-item" href='/instructions'>Усі</a>
-          <div className="menu-item">Архів</div>
+            <button onClick={() => createInstruction()}>Створити доручення</button>
+            <a className="menu-item" href='/instructions'><i class="bi bi-card-list"></i>Усі</a>
+            <a className="menu-item" href='/instructions'><i class="bi bi-archive"></i>Архів</a>
         </div>
 
         <div className="main-content">

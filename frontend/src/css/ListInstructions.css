@@ -69,6 +69,50 @@
     padding: 10px;
     border-radius: 7px;
     background: white;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
+}
+
+.filters {
+    margin-bottom: 10px;
+}
+
+.filters-button {
+    height: 45px;
+    width: 120px;
+    background: #fff;
+    color: #087dc1;
+    border: 1px solid #dbe5ea;
+    border-radius: 7px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
+}
+
+.filters-button:hover {
+    background: #eef4ff;
+}
+
+.input-search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+    color: #8aa3b7;
+    opacity: 1; /* Firefox */
+    font-size: 14px;
+
+}
+
+.input-search {
+    height: 45px;
+    width: 300px;
+    padding: 0 10px;
+    border: 1px solid #dbe5ea;
+    border-radius: 7px;
+    background: #fff;
+    color: #087dc1;
+    font-size: 14px;
+    margin-left: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
 }
 
 .table {
@@ -113,22 +157,4 @@
 
 .orange {
     background-color: #ff834a;
-}
-
-.filters {
-    margin-bottom: 10px;
-}
-
-.filters-button {
-    padding: 10px 30px;
-    background: #fff;
-    color: #087dc1;
-    border: 1px solid #dbe5ea;
-    border-radius: 7px;
-    font-weight: 600;
-    font-size: 14px;
-}
-
-.filters-button:hover {
-    background: #eef4ff;
 }

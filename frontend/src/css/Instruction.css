@@ -7,6 +7,8 @@
     background: #fff;
     border-radius: 7px;
     padding: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
 }
 
 .instruction-control {
@@ -38,12 +40,20 @@
     cursor: pointer;
 }
 
+.status{
+    border: none;
+}
+
+.form-select:focus {
+    box-shadow: none;
+}
+
 .uni-name {
     color: #000;
     text-align: center;
 }
 
-.instruction h2, h5{
+.instruction h2, h4{
     text-align: center;
     font-weight: 600;
 }
@@ -52,12 +62,34 @@
     font-weight: 600;
 }
 
-.comment-section {
+.comment-section, .process-map {
     display: flex;
     background: #fff;
     border-radius: 7px;
     padding: 10px;
     margin-top: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
+}
+
+.process-map {
+    display: block;
+}
+
+.map{
+    border: 2px solid #adb5bd;
+    border-radius: 5px;
+    height: 300px;
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: #6c757d;
+    background: #cfe2ff;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
 }
 
 .image img {
@@ -83,6 +115,10 @@
     border-radius: 5px;
     width: 100%;
     min-height: 100px;
+}
+
+.input-comment-block textarea:focus-visible{
+    outline: none;
 }
 
 .send-button {

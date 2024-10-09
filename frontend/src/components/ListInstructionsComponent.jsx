@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react'
 import { listInstructions } from '../sevices/InstructionService'
 import {useNavigate} from 'react-router-dom'
 import Table from 'react-bootstrap/Table';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/ListInstructions.css'
 
@@ -29,6 +31,32 @@ const ListInstructionsComponent = () => {
         navigator(`/instructions/instruction`);
       };
 
+    // Створюємо стан для пошукового запиту
+  const [searchTerm, setSearchTerm] = useState('');
+
+  // Фільтрація даних на основі пошукового запиту
+  const filteredData = instructions.filter((item) => {
+    const searchWords = searchTerm.toLowerCase().trim().split(' ');
+    console.log("SEARCH " + searchTerm);
+    console.log("DATE " + new Date(item.startTime).toLocaleDateString())
+    console.log("DATE2 " + new Date(item.endTime).toLocaleDateString())
+
+
+    return searchWords.some((word) => 
+        item.headSurname.toLowerCase().includes(word)||
+        item.headName.toLowerCase().includes(word) ||
+        item.headPatronymic.toLowerCase().includes(word) ||
+        item.headControlSurname.toLowerCase().includes(word) ||
+        item.headControlName.toLowerCase().includes(word) ||
+        item.headControlPatronymic.toLowerCase().includes(word) ||
+        item.sourceOfInstruction.toLowerCase().includes(word) ||
+        item.shortDescription.toLowerCase().includes(word) ||
+        item.title.toLowerCase().includes(word) ||
+        new Date(item.startTime).toLocaleDateString().toLowerCase().includes(word) ||
+        new Date(item.expTime).toLocaleDateString().toLowerCase().includes(word)
+      );
+    });
+
   return (
     <body>
     <div className="wrapper">
@@ -41,7 +69,16 @@ const ListInstructionsComponent = () => {
         <div className="main-content">
             <div className="filters">
                 <button className='filters-button'>Фільтри</button>
+                <input
+                type="text"
+                placeholder="Пошук за ключовими словами..."
+                className="me-2 input-search"
+                aria-label="Search"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)} // Оновлюємо стан при введенні
+                />
             </div>
+
 
             <div className="content">
                 <Table responsive className="table table-hover">
@@ -64,12 +101,12 @@ const ListInstructionsComponent = () => {
                     </thead>
                     <tbody>
                         {
-                            instructions.map(instruction => 
+                            filteredData.map(instruction => 
                                 <tr key={instruction.id}>
                                     <td><input type='checkbox'/></td>
                                     <td>11.09.24</td>
                                     <td>{instruction.headSurname} {instruction.headName} {instruction.headPatronymic}</td>
-                                    <td>{instruction.headControl} {instruction.headControlName} {instruction.headControlPatronymic}</td>
+                                    <td>{instruction.headControlSurname} {instruction.headControlName} {instruction.headControlPatronymic}</td>
                                     <td>{instruction.sourceOfInstruction}</td>
                                     <td>Науково-методична робота</td>
                                     <td>{instruction.title}</td>

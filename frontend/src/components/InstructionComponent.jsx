@@ -2,6 +2,11 @@ import React from 'react'
 import {useNavigate} from 'react-router-dom'
 import Dropdown from 'react-bootstrap/Dropdown';
 import Form from 'react-bootstrap/Form';
+import Accordion from 'react-bootstrap/Accordion';
+
+import { ReactFlow, Background, Controls } from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
+
 
 import '../css/Instruction.css'
 
@@ -51,8 +56,9 @@ const InstructionComponent = () => {
           <h2>ДОРУЧЕННЯ</h2>
 
           <br></br>
-          <h5>Назва доручення</h5>
+          <h4>Назва доручення</h4>
           <p><span className='bold'>Джерело: </span><span>МОН</span></p>
+          <p><span className='bold'>Тип: </span><span>Науково-методична робота</span></p>
 
           <br></br>
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui quia facilis ut ab nobis ipsam, nisi, dolor quibusdam minus consequuntur et assumenda placeat tenetur enim sit soluta quaerat adipisci laboriosam!</p>
@@ -67,6 +73,22 @@ const InstructionComponent = () => {
           <br></br>
           <p><span className='bold'>Розпочати від: </span><span>16.09.2024</span></p>
           <p><span className='bold'>Виконати до: </span><span>30.09.2024</span></p>
+        </div>
+
+        <div className="process-map">
+        <Accordion>
+          <Accordion.Item eventKey="0">
+            <Accordion.Header>Додайте карту процесів</Accordion.Header>
+            <Accordion.Body>
+            <div className='map'>
+              <ReactFlow>
+                <Background />
+                <Controls />
+              </ReactFlow>
+            </div>
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
         </div>
 
         <div className="comments">

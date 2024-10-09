@@ -10,6 +10,7 @@ import LoginComponent from './components/LoginComponent'
 import UsersComponent from './components/UsersComponent'
 import AddUserComponent from './components/AddUserComponent'
 import EditUserComponent from './components/EditUserComponent'
+import StatisticsComponent from './components/StatisticsComponent'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
             <Route path='/users' element={<UsersComponent />}></Route>
             <Route path='/users/new' element={<AddUserComponent />}></Route>
             <Route path='/users/edit' element={<EditUserComponent />}></Route>
+            <Route path='/statistics' element={<StatisticsComponent />}></Route>
           </Routes>
         <FooterComponent />
       </BrowserRouter>
