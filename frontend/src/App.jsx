@@ -12,11 +12,14 @@ import AddUserComponent from './components/AddUserComponent'
 import EditUserComponent from './components/EditUserComponent'
 import StatisticsComponent from './components/StatisticsComponent'
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
+import {ReactFlowProvider} from '@xyflow/react';
+
 
 function App() {
 
   return (
     <>
+    <ReactFlowProvider>
       <BrowserRouter>
         <HeaderComponent />
           <Routes>
@@ -32,6 +35,7 @@ function App() {
           </Routes>
         <FooterComponent />
       </BrowserRouter>
+      </ReactFlowProvider>
     </>
   )
 }
