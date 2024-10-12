@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -25,23 +26,11 @@ public class Instructions {
     @Column(name = "instruction_title")
     private String title;
 
-    @Column(name = "instruction_head_surname")
-    private String headSurname;
+    @ManyToMany(mappedBy = "instructions")
+    private List<UserEntity> heads;
 
-    @Column(name = "instruction_head_name")
-    private String headName;
-
-    @Column(name = "instruction_head_patronymic")
-    private String headPatronymic;
-
-    @Column(name = "instruction_head_control_surname")
-    private String headControlSurname;
-
-    @Column(name = "instruction_head_control_name")
-    private String headControlName;
-
-    @Column(name = "instruction_head_control_patronymic")
-    private String headControlPatronymic;
+    @Column(name = "instruction_point_of_instruction")
+    private String pointOfInstruction;
 
     @Column(name = "instruction_status")
     private String status;
@@ -64,6 +53,13 @@ public class Instructions {
     @Column(name = "exp_time")
     private Long expTime;
 
+    @Column(name = "making_time")
+    private Long makingTime;
 
+    @Column(name = "instruction_protocol")
+    private String protocol;
+
+    @Column(name = "instruction_type")
+    private String type;
 
 }

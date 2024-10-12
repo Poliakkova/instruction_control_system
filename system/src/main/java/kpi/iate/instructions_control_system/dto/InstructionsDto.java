@@ -3,6 +3,7 @@ package kpi.iate.instructions_control_system.dto;
 import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Getter
@@ -14,18 +15,6 @@ public class InstructionsDto {
 
     private String title;
 
-    private String headSurname;
-
-    private String headName;
-
-    private String headPatronymic;
-
-    private String headControlSurname;
-
-    private String headControlName;
-
-    private String headControlPatronymic;
-
     private String status;
 
     private String sourceOfInstruction;
@@ -34,7 +23,11 @@ public class InstructionsDto {
 
     private String fullDescription;
 
+    private String type;
+
     private String text;
+
+    private List<UserEntityDto> users;
 
     private Date startTime;
 

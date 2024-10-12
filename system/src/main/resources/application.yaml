@@ -7,14 +7,12 @@ jpa:
       jdbc:
         time_zone: UTC
 
-hibernate:
-  ddl-auto: update
-  show-sql: true
-  liquibase:
-    enabled: true
-    drop-first: false
-    change-log: classpath:db/changelog/db.changelog-master.yaml
-    default-schema: public
+
+#  liquibase:
+#    enabled: true
+#    drop-first: false
+#    change-log: classpath:db/changelog/db.changelog-master.yaml
+#    default-schema: public
 
 spring:
   datasource:
@@ -22,6 +20,9 @@ spring:
     username: postgres
     password: postgres
   jpa:
+    hibernate:
+      ddl-auto: update
+      show-sql: true
     open-in-view: false
   mvc:
     pathmatch:
