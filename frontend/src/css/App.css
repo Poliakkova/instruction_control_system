@@ -34,10 +34,7 @@ body {
     margin-right: 10px;
 }
 
-input[type="search"]::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
-    color: #8aa3b7;
-    opacity: 1; /* Firefox */
-}
+
 
 .custom-dark:hover {
     background: #1a1a1a;

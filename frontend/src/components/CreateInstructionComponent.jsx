@@ -29,11 +29,11 @@ const CreateInstructionComponent = () => {
   return (
     <div className='wrapper'>
         <div className="sidebar">
-          <button onClick={() => createInstruction()}>Створити доручення</button>
-          <a className="menu-item" href='/instructions'>Усі</a>
-          <div className="menu-item">Архів</div>
+            <button onClick={() => createInstruction()}>Створити доручення</button>
+            <a className="menu-item" href='/instructions'><i class="bi bi-card-list"></i>Усі</a>
+            <a className="menu-item" href='/instructions'><i class="bi bi-archive"></i>Архів</a>
         </div>
-
+ 
         <div className="main-content">
             <h2 className='text-center mb-3'>Створіть доручення</h2>
             <div className="content">

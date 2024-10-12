@@ -1,0 +1,25 @@
+.pie {
+    max-height: auto;
+}
+
+.diagram{
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 350px;
+}
+
+.diagram-title {
+    color: #3782e2;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.title {
+    font-weight: 600;
+    color: #0a58ca;
+}

@@ -17,20 +17,9 @@ const HeaderComponent = () => {
               <Navbar.Collapse id="navbar-dark-example">
                 <Nav className="me-auto">
                   <Nav.Link href="/users">Користувачі</Nav.Link>
-                  <Form className="d-flex search-form">
-                    <Form.Control
-                      type="search"
-                      placeholder="Введіть назву..."
-                      className="me-2"
-                      aria-label="Search"
-                      style={{
-                        width: "300px",
-                        border: "2px solid #535353",
-                        background: "#1a1a1a",
-                        color: "white"}}
-                    />
-                    <Button bsPrefix="custom" variant='dark'>Пошук</Button>
-                  </Form>
+                  <Nav.Link href="/statistics">Статистика</Nav.Link>
+
+                  
                 </Nav>
                 <Nav>
                   <NavDropdown
