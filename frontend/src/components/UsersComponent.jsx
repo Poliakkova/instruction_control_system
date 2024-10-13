@@ -1,22 +1,34 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
 import '../css/Users.css'
+import { listUsers } from '../sevices/UserService'
 
 const UsersComponent = () => {
 
-  const navigator = useNavigate();
+    const [users, setUsers] = useState([])
 
-  function navigateCreateUser(){
-    navigator('/users/new')
-  }
+    useEffect(() => {
+        listUsers().then((response) => {
+            setUsers(response.data);
+        }).catch(error => {
+            console.error(error);
+        })
 
-  return (
+    }, [])
+
+    const navigator = useNavigate();
+
+    function navigateCreateUser(){
+        navigator('/users/new')
+    }
+
+    return (
     <div className='wrapper'>
-      <div className="sidebar">
+        <div className="sidebar">
             <button onClick={navigateCreateUser}>Додати користувача</button>
-      </div>
+        </div>
 
-      <div className="main-content">
+        <div className="main-content">
             <div className="filters">
                 <button className='filters-button'>Фільтри</button>
             </div>
@@ -25,20 +37,40 @@ const UsersComponent = () => {
                 <table className="table table-hover">
                     <thead>
                         <tr>
-                            <th><input type='checkbox'/></th>
-                            <th onclick={() => sortTable(0)}>№</th>
-                            <th onclick={() => sortTable(4)}>Роль</th>
-                            <th onclick={() => sortTable(1)}>Прізвище</th>
-                            <th onclick={() => sortTable(2)}>Ім'я</th>
-                            <th onclick={() => sortTable(3)}>По-батькові</th>
-                            <th onclick={() => sortTable(3)}>Пошта</th>
-                            <th onclick={() => sortTable(3)}></th>
-                            <th onclick={() => sortTable(5)}></th>
+                            <th>№</th>
+                            <th>Роль</th>
+                            <th>Логін</th>
+                            <th>Прізвище</th>
+                            <th>Ім'я</th>
+                            <th>По-батькові</th>
+                            <th>Пошта</th>
+                            <th>Сповіщення</th>
+                            <th></th>
+                            <th></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
-                            <td><input type='checkbox'/></td>
+                        {
+                            users.map((user, index) => 
+                                <tr key={user.id} style={{ cursor: 'pointer' }}>
+                                    <td>{index + 1}</td>
+                                    <td>{user.userJobTitle}</td>
+                                    <td>{user.userLogin}</td>
+                                    <td>{user.userSurname}</td>
+                                    <td>{user.userName}</td>
+                                    <td>{user.userPatronymic}</td>
+                                    <td>{user.userEmail}</td>
+                                    <td style={{textAlign: 'center'}}>{user.enableNotification ? (
+                                        <i title="Сповіщення увімкнено" className="bi bi-bell-fill" style={{ color: 'green' }}></i> // іконка для увімкнених сповіщень
+                                    ) : (
+                                        <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
+                                    )}</td>
+                                    <td><a href='/users/edit'><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
+                                    <td><i className="bi bi-trash3" title="Видалити" style={{ fontSize: '18px'}}></i></td>
+                                </tr>
+                            )
+                        }
+                        {/* <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
                             <td>1</td>
                             <td>Адмін</td>
                             <td>Іванов</td>
@@ -49,7 +81,6 @@ const UsersComponent = () => {
                             <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
-                            <td><input type='checkbox'/></td>
                             <td>2</td>
                             <td>Студ.представник</td>
                             <td>Петренко</td>
@@ -60,7 +91,6 @@ const UsersComponent = () => {
                             <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
-                            <td><input type='checkbox'/></td>
                             <td>3</td>
                             <td>Викладач</td>
                             <td>Семенков</td>
@@ -71,7 +101,6 @@ const UsersComponent = () => {
                             <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                         </tr>
                         <tr>
-                            <td><input type='checkbox'/></td>
                             <td>4</td>
                             <td>Викладач</td>
                             <td>Тарасенко</td>
@@ -80,13 +109,13 @@ const UsersComponent = () => {
                             <td>email1@gmail.com</td>
                             <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
                             <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                        </tr>
+                        </tr> */}
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-  )
+    )
 }
 
 export default UsersComponent

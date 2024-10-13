@@ -6,6 +6,7 @@ import { ReactFlow, Background, Controls, MiniMap,
          Handle, Position, ReactFlowProvider,  useReactFlow } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import '../css/Instruction.css'
+import axios from 'axios';
 
 const InstructionComponent = () => {
 
@@ -239,7 +240,24 @@ const InstructionComponent = () => {
     const flowData = { nodes, edges };
     localStorage.setItem('flowData', JSON.stringify(flowData)); // Зберігаємо стан у локальне сховище
   };
-  
+
+  const handleSave = () => {
+    const flowData = {
+        nodes: nodes,
+        edges: edges
+    };
+
+    console.log("MAP " + JSON.stringify(flowData));
+
+    // axios.post(`/api/instructions/${instructionId}/save-flow`, flowData)
+    //   .then(response => {
+    //     console.log('Diagram saved successfully!');
+    //   })
+    //   .catch(error => {
+    //     console.error('Error saving diagram:', error);
+    //   });
+  };
+
 
   return (
     <div className="wrapper">
@@ -356,6 +374,7 @@ const InstructionComponent = () => {
                 <Background />
                 <Controls />
               </ReactFlow>
+              <button onClick={handleSave}>Зберегти карту</button>
             </div>
             </Accordion.Body>
           </Accordion.Item>
