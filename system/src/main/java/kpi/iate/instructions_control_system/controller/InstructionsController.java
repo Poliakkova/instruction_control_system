@@ -92,14 +92,14 @@ public class InstructionsController {
     public InstructionsDto createInstructionViaDTOO(@RequestHeader(value = "key") UUID key,
                                                     @Parameter(description = "Instruction details")
                                                     @RequestBody InstructionsDto instructionsDto) {
-        return instructionsService.createInstruction(key, "testId", instructionsDto);
+        return instructionsService.createInstruction(key, "634ae0a9-c44f-45bb-a5d0-36fbbd7450bd", instructionsDto);
     }
 
     //todo update instr status by id/title (by enum)
 
     @Operation(summary = "get archived instructions")
     @PostMapping("/archived")
-    public List<InstructionsDto> deleteInstructionByTitle(@RequestHeader(value = "key") UUID key) {
+    public List<InstructionsDto> getArchivedInstructions(@RequestHeader(value = "key") UUID key) {
         return instructionsService.getArchivedInstructions();
     }
 }
