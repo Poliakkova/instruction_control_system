@@ -197,6 +197,7 @@ public class InstructionsServiceImpl implements InstructionsService {
             }
         });
         return instructions.stream()
+                .filter(Objects::nonNull)
                 .map(instructionMapper::instructionToDto)
                 .collect(Collectors.toList());
     }
@@ -209,7 +210,9 @@ public class InstructionsServiceImpl implements InstructionsService {
 
     private List<InstructionsDto> convertInstructionListToDtoList(List<Instructions> listOfInstructions){
         return  listOfInstructions.stream()
-                .map(instructionMapper::instructionToDto).collect(Collectors.toList());
+                .filter(Objects::nonNull)
+                .map(instructionMapper::instructionToDto)
+                .collect(Collectors.toList());
     }
 
     private boolean validateKey(final UUID key){

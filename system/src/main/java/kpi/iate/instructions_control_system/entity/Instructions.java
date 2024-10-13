@@ -23,7 +23,7 @@ public class Instructions {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "instruction_title")
+    @Column(name = "instruction_title", unique = true)
     private String title;
 
     @ManyToMany(mappedBy = "instructions")
