@@ -16,4 +16,10 @@ public class UserEntityDto {
     private String userPatronymic;
 
     private String userJobTitle;
+
+    private String userEmail;
+
+    private String userLogin;
+
+    private boolean enableNotification;
 }

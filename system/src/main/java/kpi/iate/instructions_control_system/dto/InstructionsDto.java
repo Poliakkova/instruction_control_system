@@ -32,4 +32,8 @@ public class InstructionsDto {
     private Date startTime;
 
     private Date expTime;
+
+    private Long makingTime;
+
+    private String mapProcess;
 }

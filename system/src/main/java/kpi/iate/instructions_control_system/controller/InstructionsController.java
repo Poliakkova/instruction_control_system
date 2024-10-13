@@ -92,7 +92,7 @@ public class InstructionsController {
     public InstructionsDto createInstructionViaDTOO(@RequestHeader(value = "key") UUID key,
                                                     @Parameter(description = "Instruction details")
                                                     @RequestBody InstructionsDto instructionsDto) {
-        return instructionsService.createInstruction(key, "634ae0a9-c44f-45bb-a5d0-36fbbd7450bd", instructionsDto);
+        return instructionsService.createInstruction(key, "1caf7902-9d90-40c0-81bb-bb88f2d9718d", instructionsDto);
     }
 
     //todo update instr status by id/title (by enum)

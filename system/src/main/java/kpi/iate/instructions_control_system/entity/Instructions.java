@@ -59,6 +59,9 @@ public class Instructions {
     @Column(name = "instruction_protocol")
     private String protocol;
 
+    @Column(name = "instruction_map_process")
+    private String mapProcess;
+
     @Column(name = "instruction_type")
     private String type;
 
