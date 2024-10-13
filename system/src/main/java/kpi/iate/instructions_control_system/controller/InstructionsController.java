@@ -98,7 +98,7 @@ public class InstructionsController {
     //todo update instr status by id/title (by enum)
 
     @Operation(summary = "get archived instructions")
-    @PostMapping("/archived")
+    @GetMapping("/archived")
     public List<InstructionsDto> getArchivedInstructions(@RequestHeader(value = "key") UUID key) {
         return instructionsService.getArchivedInstructions();
     }
