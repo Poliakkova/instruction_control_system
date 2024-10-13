@@ -3,12 +3,17 @@ package kpi.iate.instructions_control_system.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import kpi.iate.instructions_control_system.dto.InstructionsDto;
+import kpi.iate.instructions_control_system.enums.InstructionStatus;
 import kpi.iate.instructions_control_system.service.InstructionsService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @CrossOrigin("*")
 @RestController
@@ -22,7 +27,10 @@ public class InstructionsController {
     public UUID getKey(){
         return instructionsService.getKey().getId();
     }
-
+    @GetMapping("/statuses")
+    public List<InstructionStatus> getPossibleStatuses() {
+        return Arrays.stream(InstructionStatus.values()).collect(Collectors.toList());
+    }
     @Operation(summary = "get instruction using it`s title")
     @GetMapping("/get/{instructionTitle}")
     public InstructionsDto getInstructionByTitle(@RequestHeader(value = "key") UUID key, @PathVariable String instructionTitle){
@@ -98,7 +106,7 @@ public class InstructionsController {
     //todo update instr status by id/title (by enum)
 
     @Operation(summary = "get archived instructions")
-    @PostMapping("/archived")
+    @GetMapping("/archived")
     public List<InstructionsDto> getArchivedInstructions(@RequestHeader(value = "key") UUID key) {
         return instructionsService.getArchivedInstructions();
     }
