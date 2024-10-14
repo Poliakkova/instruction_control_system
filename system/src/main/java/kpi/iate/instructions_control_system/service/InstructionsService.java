@@ -28,12 +28,7 @@ public interface InstructionsService {
                                           final String newShortDescription, final String newFullDescription, final String newText,
                                           final String newStartTime, final String newExpTime);
 
-    InstructionsDto createInstruction(final UUID key, final String newTitle,
-                                      final String newHeadSurname, final String newHeadName, final String newHeadPatronymic,
-                                      final String headControlSurname, final String headControlName, final String headControlPatronymic, final String status, final String sourceOfInstruction,
-                                      final String newShortDescription, final String newFullDescription,  final String newText,
-                                      final String newStartTime, final String newExpTime);
-    InstructionsDto createInstruction(final UUID key, final String userId, final InstructionsDto instructionsDto);
+    InstructionsDto createInstruction(final UUID key, final InstructionsDto instructionsDto);
 
     void deleteInstructionByTitle(final UUID key, final String instructionTitle);
 

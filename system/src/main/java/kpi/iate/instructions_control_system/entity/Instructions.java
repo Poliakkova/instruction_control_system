@@ -44,7 +44,7 @@ public class Instructions {
     @Column(name = "instruction_full_description")
     private String fullDescription;
 
-    @Column(name = "instruction_text")
+    @Column(name = "instruction_text", length = 4000)
     private String text;
 
     @Column(name = "start_time")
@@ -59,7 +59,7 @@ public class Instructions {
     @Column(name = "instruction_protocol")
     private String protocol;
 
-    @Column(name = "instruction_map_process")
+    @Column(name = "instruction_map_process", length = 4000)
     private String mapProcess;
 
     @Column(name = "instruction_type")

@@ -14,12 +14,15 @@ import kpi.iate.instructions_control_system.mapper.UserMapper;
 import kpi.iate.instructions_control_system.parser.StringToDateLongParser;
 import kpi.iate.instructions_control_system.repository.AuthKeyRepository;
 import kpi.iate.instructions_control_system.repository.InstructionsRepository;
+import kpi.iate.instructions_control_system.repository.UserRepository;
 import kpi.iate.instructions_control_system.service.InstructionsService;
 import kpi.iate.instructions_control_system.service.UserService;
 import kpi.iate.instructions_control_system.validation.AuthKeyValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Assert;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,6 +36,8 @@ public class InstructionsServiceImpl implements InstructionsService {
     private final AuthKeyValidator authKeyValidator;
 
     private final InstructionsRepository instructionsRepository;
+
+    private final UserRepository userRepository;
 
     private final InstructionMapper instructionMapper;
 
@@ -140,40 +145,25 @@ public class InstructionsServiceImpl implements InstructionsService {
 
     @Override
     @Transactional
-    public InstructionsDto createInstruction(final UUID key, final String newTitle,
-                                             final String newHeadSurname, final String newHeadName, final String newHeadPatronymic,
-                                             final String newHeadControlSurname, final String newHeadControlName, final String newHeadControlPatronymic, final String newStatus, final String newSourceOfInstruction,
-                                             final String newShortDescription, final String newFullDescription,  final String newText,
-                                             final String newStartTime, final String newExpTime) {
-        validateKey(key);
-
-//        Instructions instructions = new Instructions(key, newTitle, newHeadSurname, newHeadName,
-//                newHeadPatronymic, newHeadControlSurname, newHeadControlName, newHeadControlPatronymic, newStatus, newSourceOfInstruction, newShortDescription, newFullDescription, newText,
-//                stringToDateLongParser.parseStringToGetLongTime(newStartTime)/1000, stringToDateLongParser.parseStringToGetLongTime(newExpTime)/1000);
-        Instructions instructions = new Instructions();
-        instructions.setTitle(newTitle);
-        instructions.setHeads(Collections.emptyList());
-        instructions.setStatus(newStatus);
-
-        instructionsRepository.save(instructions);
-
-        return instructionMapper.instructionToDto(instructions);
-
-    }
-    @Override
-    @Transactional
-    public InstructionsDto createInstruction(final UUID key, final String userId, final InstructionsDto instructionsDto) {
+    public InstructionsDto createInstruction(final UUID key, final InstructionsDto instructionsDto) {
         validateKey(key);
 
         Instructions instructions =  instructionMapper.instructionDtoToEntity(instructionsDto);
-        UserEntity userEntity = userService.findUserById(userId);
-        if (userEntity != null) {
-            instructions.setHeads(Collections.singletonList(userEntity));
+        if (instructions != null) {
+            instructionsDto.getUsers().stream()
+                    .filter(Objects::nonNull)
+                    .forEach(user -> {
+                        UserEntity userEntity = userService.findUserByLogin(user.getUserLogin());
+                        if (userEntity != null) {
+                            addUserToInstruction(instructions, userEntity);
+                            addInstructionsToUser(userEntity, instructions);
+                            instructionsRepository.save(instructions);
+                            userRepository.save(userEntity);
+                        }
+                    });
+            return instructionMapper.instructionToDto(instructions);
         }
-
-        instructionsRepository.save(instructions);
-
-        return instructionMapper.instructionToDto(instructions);
+        return new InstructionsDto();
     }
 
     @Override
@@ -220,5 +210,23 @@ public class InstructionsServiceImpl implements InstructionsService {
         //        if(authKeyValidator.validate(key)) {
 //            return true;
 //        } else throw new KeyIsNotValidException("Key is not valid " +  new Date().getTime() );
+    }
+    private void addUserToInstruction(Instructions instructions, UserEntity userEntity){
+        Assert.notNull(instructions, "instruction couldn`t be nll");
+        Assert.notNull(userEntity, "userEntity couldn`t be nll");
+        if (CollectionUtils.isEmpty(instructions.getHeads())) {
+            ArrayList<UserEntity> users = new ArrayList<>();
+            users.add(userEntity);
+            instructions.setHeads(users);
+        }
+        instructions.getHeads().add(userEntity);
+    }
+    private void addInstructionsToUser(UserEntity userEntity, Instructions instructions){
+        Assert.notNull(instructions, "instruction couldn`t be nll");
+        Assert.notNull(userEntity, "userEntity couldn`t be nll");
+        if (userEntity.getInstructions() == null) {
+            userEntity.setInstructions(new ArrayList<Instructions>());
+        }
+        userEntity.getInstructions().add(instructions);
     }
 }

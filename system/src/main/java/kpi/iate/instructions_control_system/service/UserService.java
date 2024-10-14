@@ -8,6 +8,8 @@ import java.util.List;
 public interface UserService {
     UserEntity findUserById (final String userId);
 
+    UserEntity findUserByLogin (final String userLogin);
+
     void createUser(UserEntityDto userEntityDto);
 
     List <UserEntityDto> findAllUsers();

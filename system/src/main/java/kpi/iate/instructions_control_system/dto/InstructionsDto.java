@@ -15,6 +15,8 @@ public class InstructionsDto {
 
     private String title;
 
+    private List<UserEntityDto> users;
+
     private String status;
 
     private String sourceOfInstruction;
@@ -23,11 +25,8 @@ public class InstructionsDto {
 
     private String fullDescription;
 
-    private String type;
-
     private String text;
 
-    private List<UserEntityDto> users;
 
     private Date startTime;
 
@@ -35,8 +34,9 @@ public class InstructionsDto {
 
     private Long makingTime;
 
-    private String mapProcess;
-
     private String protocol;
 
+    private String mapProcess;
+
+    private String type;
 }

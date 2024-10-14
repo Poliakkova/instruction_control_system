@@ -44,7 +44,7 @@ public class UserEntity {
     @Column(name = "user_password")
     private String userPassword;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
             name = "users_instructions",
             joinColumns = @JoinColumn(name = "user_entity_id"),

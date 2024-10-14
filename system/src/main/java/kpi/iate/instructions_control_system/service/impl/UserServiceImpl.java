@@ -8,6 +8,7 @@ import kpi.iate.instructions_control_system.repository.UserRepository;
 import kpi.iate.instructions_control_system.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -21,13 +22,22 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     @Override
+    @Transactional(readOnly = true)
     public UserEntity findUserById(final String userId) {
         UserEntity userEntity = userRepository.findById(UUID.fromString(userId))
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with id %s not found!", userId)));
         return userEntity;
     }
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntity findUserByLogin(final String userLogin) {
+        UserEntity userEntity = userRepository.findByUserLogin(userLogin)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with login %s not found!", userLogin)));
+        return userEntity;
+    }
 
     @Override
+    @Transactional
     public void createUser(UserEntityDto userEntityDto) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserJobTitle(userEntityDto.getUserJobTitle());
@@ -40,6 +50,7 @@ public class UserServiceImpl implements UserService {
         userRepository.save(userEntity);
     }
     @Override
+    @Transactional(readOnly = true)
     public List<UserEntityDto> findAllUsers() {
         List <UserEntityDto> users = new ArrayList<>();
         userRepository.findAll().forEach( user -> {
