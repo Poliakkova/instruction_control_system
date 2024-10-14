@@ -3,6 +3,7 @@ package kpi.iate.instructions_control_system.service;
 import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.entity.AuthKey;
 import kpi.iate.instructions_control_system.entity.Instructions;
+import kpi.iate.instructions_control_system.enums.InstructionStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestHeader;
 
@@ -33,4 +34,6 @@ public interface InstructionsService {
     void deleteInstructionByTitle(final UUID key, final String instructionTitle);
 
     List<InstructionsDto> getArchivedInstructions();
+
+    void updateInstructionStatus(final UUID key, final InstructionsDto instructionsDto);
 }

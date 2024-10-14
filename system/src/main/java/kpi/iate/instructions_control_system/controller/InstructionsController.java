@@ -104,6 +104,13 @@ public class InstructionsController {
     }
 
     //todo update instr status by id/title (by enum)
+    @Operation(summary = "Update instructions status")
+    @PutMapping("/status/update")
+    public void updateInstructionsStatus(@RequestHeader(value = "key") UUID key,
+                                         @Parameter(description = "Instruction details")
+                                         @RequestBody InstructionsDto instructionsDto) {
+        instructionsService.updateInstructionStatus(key, instructionsDto);
+    }
 
     @Operation(summary = "get archived instructions")
     @GetMapping("/archived")

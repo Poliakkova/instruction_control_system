@@ -192,6 +192,18 @@ public class InstructionsServiceImpl implements InstructionsService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    @Transactional
+    public void updateInstructionStatus(final UUID key, final InstructionsDto instructionsDto) {
+        Assert.notNull(instructionsDto, "Instruction DTO couldn`t be null while updating status");
+        validateKey(key);
+        Instructions instructions = instructionsRepository.getInstructionByTitle(instructionsDto.getTitle())
+                .orElseThrow(() -> new InstructionNotFoundException(String.format("No instruction with title %s was found", instructionsDto.getTitle())));
+        InstructionStatus instructionStatus = InstructionStatus.valueOf(instructionsDto.getStatus());
+        instructions.setStatus(instructionStatus.name());
+        instructionsRepository.save(instructions);
+    }
+
     private List<Instructions> getAllInstructionsFromRepo() {
         List <Instructions> listOfInstructions= new ArrayList<>();
         instructionsRepository.findAll().forEach(listOfInstructions::add);
