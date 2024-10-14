@@ -1,5 +1,5 @@
-import React, {useCallback, useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, {useCallback, useState, useEffect} from 'react'
+import {useNavigate, useParams } from 'react-router-dom'
 import Accordion from 'react-bootstrap/Accordion';
 import { ReactFlow, Background, Controls, MiniMap, 
          addEdge, applyNodeChanges, applyEdgeChanges,
@@ -7,6 +7,8 @@ import { ReactFlow, Background, Controls, MiniMap,
 import '@xyflow/react/dist/style.css';
 import '../css/Instruction.css'
 import axios from 'axios';
+import { getKey } from '../sevices/InstructionService';
+
 
 const InstructionComponent = () => {
 
@@ -15,6 +17,36 @@ const InstructionComponent = () => {
   function createInstruction(){
     navigator('/instructions/new')
   }
+
+  const { title } = useParams(); // Отримуємо параметр title з URL
+  const [instruction, setInstruction] = useState('');
+
+  useEffect(() => {
+      const fetchInstruction = async () => {
+          try {
+            // Отримання ключа
+            const keyResponse = await getKey();
+            const uuidKey = keyResponse.data;
+            console.log("uuidKey " + uuidKey);
+
+            const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(title)}`, {
+                headers: {
+                    'key': uuidKey, // передайте ваш ключ у заголовку
+                },
+            });
+            setInstruction(response.data);
+          } catch (error) {
+              console.error('Error fetching instruction:', error);
+          }
+      };
+
+      fetchInstruction();
+    }, [title]);
+
+    // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
+useEffect(() => {
+  console.log("INSTRUCTION UPDATED: ", instruction);
+}, [instruction]);
 
   const DiamondNode = ({ data, isSelected }) => (
     <div style={{ /* Обводка */
@@ -258,6 +290,48 @@ const InstructionComponent = () => {
     //   });
   };
 
+  const statusMapping = {
+    CREATED: 'Назначено',
+    CONFIRMATION: 'Очікує затвердження',
+    IN_PROGRESS: 'В роботі',
+    CANCELLED: 'Скасовано',
+    FINISHED: 'Затверджено',
+  };
+  
+  const reverseStatusMapping = {
+    'Назначено': 'CREATED',
+    'Очікує затвердження': 'CONFIRMATION',
+    'В роботі': 'IN_PROGRESS',
+    'Скасовано': 'CANCELLED',
+    'Затверджено': 'FINISHED',
+  };
+
+  const [selectedStatus, setSelectedStatus] = useState(statusMapping[instruction.status] || 'Назначено');
+  
+  // Функція для зміни статусу
+  const handleChangeStatus = (event) => {
+    setSelectedStatus(event.target.value);
+  };
+
+  // Функція для визначення класу на основі статусу
+  const getStatusClass = (status) => {
+    switch (status) {
+      case 'Назначено':
+        return 'status orange';
+      case 'В роботі':
+        return 'status yellow';
+      case 'Очікує затвердження':
+        return 'status green';
+      case 'Затверджено':
+        return 'status grey';
+      default:
+        return 'status grey';
+    }
+  };
+
+  useEffect(() => {
+    setSelectedStatus(statusMapping[instruction.status]); // Оновлюємо вибраний статус при зміні вхідних даних
+  }, [instruction.status]);
 
   return (
     <div className="wrapper">
@@ -272,12 +346,13 @@ const InstructionComponent = () => {
           <div className="instruction-control">
             <a href='/instructions/edit'><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
             <a href='#'><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
-            {/* <div className="status orange">Назначено</div> */}
-            <select class="form-select status orange" id="floatingSelect" aria-label="Choose role">
-              <option selected value="Назначено" className='status orange'>Назначено</option>
-              <option value="В роботі" >В роботі</option>
-              <option value="Очікує затвердження" >Очікує затвердження</option>
-              <option value="Затверджено" >Затверджено</option>
+
+            <select class={`form-select status ${getStatusClass(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
+            value={selectedStatus} onChange={handleChangeStatus}>
+              <option value="Назначено" className='status orange'>Назначено</option>
+              <option value="В роботі" className='status yellow'>В роботі</option>
+              <option value="Очікує затвердження" className='status green'>Очікує затвердження</option>
+              <option value="Затверджено" className='status grey'>Затверджено</option>
             </select>
           </div>
 
@@ -289,30 +364,29 @@ const InstructionComponent = () => {
 
           <br></br>
           <div className="block">
-            <p>Протокол №1234-5678 засідання кафедри від 13.09.2024</p>
+            <p>Протокол №{instruction.protocol} засідання кафедри від {instruction.makingTime}</p>
           </div>
 
           <br></br>
           <h2>ДОРУЧЕННЯ</h2>
 
           <br></br>
-          <h4>Назва доручення</h4>
-          <p><span className='bold'>Джерело: </span><span>МОН</span></p>
-          <p><span className='bold'>Тип: </span><span>Науково-методична робота</span></p>
+          <h4>{instruction.title}</h4>
+          <p><span className='bold'>Джерело: </span>{instruction.sourceOfInstruction}</p>
+          <p><span className='bold'>Тип: </span>{instruction.type}</p>
 
           <br></br>
-          <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Qui quia facilis ut ab nobis ipsam, nisi, dolor quibusdam minus consequuntur et assumenda placeat tenetur enim sit soluta quaerat adipisci laboriosam!</p>
+          <p>{instruction.text}</p>
 
-          <br></br>
-          <p><span className='bold'>Відповідальний:</span><span> КОВАЛЬ О.В.</span></p>
           <br></br>
           <p><span className='bold'>До виконання:</span></p>
-          <p><span>Шевченко Т.Г.</span><br></br>
-          <span>Рябченко Н.В.</span></p>
+          {
+            instruction.users
+          }
 
           <br></br>
-          <p><span className='bold'>Розпочати від: </span><span>16.09.2024</span></p>
-          <p><span className='bold'>Виконати до: </span><span>30.09.2024</span></p>
+          <p><span className='bold'>Розпочати від: </span>{new Date(instruction.startTime).toLocaleDateString()}</p>
+          <p><span className='bold'>Виконати до: </span>{new Date(instruction.expTime).toLocaleDateString()}</p>
         </div>
 
         <div className="process-map">

@@ -12,7 +12,10 @@ const AddUserComponent = () => {
     userJobTitle: '',
     userSurname: '',
     userName: '',
-    userPatronymic: ''
+    userPatronymic: '',
+    userEmail: '',
+    userLogin: '',
+    enableNotification: false
   });
 
   const handleChange = (e) => {
@@ -26,6 +29,7 @@ const AddUserComponent = () => {
 
   const addUser = async (e) => {
     e.preventDefault();
+    console.log(JSON.stringify(user));
     
     const response = await fetch('http://localhost:8090/users/new', {
       method: 'POST',
@@ -77,8 +81,13 @@ const AddUserComponent = () => {
         </div>
 
         <div className="form-floating mt-3">
-          <input type="email" className="form-control" id="email" placeholder="Пошта" onChange={handleChange}/>
-          <label for="email">Пошта</label>
+          <input required type="text" className="form-control" id="userLogin" placeholder="Логін (у форматі Прізвище і Ініціал англійською - Ivanov.I)" onChange={handleChange}/>
+          <label for="userLogin">Логін (у форматі Прізвище і Ініціал англійською - Ivanov.I)</label>
+        </div>
+
+        <div className="form-floating mt-3">
+          <input required type="email" className="form-control" id="userEmail" placeholder="Пошта" onChange={handleChange}/>
+          <label for="userEmail">Пошта</label>
         </div>
 
         <button type="submit" className='add-user-button mt-3 mb-3'>Додати користувача</button>

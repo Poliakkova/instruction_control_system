@@ -40,6 +40,8 @@ public interface InstructionMapper {
         userEntityDto.setUserPatronymic(userEntity.getUserPatronymic());
         userEntityDto.setUserSurname(userEntity.getUserSurname());
         userEntityDto.setUserJobTitle(userEntity.getUserJobTitle());
+        userEntityDto.setUserEmail(userEntity.getUserEmail());
+        userEntityDto.setUserLogin(userEntity.getUserLogin());
         return userEntityDto;
     }
 }

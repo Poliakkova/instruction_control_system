@@ -34,6 +34,9 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserName(userEntityDto.getUserName());
         userEntity.setUserPatronymic(userEntityDto.getUserPatronymic());
         userEntity.setUserSurname(userEntityDto.getUserSurname());
+        userEntity.setUserEmail(userEntityDto.getUserEmail());
+        userEntity.setUserLogin(userEntityDto.getUserLogin());
+        userEntity.setEnableNotification(userEntityDto.isEnableNotification());
         userRepository.save(userEntity);
     }
     @Override

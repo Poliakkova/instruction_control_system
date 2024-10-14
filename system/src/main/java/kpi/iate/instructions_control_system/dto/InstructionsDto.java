@@ -36,4 +36,7 @@ public class InstructionsDto {
     private Long makingTime;
 
     private String mapProcess;
+
+    private String protocol;
+
 }

@@ -24,34 +24,55 @@ const ListInstructionsComponent = () => {
         navigator('/instructions/new')
     }
 
-    const handleRowClick = (id) => {
-        // Перехід на сторінку деталей з ідентифікатором
-        navigator(`/instructions/instruction`);
-      };
+    const handleRowClick = (title) => {
+        navigator(`/instruction/${encodeURIComponent(title)}`);
+    };
+
+    const statusMapping = {
+        CREATED: 'Назначено',
+        CONFIRMATION: 'Очікує затвердження',
+        IN_PROGRESS: 'В роботі',
+        CANCELLED: 'Скасовано',
+        FINISHED: 'Затверджено',
+    };
+
+    // Функція для визначення класу на основі статусу
+    const getStatusClass = (status) => {
+        switch (status) {
+        case 'Назначено':
+            return 'status orange';
+        case 'В роботі':
+            return 'status yellow';
+        case 'Очікує затвердження':
+            return 'status green';
+        case 'Затверджено':
+            return 'status grey';
+        default:
+            return 'status grey';
+        }
+    };
 
     // Створюємо стан для пошукового запиту
     const [searchTerm, setSearchTerm] = useState('');
 
     // Фільтрація даних на основі пошукового запиту
     const filteredData = instructions.filter((item) => {
-    const searchWords = searchTerm.toLowerCase().trim().split(' ');
-    console.log("SEARCH " + searchTerm);
-    console.log("DATE " + new Date(item.startTime).toLocaleDateString())
-    console.log("DATE2 " + new Date(item.expTime).toLocaleDateString())
+        const searchWords = searchTerm.toLowerCase().trim().split(' ');
+        console.log("SEARCH " + searchTerm);
+        console.log("DATE " + new Date(item.startTime).toLocaleDateString())
+        console.log("DATE2 " + new Date(item.expTime).toLocaleDateString())
 
-    return searchWords.some((word) => 
-        // item.headSurname.toLowerCase().includes(word)||
-        // item.headName.toLowerCase().includes(word) ||
-        // item.headPatronymic.toLowerCase().includes(word) ||
-        // item.headControlSurname.toLowerCase().includes(word) ||
-        // item.headControlName.toLowerCase().includes(word) ||
-        // item.headControlPatronymic.toLowerCase().includes(word) ||
-        item.sourceOfInstruction.toLowerCase().includes(word) ||
-        item.shortDescription.toLowerCase().includes(word) ||
-        item.title.toLowerCase().includes(word) ||
-        new Date(item.startTime).toLocaleDateString().toLowerCase().includes(word) ||
-        new Date(item.expTime).toLocaleDateString().toLowerCase().includes(word)
-      );
+        return searchWords.some((word) => 
+            new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(word) ||
+            item.sourceOfInstruction.toLowerCase().includes(word) ||
+            item.protocol.toLowerCase().includes(word) ||
+            item.type.toLowerCase().includes(word) ||
+            item.title.toLowerCase().includes(word) ||
+            item.shortDescription.toLowerCase().includes(word) ||
+            new Date(item.startTime).toLocaleDateString().toLowerCase().includes(word) ||
+            new Date(item.expTime).toLocaleDateString().toLowerCase().includes(word) ||
+            statusMapping[item.status].toLowerCase().includes(word)
+        );
     });
 
     return (
@@ -86,7 +107,6 @@ const ListInstructionsComponent = () => {
                                 <th>Джерело</th>
                                 <th>Протокол засідання</th>
                                 <th>Тип</th>
-                                <th>Предмет</th>
                                 <th>Назва</th>
                                 <th>Опис</th>
                                 <th>Початок</th>
@@ -98,31 +118,24 @@ const ListInstructionsComponent = () => {
                         </thead>
                         <tbody>
                             {
-                            filteredData.map(instruction => 
-                                <tr key={instruction.id}>
-                                    <td><ul>
-                                    {Object.keys(instruction).map((key) => (
-                                    <li key={key}>
-                                        <strong>{key}:</strong> {instruction[key]?.toString()}
-                                    </li>
-                                    ))}
-                                </ul></td>
+                            filteredData.map((instruction, index) => 
+                                <tr key={instruction.id} onClick={() => handleRowClick(instruction.title)} style={{ cursor: 'pointer' }}>
+                                <td>{index + 1}</td>
                                 <td>{new Date(instruction.makingTime).toLocaleDateString()}</td>
                                 <td>{instruction.heads}</td>
                                 <td>{instruction.sourceOfInstruction}</td>
-                                <td>{instruction.protocol} 00</td>
+                                <td>{instruction.protocol}</td>
                                 <td>{instruction.type}</td>
-                                <td>{instruction.pointOfInstruction}</td>
                                 <td>{instruction.title}</td>
                                 <td>{instruction.shortDescription}</td>
                                 <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                                 <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
-                                <td><span className="status orange">{instruction.status}</span></td>
+                                <td><span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>{statusMapping[instruction.status] || 'Невідомий статус'}</span></td>
                                 <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
                                 <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
                             </tr>)
                             }
-                            <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
+                            {/* <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
                                 <td><input type='checkbox'/></td>
                                 <td>11.09.24</td>
                                 <td>Адмін</td>
@@ -181,7 +194,7 @@ const ListInstructionsComponent = () => {
                                 <td><span className="status grey">Затверджено</span></td>
                                 <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
                                 <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                            </tr>
+                            </tr> */}
                         </tbody>
                     </Table>
                 </div>
