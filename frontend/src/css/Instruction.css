@@ -92,6 +92,71 @@
     box-shadow: none;
 }
 
+.button-start {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #bdffcd;
+    border: 2px solid #006e1b;
+    color: #006e1b;
+}
+
+.button-start:hover{
+    background: #84ffa3;
+}
+
+.button-finish {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffbdbd;
+    border: 2px solid #7b0000;
+    color: #7b0000;
+}
+
+.button-finish:hover {
+    background: #ffa3a3;
+}
+
+.button-square {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #d7fcfc;
+    border: 2px solid #006767;
+    color: #006767;
+}
+
+.button-square:hover{
+    background: #a3ffff;
+}
+
+.button-diamond {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #fffdbd;
+    border: 2px solid #cc6200;
+    color: #cc6200;
+}
+
+.button-diamond:hover{
+    background: #fffb8e;
+}
+
+.button-update {
+    border-radius: 5px;
+    padding: 0 15px;
+}
+
+.button-update:hover{
+    background: #cfe2ff;
+}
+
+.button-save {
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: none;
+    background: #81b8ff;
+}
+
 .image img {
     height: 40px;
 }
@@ -133,7 +198,7 @@
     margin-bottom: 6px;
 }
 
-.send-button:hover{
+.send-button:hover, .button-save:hover{
     background: #669ee7;
 }
 
