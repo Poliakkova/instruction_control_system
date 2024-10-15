@@ -25,4 +25,14 @@ public class UserController {
     public void createUser(@RequestBody UserEntityDto userEntityDto) {
          userService.createUser(userEntityDto);
     }
+    @Operation(summary = "update user")
+    @PutMapping("/update")
+    public void updateUser(@RequestBody UserEntityDto userEntityDto) {
+        userService.updateUser(userEntityDto);
+    }
+    @Operation(summary = "delete user")
+    @PostMapping("/delete/{userLogin}")
+    public void deleteUser(@RequestParam String userLogin) {
+        userService.deleteUser(userLogin);
+    }
 }

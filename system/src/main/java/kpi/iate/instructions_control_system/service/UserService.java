@@ -12,5 +12,9 @@ public interface UserService {
 
     void createUser(UserEntityDto userEntityDto);
 
+    void updateUser(UserEntityDto userEntityDto);
+
+    void deleteUser(String userLogin);
+
     List <UserEntityDto> findAllUsers();
 }
