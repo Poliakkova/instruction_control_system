@@ -2,10 +2,6 @@ package kpi.iate.instructions_control_system.service;
 
 import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.entity.AuthKey;
-import kpi.iate.instructions_control_system.entity.Instructions;
-import kpi.iate.instructions_control_system.enums.InstructionStatus;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
 
 import java.util.List;
 import java.util.UUID;
@@ -13,7 +9,7 @@ import java.util.UUID;
 public interface InstructionsService {
     AuthKey getKey();
 
-    InstructionsDto getInstructionByTitle(final UUID key, final String instructionTitle);
+    InstructionsDto getInstructionByCode(final UUID key, final String instructionCode);
 
     List<InstructionsDto> getAllInstructions(final UUID key);
 
@@ -27,7 +23,7 @@ public interface InstructionsService {
 
     InstructionsDto createInstruction(final UUID key, final InstructionsDto instructionsDto);
 
-    void deleteInstructionByTitle(final UUID key, final String instructionTitle);
+    void deleteInstructionByCode(final UUID key, final String instructionCode);
 
     List<InstructionsDto> getArchivedInstructions();
 

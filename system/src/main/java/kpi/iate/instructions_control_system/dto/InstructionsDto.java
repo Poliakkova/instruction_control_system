@@ -17,6 +17,8 @@ public class InstructionsDto {
 
     private List<UserEntityDto> users;
 
+    private String code;
+
     private String status;
 
     private String sourceOfInstruction;

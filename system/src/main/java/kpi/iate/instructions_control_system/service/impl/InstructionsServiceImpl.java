@@ -60,12 +60,12 @@ public class InstructionsServiceImpl implements InstructionsService {
 
     @Override
     @Transactional(readOnly = true)
-    public InstructionsDto getInstructionByTitle(final UUID key, final String instructionTitle) {
+    public InstructionsDto getInstructionByCode(final UUID key, final String instructionCode) {
         validateKey(key);
 
         return instructionMapper.instructionToDto(instructionsRepository
-                .getInstructionByTitle(instructionTitle)
-                .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title")));
+                .getInstructionByCode(instructionCode)
+                .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionCode + " code")));
     }
 
     @Override
@@ -119,9 +119,9 @@ public class InstructionsServiceImpl implements InstructionsService {
         validateKey(key);
 
         Assert.notNull(instructionsDto, "instructionDto cant be null");
-        String instructionTitle = instructionsDto.getTitle();
-        Instructions instructions = instructionsRepository.getInstructionByTitle(instructionTitle)
-                .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title"));
+        String instructionsCode = instructionsDto.getCode();
+        Instructions instructions = instructionsRepository.getInstructionByCode(instructionsCode)
+                .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionsCode + " code"));
         if (!CollectionUtils.isEmpty(instructionsDto.getUsers())) {
             deleteInstructionsFromUsers(instructions, instructions.getHeads());
             instructions.setHeads(new ArrayList<>());
@@ -133,6 +133,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                 instructionsRepository.save(instructions);
             });
         }
+        instructions.setTitle(instructionsDto.getTitle());
         instructions.setStatus(instructionsDto.getStatus());
         instructions.setSourceOfInstruction(instructionsDto.getSourceOfInstruction());
         instructions.setShortDescription(instructionsDto.getShortDescription());
@@ -176,10 +177,10 @@ public class InstructionsServiceImpl implements InstructionsService {
 
     @Override
     @Transactional
-    public void deleteInstructionByTitle(final UUID key, final String instructionTitle) {
+    public void deleteInstructionByCode(final UUID key, final String instructionCode) {
         validateKey(key);
 
-        Instructions instructions = instructionsRepository.getInstructionByTitle(instructionTitle).orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title"));
+        Instructions instructions = instructionsRepository.getInstructionByCode(instructionCode).orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionCode + " code"));
         instructions.getHeads().stream().forEach(user -> {
             user.getInstructions().remove(instructions);
             userRepository.save(user);
@@ -208,8 +209,8 @@ public class InstructionsServiceImpl implements InstructionsService {
     public void updateInstructionStatus(final UUID key, final InstructionsDto instructionsDto) {
         Assert.notNull(instructionsDto, "Instruction DTO couldn`t be null while updating status");
         validateKey(key);
-        Instructions instructions = instructionsRepository.getInstructionByTitle(instructionsDto.getTitle())
-                .orElseThrow(() -> new InstructionNotFoundException(String.format("No instruction with title %s was found", instructionsDto.getTitle())));
+        Instructions instructions = instructionsRepository.getInstructionByCode(instructionsDto.getCode())
+                .orElseThrow(() -> new InstructionNotFoundException(String.format("No instruction with code %s was found", instructionsDto.getCode())));
         InstructionStatus instructionStatus = InstructionStatus.valueOf(instructionsDto.getStatus());
         instructions.setStatus(instructionStatus.name());
         instructionsRepository.save(instructions);
@@ -242,7 +243,7 @@ public class InstructionsServiceImpl implements InstructionsService {
             users.add(userEntity);
             instructions.setHeads(users);
         }
-        instructions.getHeads().add(userEntity);
+        //instructions.getHeads().add(userEntity);
     }
     private void addInstructionsToUser(UserEntity userEntity, Instructions instructions){
         Assert.notNull(instructions, "instruction couldn`t be nll");

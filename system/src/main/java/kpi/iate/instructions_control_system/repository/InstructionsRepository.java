@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Repository
 public interface InstructionsRepository extends CrudRepository<Instructions, UUID> {
-    Optional<Instructions> getInstructionByTitle(String title);
+    Optional<Instructions> getInstructionByCode(String code);
 
-    void deleteInstructionByTitle(String title);
+    void deleteInstructionByCode(String code);
 }

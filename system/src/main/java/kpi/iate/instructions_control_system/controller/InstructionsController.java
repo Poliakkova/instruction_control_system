@@ -6,8 +6,6 @@ import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.enums.InstructionStatus;
 import kpi.iate.instructions_control_system.service.InstructionsService;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +30,10 @@ public class InstructionsController {
     public List<InstructionStatus> getPossibleStatuses() {
         return Arrays.stream(InstructionStatus.values()).collect(Collectors.toList());
     }
-    @Operation(summary = "get instruction using it`s title")
-    @GetMapping("/get/{instructionTitle}")
-    public InstructionsDto getInstructionByTitle(@RequestHeader(value = "key") UUID key, @PathVariable String instructionTitle){
-        return instructionsService.getInstructionByTitle(key, instructionTitle);
+    @Operation(summary = "get instruction using it`s code")
+    @GetMapping("/get/{instructionCode}")
+    public InstructionsDto getInstructionByCode(@RequestHeader(value = "key") UUID key, @PathVariable String instructionCode){
+        return instructionsService.getInstructionByCode(key, instructionCode);
     }
     @Operation(summary = "get all instructions")
     @GetMapping("/get/all")
@@ -98,10 +96,10 @@ public class InstructionsController {
 //    }
 
 
-    @Operation(summary = "delete instruction by title")
-    @PostMapping("/{instructionTitle}")
-    public void deleteInstructionByTitle(@RequestHeader(value = "key") UUID key, @PathVariable String instructionTitle) {
-        instructionsService.deleteInstructionByTitle(key, instructionTitle);
+    @Operation(summary = "delete instruction by code")
+    @PostMapping("/{instructionCode}")
+    public void deleteInstructionByCode(@RequestHeader(value = "key") UUID key, @PathVariable String instructionCode) {
+        instructionsService.deleteInstructionByCode(key, instructionCode);
     }
     @Operation(summary = "create instruction passing all fields via dtooo.")
     @PostMapping("/new/processing")

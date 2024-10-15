@@ -23,14 +23,14 @@ public class Instructions {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @Column(name = "instruction_title", unique = true)
+    @Column(name = "instruction_title")
     private String title;
 
     @ManyToMany(mappedBy = "instructions")
     private List<UserEntity> heads;
 
-    @Column(name = "instruction_point_of_instruction")
-    private String pointOfInstruction;
+    @Column(name = "instruction_code", unique = true, nullable = false)
+    private String code;
 
     @Column(name = "instruction_status")
     private String status;
