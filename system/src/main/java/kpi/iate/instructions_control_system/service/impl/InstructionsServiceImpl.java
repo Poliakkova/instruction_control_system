@@ -115,29 +115,38 @@ public class InstructionsServiceImpl implements InstructionsService {
 
     @Override
     @Transactional
-    public InstructionsDto updateInstructionByTitle(final UUID key, final String instructionTitle, final String newTitle,
-                                                    final String newHeadSurname, final String newHeadName, final String newHeadPatronymic,
-                                                    final String newHeadControlSurname, final String newHeadControlName, final String newHeadControlPatronymic, final String newStatus, final String newSourceOfInstruction,
-                                                    final String newShortDescription, final String newFullDescription, final String newText,
-                                                    final String newStartTime, final String newExpTime) {
+    public InstructionsDto updateInstruction(final UUID key, InstructionsDto instructionsDto) {
         validateKey(key);
 
+        Assert.notNull(instructionsDto, "instructionDto cant be null");
+        String instructionTitle = instructionsDto.getTitle();
         Instructions instructions = instructionsRepository.getInstructionByTitle(instructionTitle)
                 .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title"));
-        instructions.setTitle(newTitle);
-//        instructions.setHeadSurname(newHeadSurname);
-//        instructions.setHeadName(newHeadName);
-//        instructions.setHeadPatronymic(newHeadPatronymic);
-//        instructions.setHeadControlSurname(newHeadControlSurname);
-//        instructions.setHeadControlName(newHeadControlName);
-//        instructions.setHeadControlPatronymic(newHeadControlPatronymic);
-        instructions.setStatus(newStatus);
-        instructions.setSourceOfInstruction(newSourceOfInstruction);
-        instructions.setShortDescription(newShortDescription);
-        instructions.setFullDescription(newFullDescription);
-        instructions.setStartTime(stringToDateLongParser.parseStringToGetLongTime(newStartTime)/1000);
-        instructions.setExpTime(stringToDateLongParser.parseStringToGetLongTime(newExpTime)/1000);
-        instructions.setText(newText);
+        instructions.setTitle(instructionTitle);
+        if (!CollectionUtils.isEmpty(instructionsDto.getUsers())) {
+            deleteInstructionsFromUsers(instructions, instructions.getHeads());
+            instructions.setHeads(new ArrayList<>());
+            instructionsDto.getUsers().stream().filter(Objects::nonNull).forEach(user -> {
+                UserEntity updatedUser = userService.findUserByLogin(user.getUserLogin());
+                updatedUser.getInstructions().add(instructions);
+                instructions.getHeads().add(updatedUser);
+                userRepository.save(updatedUser);
+                instructionsRepository.save(instructions);
+            });
+        }
+        instructions.setStatus(instructionsDto.getStatus());
+        instructions.setSourceOfInstruction(instructionsDto.getSourceOfInstruction());
+        instructions.setShortDescription(instructionsDto.getShortDescription());
+        instructions.setFullDescription(instructionsDto.getFullDescription());
+        instructions.setText(instructionsDto.getText());
+        instructions.setStartTime(instructionsDto.getStartTime().getTime()/1000);
+        instructions.setExpTime((instructionsDto.getExpTime().getTime()/1000));
+        instructions.setExpTime(instructionsDto.getExpTime().getTime()/1000);
+        instructions.setMakingTime(instructionsDto.getMakingTime());
+        instructions.setProtocol(instructionsDto.getProtocol());
+        instructions.setMapProcess(instructionsDto.getMapProcess());
+        instructions.setType(instructionsDto.getType());
+
         instructionsRepository.save(instructions);
 
         return instructionMapper.instructionToDto(instructions);
@@ -171,10 +180,13 @@ public class InstructionsServiceImpl implements InstructionsService {
     public void deleteInstructionByTitle(final UUID key, final String instructionTitle) {
         validateKey(key);
 
-        instructionsRepository.delete(instructionsRepository
-                .getInstructionByTitle(instructionTitle)
-                .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title")));
-        instructionsRepository.deleteInstructionByTitle(instructionTitle);
+        Instructions instructions = instructionsRepository.getInstructionByTitle(instructionTitle).orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title"));
+        instructions.getHeads().stream().forEach(user -> {
+            user.getInstructions().remove(instructions);
+            userRepository.save(user);
+        });
+        instructions.setHeads(new ArrayList<>());
+        instructionsRepository.delete(instructions);
     }
 
     @Override
@@ -240,5 +252,11 @@ public class InstructionsServiceImpl implements InstructionsService {
             userEntity.setInstructions(new ArrayList<Instructions>());
         }
         userEntity.getInstructions().add(instructions);
+    }
+    private void deleteInstructionsFromUsers(Instructions instructions, List<UserEntity> users) {
+        users.stream().filter(Objects::nonNull).forEach(user -> {
+            user.getInstructions().remove(instructions);
+            userRepository.save(user);
+        });
     }
 }

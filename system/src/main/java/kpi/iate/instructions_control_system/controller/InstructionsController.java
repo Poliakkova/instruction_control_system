@@ -8,6 +8,7 @@ import kpi.iate.instructions_control_system.service.InstructionsService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -60,7 +61,13 @@ public class InstructionsController {
         return instructionsService.getInstructionsFilteredByExpDate(key, expDate);
     }
 
-
+    @Operation(summary = "Update instruction")
+    @PostMapping("/update")
+    public void updateInstruction(@RequestHeader(value = "key") UUID key,
+                                  @Parameter(description = "Instruction details")
+                                  @RequestBody InstructionsDto instructionsDto) {
+        instructionsService.updateInstruction(key, instructionsDto);
+    }
 
 //    @Operation(summary = "create instruction passing all fields.")
 //    @PostMapping("/new/{newTitle}/{newHeadSurname}/{newHeadName}/{newHeadPatronymic}/{headControlSurname}/{headControlName}/{headControlPatronymic}/{status}/{sourceOfInstruction}/{newShortDescription}/{newFullDescription}/{newText}/{newStartTime}/{newExpTime}")
@@ -90,6 +97,7 @@ public class InstructionsController {
 //        return instructionsService.updateInstructionByTitle(key, instructionTitle, newTitle, newHeadSurname, newHeadName, newHeadPatronymic, headControlSurname, headControlName, headControlPatronymic, status, sourceOfInstruction, newShortDescription, newFullDescription, newText, newStartTime, newExpTime);
 //    }
 
+
     @Operation(summary = "delete instruction by title")
     @PostMapping("/{instructionTitle}")
     public void deleteInstructionByTitle(@RequestHeader(value = "key") UUID key, @PathVariable String instructionTitle) {
@@ -99,7 +107,8 @@ public class InstructionsController {
     @PostMapping("/new/processing")
     public InstructionsDto createInstructionViaDTOO(@RequestHeader(value = "key") UUID key,
                                                     @Parameter(description = "Instruction details")
-                                                    @RequestBody InstructionsDto instructionsDto) {
+                                                    @RequestBody InstructionsDto instructionsDto, Model model) {
+        model.addAttribute("isGuestUser", false);
         return instructionsService.createInstruction(key, instructionsDto);
     }
 

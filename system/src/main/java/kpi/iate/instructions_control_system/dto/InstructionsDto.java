@@ -27,7 +27,6 @@ public class InstructionsDto {
 
     private String text;
 
-
     private Date startTime;
 
     private Date expTime;

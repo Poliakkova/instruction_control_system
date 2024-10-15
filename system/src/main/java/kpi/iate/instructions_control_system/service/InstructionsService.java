@@ -23,11 +23,7 @@ public interface InstructionsService {
 
     List<InstructionsDto> getInstructionsFilteredByExpDate(UUID key,  String expDate);
 
-    InstructionsDto updateInstructionByTitle(final UUID key, final String instructionTitle, final String newTitle,
-                                          final String newHeadSurname, final String newHeadName, final String newHeadPatronymic,
-                                          final String headControlSurname, final String headControlName, final String headControlPatronymic, final String status, final String sourceOfInstruction,
-                                          final String newShortDescription, final String newFullDescription, final String newText,
-                                          final String newStartTime, final String newExpTime);
+    InstructionsDto updateInstruction(final UUID key, final InstructionsDto instructionsDto);
 
     InstructionsDto createInstruction(final UUID key, final InstructionsDto instructionsDto);
 
