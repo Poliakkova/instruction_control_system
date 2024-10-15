@@ -122,7 +122,6 @@ public class InstructionsServiceImpl implements InstructionsService {
         String instructionTitle = instructionsDto.getTitle();
         Instructions instructions = instructionsRepository.getInstructionByTitle(instructionTitle)
                 .orElseThrow( () ->  new InstructionNotFoundException("No instruction found with " + instructionTitle + " title"));
-        instructions.setTitle(instructionTitle);
         if (!CollectionUtils.isEmpty(instructionsDto.getUsers())) {
             deleteInstructionsFromUsers(instructions, instructions.getHeads());
             instructions.setHeads(new ArrayList<>());
