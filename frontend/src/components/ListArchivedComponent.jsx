@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import { listInstructions } from '../sevices/InstructionService'
+import { archivedInstructions } from '../sevices/InstructionService'
 import {useNavigate} from 'react-router-dom'
 import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -7,14 +7,14 @@ import '../css/ListInstructions.css'
 import { deleteInstruction } from '../sevices/InstructionService';
 
 
-const ListInstructionsComponent = () => {
+const ListArchivedComponent = () => {
 
     const [instructions, setInstructions] = useState([])
 
     const navigator = useNavigate();
 
     useEffect(() => {
-        listInstructions().then((response) => {
+        archivedInstructions().then((response) => {
             setInstructions(response.data);
         }).catch(error => {
             console.error(error);
@@ -64,6 +64,9 @@ const ListInstructionsComponent = () => {
     // Фільтрація даних на основі пошукового запиту
     const filteredData = instructions.filter((item) => {
         const searchWords = searchTerm.toLowerCase().trim();
+        console.log("SEARCH " + searchTerm);
+        console.log("DATE " + new Date(item.startTime).toLocaleDateString())
+        console.log("DATE2 " + new Date(item.expTime).toLocaleDateString())
 
         return new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
         item.sourceOfInstruction.toLowerCase().includes(searchWords) ||
@@ -134,7 +137,7 @@ const ListInstructionsComponent = () => {
                                 <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                                 <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
                                 <td><span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>{statusMapping[instruction.status] || 'Невідомий статус'}</span></td>
-                                <td><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px'}}
+                                <td><i title="Сповіщення увімкнено" className="bi bi-pencil-square" style={{ fontSize: '18px'}}
                                     onClick={(event) => {
                                         event.stopPropagation(); // Зупиняємо спливання події
                                         editInstruction(instruction.title); // Викликаємо функцію редагування
@@ -216,4 +219,4 @@ const ListInstructionsComponent = () => {
     )
 }
 
-export default ListInstructionsComponent
+export default ListArchivedComponent

@@ -1,64 +1,189 @@
-import React from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, { useState, useEffect } from 'react';
+import {useNavigate} from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import '@xyflow/react/dist/style.css';
 import '../css/Statistics.css';
+import { listInstructions } from '../sevices/InstructionService';
 
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 
-
 // Реєструємо елементи для chart.js
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const InstructionComponent = () => {
-  const typeData = {
-    labels: ['Науково-методична робота', 'Навчально-виховна робота', 'Профорієнтаційна робота', 'Навчально-організаційна робота'],
-    datasets: [
-      {
-        label: '# зразків',
-        data: [12, 19, 3, 5],
-        backgroundColor: [
-          'rgba(255, 99, 132, 0.2)',
-          'rgba(245, 39, 183, 0.2)',
-          'rgba(152, 39, 245, 0.2)',
-          'rgba(54, 162, 235, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 99, 132, 1)',
-          'rgba(245, 39, 183, 1)',
-          'rgba(152, 39, 245, 1)',
-          'rgba(54, 162, 235, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ]
+  const navigator = useNavigate();
+
+  function createInstruction(){
+    navigator('/instructions/new')
   }
 
-  const statusData = {
-    labels: ['Назначено', 'В роботі', 'Очікує затвердження', 'Затверджено'],
-    datasets: [
-      {
-        label: '# зразків',
-        data: [12, 19, 3, 6],
-        backgroundColor: [
-          'rgba(255, 131, 74, 0.2)',
-          'rgba(255, 219, 74, 0.2)',
-          'rgba(76, 175, 80, 0.2)',
-          'rgba(173, 181, 189, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 131, 74, 1)',
-          'rgba(255, 219, 74, 1)',
-          'rgba(76, 175, 80, 1)',
-          'rgba(173, 181, 189, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ]
-  }
+  const [instructions, setInstructions] = useState([])
+  const [instructionTypeData, setInstructionTypeData] = useState({
+    labels: [],
+    datasets: []
+  });
+  const [instructionStatusData, setInstructionStatusData] = useState({
+    labels: [],
+    datasets: []
+  });
+
+
+  useEffect(() => {
+    listInstructions().then((response) => {
+        console.log('Дані з API:', response.data); // Перевірте, що ви отримуєте дані
+        if (response.data && response.data.length > 0) {
+        setInstructions(response.data);
+        updateChartData(response.data); // Оновлюємо дані для діаграм
+    }}).catch(error => {
+        console.error(error);
+    })
+  }, [])
+
+  // const typeData = {
+  //   labels: ['Науково-методична робота', 'Навчально-виховна робота', 'Профорієнтаційна робота', 'Навчально-організаційна робота'],
+  //   datasets: [
+  //     {
+  //       label: '# зразків',
+  //       data: [12, 19, 3, 5],
+  //       backgroundColor: [
+  //         'rgba(255, 99, 132, 0.2)',
+  //         'rgba(245, 39, 183, 0.2)',
+  //         'rgba(152, 39, 245, 0.2)',
+  //         'rgba(54, 162, 235, 0.2)',
+  //       ],
+  //       borderColor: [
+  //         'rgba(255, 99, 132, 1)',
+  //         'rgba(245, 39, 183, 1)',
+  //         'rgba(152, 39, 245, 1)',
+  //         'rgba(54, 162, 235, 1)',
+  //       ],
+  //       borderWidth: 1,
+  //     },
+  //   ]
+  // }
+
+  // const statusData = {
+  //   labels: ['Назначено', 'В роботі', 'Очікує затвердження', 'Затверджено'],
+  //   datasets: [
+  //     {
+  //       label: '# зразків',
+  //       data: [12, 19, 3, 6],
+  //       backgroundColor: [
+  //         'rgba(255, 131, 74, 0.2)',
+  //         'rgba(255, 219, 74, 0.2)',
+  //         'rgba(76, 175, 80, 0.2)',
+  //         'rgba(173, 181, 189, 0.2)',
+  //       ],
+  //       borderColor: [
+  //         'rgba(255, 131, 74, 1)',
+  //         'rgba(255, 219, 74, 1)',
+  //         'rgba(76, 175, 80, 1)',
+  //         'rgba(173, 181, 189, 1)',
+  //       ],
+  //       borderWidth: 1,
+  //     },
+  //   ]
+  // }
+
+  const updateChartData = (instructions) => {
+    console.log("updateChartData - instructions: " + instructions);
+    // Підрахунок для типів
+    const typeCounts = {
+      'Науково-методична робота': 0,
+      'Навчально-виховна робота': 0,
+      'Профорієнтаційна робота': 0,
+      'Навчально-організаційна робота': 0,
+    };
+
+    // Підрахунок для статусів
+    const statusCounts = {
+      'CREATED': 0,
+      'IN_PROGRESS': 0,
+      'CONFIRMATION': 0,
+      'FINISHED': 0,
+    };
+
+    instructions.forEach((instruction) => {
+      console.log('Instruction: ', instruction); // Перевіряємо кожну інструкцію
+
+      // Підрахунок типів
+      if (typeCounts[instruction.type] !== undefined) {
+        typeCounts[instruction.type]++;
+      }
+
+      // Підрахунок статусів
+      if (statusCounts[instruction.status] !== undefined) {
+        statusCounts[instruction.status]++;
+      }
+    });
+
+    console.log(Object.keys(typeCounts));
+    console.log(Object.values(typeCounts));
+    console.log(Object.keys(statusCounts));
+    console.log(Object.values(statusCounts));
+    console.log(statusCounts['CREATED']);
+
+    // Оновлюємо дані для діаграми по типах
+    setInstructionTypeData({
+      labels: Object.keys(typeCounts),
+      datasets: [
+        {
+          label: '# зразків',
+          data: Object.values(typeCounts),
+          backgroundColor: [
+            'rgba(255, 99, 132, 0.2)',
+            'rgba(245, 39, 183, 0.2)',
+            'rgba(152, 39, 245, 0.2)',
+            'rgba(54, 162, 235, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 99, 132, 1)',
+            'rgba(245, 39, 183, 1)',
+            'rgba(152, 39, 245, 1)',
+            'rgba(54, 162, 235, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    });
+
+    // Оновлюємо дані для діаграми по статусах
+    setInstructionStatusData({
+      labels: ['Назначено', 'В роботі', 'Очікує затвердження', 'Затверджено'],
+      datasets: [
+        {
+          label: '# зразків',
+          data: [
+            statusCounts['CREATED'],
+            statusCounts['IN_PROGRESS'],
+            statusCounts['CONFIRMATION'],
+            statusCounts['FINISHED'],
+          ],
+          backgroundColor: [
+            'rgba(255, 131, 74, 0.2)',
+            'rgba(255, 219, 74, 0.2)',
+            'rgba(76, 175, 80, 0.2)',
+            'rgba(173, 181, 189, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 131, 74, 1)',
+            'rgba(255, 219, 74, 1)',
+            'rgba(76, 175, 80, 1)',
+            'rgba(173, 181, 189, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    });
+  };
+
+      // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
+      useEffect(() => {
+        console.log("typeData UPDATED: ", instructionTypeData);
+      }, [instructionTypeData]);
 
   const userRolesData = {
     labels: ['Викладач', 'Студ.представник', 'Адмін'],
@@ -81,30 +206,30 @@ const InstructionComponent = () => {
     ]
   }
 
-  // Функція для генерації випадкового кольору
-function getRandomColor() {
-  const r = Math.floor(Math.random() * 255);
-  const g = Math.floor(Math.random() * 255);
-  const b = Math.floor(Math.random() * 255);
-  return `rgba(${r}, ${g}, ${b}`;
-}
-
-// Функція для генерації масиву кольорів на основі кількості користувачів
-function generateColors(count) {
-  const backgroundColors = [];
-  const borderColors = [];
-
-  for (let i = 0; i < count; i++) {
-    const randomColor = getRandomColor();
-    backgroundColors.push(`${randomColor}, 0.2)`); // З прозорістю
-    borderColors.push(`${randomColor}, 1)`); // Без прозорості
+    // Функція для генерації випадкового кольору
+  function getRandomColor() {
+    const r = Math.floor(Math.random() * 255);
+    const g = Math.floor(Math.random() * 255);
+    const b = Math.floor(Math.random() * 255);
+    return `rgba(${r}, ${g}, ${b}`;
   }
 
-  return { backgroundColors, borderColors };
-}
+  // Функція для генерації масиву кольорів на основі кількості користувачів
+  function generateColors(count) {
+    const backgroundColors = [];
+    const borderColors = [];
 
-// Генеруємо кольори для всіх користувачів
-const colors = generateColors(4);
+    for (let i = 0; i < count; i++) {
+      const randomColor = getRandomColor();
+      backgroundColors.push(`${randomColor}, 0.2)`); // З прозорістю
+      borderColors.push(`${randomColor}, 1)`); // Без прозорості
+    }
+
+    return { backgroundColors, borderColors };
+  }
+
+  // Генеруємо кольори для всіх користувачів
+  const colors = generateColors(4);
 
   const headData = {
     labels: ['Викладач1', 'Викладач2', 'Викладач3', 'Викладач4'],
@@ -161,19 +286,12 @@ const colors = generateColors(4);
     },
   };
 
-
-  const navigator = useNavigate();
-
-  function createInstruction(){
-    navigator('/instructions/new')
-  }
-
   return (
     <div className="wrapper">
       <div className="sidebar">
           <button onClick={() => createInstruction()}>Створити доручення</button>
-          <a className="menu-item" href='/instructions'><i class="bi bi-card-list"></i>Усі</a>
-          <a className="menu-item" href='/instructions'><i class="bi bi-archive"></i>Архів</a>
+          <a className="menu-item" href='/instructions'><i className="bi bi-card-list"></i>Усі</a>
+          <a className="menu-item" href='/instructions/archived'><i className="bi bi-archive"></i>Архів</a>
       </div>
 
       <div className="main-content">
@@ -182,14 +300,14 @@ const colors = generateColors(4);
         <Row style={{marginLeft: 'auto'}}>
           <Col className='diagram mr-3' style={{marginRight: '20px'}}>
             <div className="diagram-title ">Розподіл доручень за типом</div>
-            <Pie className='pie' data={typeData} options={options} />
+            <Pie className='pie' data={instructionTypeData} options={options}/>
           </Col>
           <Col className='diagram'>
             <div className="diagram-title">Розподіл доручень за статусом</div>
-            <Pie className='pie' data={statusData} options={options} />
+            <Pie className='pie' data={instructionStatusData} options={options} />
           </Col>
         </Row>
-
+{/* 
         <h3 className='title' style={{marginTop: "30px"}}>Статистика користувачів</h3>
         <hr></hr>
         <Row style={{marginLeft: 'auto'}}>
@@ -205,7 +323,7 @@ const colors = generateColors(4);
             <div className="diagram-title">Є виконавцями</div>
             <Pie className='pie' data={performerData} options={options} />
           </Col>
-        </Row>
+        </Row> */}
       </div>
     </div>
   )
