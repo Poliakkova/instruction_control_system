@@ -4,11 +4,12 @@ import Accordion from 'react-bootstrap/Accordion';
 import { ReactFlow, Background, Controls, MiniMap, 
          addEdge, applyNodeChanges, applyEdgeChanges,
          Handle, Position, ReactFlowProvider,  useReactFlow } from '@xyflow/react';
+
 import '@xyflow/react/dist/style.css';
 import '../css/Instruction.css'
 import axios from 'axios';
-import { getKey, deleteInstruction, updateInstructionStatus } from '../sevices/InstructionService';
 
+import { getKey, deleteInstruction, updateInstructionStatus, updateInstruction } from '../sevices/InstructionService';
 
 const InstructionComponent = () => {
 
@@ -18,11 +19,11 @@ const InstructionComponent = () => {
     navigator('/instructions/new')
   }
 
-  const editInstruction = (title) => {
-    navigator(`/instructions/edit/${encodeURIComponent(title)}`);
+  const editInstruction = (code) => {
+    navigator(`/instructions/edit/${encodeURIComponent(code)}`);
   };
 
-  const { title } = useParams(); // Отримуємо параметр title з URL
+  const { code } = useParams(); // Отримуємо параметр title з URL
   const [instruction, setInstruction] = useState('');
 
   useEffect(() => {
@@ -32,12 +33,14 @@ const InstructionComponent = () => {
             const keyResponse = await getKey();
             const uuidKey = keyResponse.data;
             console.log("uuidKey " + uuidKey);
+            console.log("code " + code);
 
-            const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(title)}`, {
+            const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(code)}`, {
                 headers: {
                     'key': uuidKey, // передайте ваш ключ у заголовку
                 },
             });
+            console.log("Response data: ", response.data); 
             setInstruction(response.data);
           } catch (error) {
               console.error('Error fetching instruction:', error);
@@ -45,7 +48,7 @@ const InstructionComponent = () => {
       };
 
       fetchInstruction();
-    }, [title]);
+    }, [code]);
 
     // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
   useEffect(() => {
@@ -79,6 +82,95 @@ const InstructionComponent = () => {
       </div>
     </div>
   );
+
+  const PrepareNode = ({ data, isSelected }) => (
+    <div style={{ /* Обводка */
+      display: 'inline-flex',
+      backgroundColor: 'black', 
+      clipPath: 'polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%)', /* Створюємо ромб */
+      alignItems: 'center',
+      justifyContent: 'center',
+      border: isSelected ? '5px solid blue' : '1px solid black',
+    }}>
+
+      <div style={{ /* Внутрішній блок */
+          maxWidth: '150px',
+          padding: '10px 25px',
+          height: 'auto',
+          display: 'flex',
+          backgroundColor: '#ffe3c2', 
+          clipPath: 'polygon(15% 0%, 85% 0%, 100% 50%, 85% 100%, 15% 100%, 0% 50%)', /* Створюємо ромб */
+          alignContent: 'center',
+      }}>
+        <Handle type="target" position={Position.Top} style={{ top: '4px', background: 'green'}}/>
+        <div style={{ fontSize: '12px', textAlign: 'center'  }}>{data.label}</div>
+        <Handle id="source-left"  type="source" position={Position.Left} style={{ left: '5px', background: '#db4f4f'}}/>
+        <Handle id="source-right"  type="source" position={Position.Right} style={{ right: '5px', background: '#db4f4f'}}/>
+
+      </div>
+    </div>
+  );
+
+  const DocumentNode = ({ data, isSelected }) => (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#e4c2ff', 
+      border: isSelected ? '5px solid blue' : '1px solid black',
+      borderRadius: '0 0 50% 50%', // Додаємо плавний низ
+      padding: '10px 10px 20px 10px',
+      maxWidth: '150px',
+      height: 'auto',
+      position: 'relative'
+    }}>
+      <Handle type="target" position={Position.Top} style={{ background: 'green' }}/>
+      <div style={{ fontSize: '12px', textAlign: 'center' }}>{data.label}</div>
+      <Handle id="source-left" type="source" position={Position.Left} style={{ background: '#db4f4f' }}/>
+      <Handle id="source-right" type="source" position={Position.Right} style={{ background: '#db4f4f' }}/>
+    </div>
+  );  
+
+  const ParallelogramNode = ({ data, isSelected }) => (
+    <div style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      backgroundColor: '#c2c2ff', 
+      border: isSelected ? '5px solid blue' : '1px solid black',
+      padding: '10px',
+      maxWidth: '150px',
+      height: 'auto',
+      position: 'relative',
+      transform: 'skew(-20deg)', // Нахил, який створює паралелограм
+    }}>
+      <Handle type="target" position={Position.Top} style={{ background: 'green' }}/>
+      <div style={{ fontSize: '12px', textAlign: 'center', transform: 'skew(20deg)' }}> {/* Повертаємо текст назад */}
+        {data.label}
+      </div>
+      <Handle id="source-left" type="source" position={Position.Left} style={{ background: '#db4f4f' }}/>
+      <Handle id="source-right" type="source" position={Position.Right} style={{ background: '#db4f4f' }}/>
+    </div>
+  );
+
+  const StickyNoteNode = ({ data, isSelected }) => (
+    <div style={{
+      width: '150px',
+      height: 'auto',
+      backgroundColor: '#ffeb3b',  // Колір липкої нотатки
+      border: isSelected ? '5px solid blue' : '1px solid black',
+      padding: '15px',
+      fontSize: '12px',
+      color: 'black',
+      fontFamily: 'Arial, sans-serif',
+      boxShadow: '3px 3px 10px rgba(0,0,0,0.2)',  // Додаємо тінь для об'єму
+    }}>
+  
+      <div style={{ position: 'relative', zIndex: 1 }}>
+        {data.label} {/* Виведення тексту */}
+      </div>
+    </div>
+  );  
 
   const CustomNode = ({ data }) => {
     return (
@@ -117,7 +209,11 @@ const InstructionComponent = () => {
     diamond: DiamondNode, // Реєструєму новий тип
     custom: CustomNode,
     customInput: CustomInputNode,
-    customOutput: CustomOutputNode
+    customOutput: CustomOutputNode,
+    document: DocumentNode,
+    prepare: PrepareNode,
+    parallel: ParallelogramNode,
+    sticky: StickyNoteNode
   };
 
   const initialNodes = [ //початкові ноди
@@ -175,7 +271,7 @@ const InstructionComponent = () => {
     // if (type == 'custom') {color = '#d7fcfc';}
 
     const newNode = {
-      id: `${nodeId}`,
+      id: `node-${new Date().getTime()}`,
       position: { x: 200, y: 0  },
       data: { label: `Новий вузол ${nodeId}` },
       type: type,
@@ -189,7 +285,7 @@ const InstructionComponent = () => {
   // Функція для скругленого нового початку
   const addStartNode = () => {
     const newNode = {
-      id: `${nodeId}`,
+      id: `node-${new Date().getTime()}`,
       position: { x: 200, y: 0 },
       data: { label: `Початок` },
       type: 'customInput',
@@ -202,7 +298,7 @@ const InstructionComponent = () => {
     // Функція для скругленого нового кінця
     const addEndNode = () => {
       const newNode = {
-        id: `${nodeId}`,
+        id: `node-${new Date().getTime()}`,
         position: { x: 200, y: 0 },
         data: { label: `Кінець` },
         type: 'customOutput',
@@ -294,24 +390,29 @@ const InstructionComponent = () => {
 
     console.log("MAP " + JSON.stringify(flowData));
 
-    // axios.post(`/api/instructions/${instructionId}/save-flow`, flowData)
-    //   .then(response => {
-    //     console.log('Diagram saved successfully!');
-    //   })
-    //   .catch(error => {
-    //     console.error('Error saving diagram:', error);
-    //   });
+    // Оновлюємо поле mapProcess в інструкції
+    const updatedInstruction = {
+      ...instruction,  // Зберігаємо інші поля інструкції
+      mapProcess: JSON.stringify(flowData)  // Додаємо карту процесу у поле mapProcess
+    };
+
+    // Викликаємо метод для оновлення інструкції
+    updateInstruction(updatedInstruction, navigator);
   };
 
   const [selectedStatus, setSelectedStatus] = useState(instruction.status || 'CREATED');
 
   // Функція для зміни статусу
   const handleChangeStatus = async (event) => {
-    setSelectedStatus(event.target.value);
+    const newStatus = event.target.value;
+    setSelectedStatus(newStatus);
+
     try {
-      await updateInstructionStatus(instruction.title, event.target.value); // Виклик функції сервісу
+      // Оновлюємо статус в об'єкті instruction і відправляємо на сервер
+      const updatedInstruction = { ...instruction, status: newStatus };
+      await updateInstructionStatus(updatedInstruction); // Передаємо об'єкт інструкції
     } catch (error) {
-        console.error('Failed to update instruction status:', error);
+      console.error('Failed to update instruction status:', error);
     }
   };
 
@@ -346,8 +447,8 @@ const InstructionComponent = () => {
       <div className="main-content">
         <div className="instruction">
           <div className="instruction-control">
-            <a title="Редагувати" onClick={() => {editInstruction(instruction.title)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
-            <a title="Видалити" onClick={() => {deleteInstruction(instruction.title, navigator)}}><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
+            <a title="Редагувати" onClick={() => {editInstruction(instruction.code)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
+            <a title="Видалити" onClick={() => {deleteInstruction(instruction.code, navigator)}}><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
 
             <select class={`form-select status ${getStatusClass(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
             value={selectedStatus} onChange={handleChangeStatus}>
@@ -366,6 +467,7 @@ const InstructionComponent = () => {
 
           <br></br>
           <div className="block">
+            <p>Код доручення: {instruction.code}</p>
             <p>Протокол №{instruction.protocol} засідання кафедри від {new Date(instruction.makingTime).toLocaleDateString()}</p>
           </div>
 
@@ -390,7 +492,7 @@ const InstructionComponent = () => {
                     </span>
                 ))
             ) : (
-                <span>No users selected</span> // Можна показати повідомлення, якщо масив порожній
+                <span>Немає назначених користувачів<br /></span> // Можна показати повідомлення, якщо масив порожній
             )
           }
 
@@ -409,9 +511,13 @@ const InstructionComponent = () => {
                   <button className='button-start' onClick={addStartNode}>Початок</button> {/* Кнопка для додавання ноду */}
                   <button className='button-finish' onClick={addEndNode}>Кінець</button> {/* Кнопка для додавання ноду */}
 
-                  <button className='button-square' onClick={()=>addNode('custom')}><i class="bi bi-square"></i></button> {/* Кнопка для додавання ноду */}
-                  <button className='button-diamond' onClick={()=>addNode('diamond')}><i class="bi bi-diamond"></i></button> {/* Кнопка для додавання ромба */}
-                </div>
+                  <button className='button-square' onClick={()=>addNode('custom')}><i className="bi bi-square"></i></button> {/* Кнопка для додавання ноду */}
+                  <button className='button-diamond' onClick={()=>addNode('diamond')}><i className="bi bi-diamond"></i></button> {/* Кнопка для додавання ромба */}
+                  <button className='button-prepare' onClick={()=>addNode('prepare')}><i className="bi bi-hexagon" style={{transform: 'rotate(90deg)' }}></i></button> {/* Кнопка для додавання ромба */}
+                  <button className='button-parallel' onClick={()=>addNode('parallel')}><i class="bi bi-box-arrow-in-down-right"></i></button> {/* Кнопка для додавання ромба */}
+                  <button className='button-document' onClick={()=>addNode('document')}><i className="bi bi-file-earmark"></i></button> {/* Кнопка для додавання */}
+                  <button className='button-sticky' onClick={()=>addNode('sticky')}><i class="bi bi-sticky"></i></button> {/* Кнопка для додавання */}
+                  </div>
 
                 <div>
                   {/* Інпут для вибору кольору */}
@@ -503,3 +609,24 @@ const InstructionComponent = () => {
 }
 
 export default InstructionComponent
+
+// {"nodes":
+//   [{"id":"3","position":{"x":-195,"y":-165},"data":{"label":"Початок"},"type":"customInput","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"4","position":{"x":-195,"y":-90},"data":{"label":"Новий вузол 4"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"5","position":{"x":-195,"y":-15},"data":{"label":"Новий вузол 5"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"6","position":{"x":-180,"y":60},"data":{"label":"Новий вузол 6"},"type":"diamond","measured":{"width":131,"height":70},"selected":false,"dragging":false},
+//     {"id":"7","position":{"x":-15,"y":120},"data":{"label":"Новий вузол 7"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"8","position":{"x":-360,"y":120},"data":{"label":"Новий вузол 8"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"9","position":{"x":-360,"y":195},"data":{"label":"Новий вузол 9"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"10","position":{"x":-15,"y":195},"data":{"label":"Новий вузол 10"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
+//     {"id":"11","position":{"x":-180,"y":330},"data":{"label":"Кінець"},"type":"customOutput","measured":{"width":150,"height":40},"selected":true,"dragging":false}],
+//  "edges":
+//   [{"source":"3","sourceHandle":"source-bottom","target":"4","targetHandle":"target-top","id":"edge-1728953158141","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"4","sourceHandle":"source-bottom","target":"5","targetHandle":"target-top","id":"edge-1728953164279","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"5","sourceHandle":"source-bottom","target":"6","id":"edge-1728953169931","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"6","sourceHandle":"source-left","target":"8","targetHandle":"target-top","id":"edge-1728953190997","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"6","sourceHandle":"source-right","target":"7","targetHandle":"target-top","id":"edge-1728953198856","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"8","sourceHandle":"source-bottom","target":"9","targetHandle":"target-top","id":"edge-1728953209424","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"7","sourceHandle":"source-bottom","target":"10","targetHandle":"target-top","id":"edge-1728953213182","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"9","sourceHandle":"source-bottom","target":"11","targetHandle":"target-top","id":"edge-1728953219392","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
+//     {"source":"10","sourceHandle":"source-bottom","target":"11","targetHandle":"target-top","id":"edge-1728953222442","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}}]}

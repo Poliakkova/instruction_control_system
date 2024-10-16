@@ -63,6 +63,7 @@
     flex: 1;
     padding: 20px;
     margin-right: 100px;
+    /* overflow-x: auto; */
 }
 
 .content {
@@ -70,11 +71,12 @@
     border-radius: 7px;
     background: white;
     box-shadow: 10px 5px 20px #e1eaf0;
-
+    /* overflow-x: auto; */
 }
 
 .filters {
     margin-bottom: 10px;
+    display: flex;
 }
 
 .filters-button {
@@ -87,11 +89,20 @@
     font-weight: 600;
     font-size: 14px;
     box-shadow: 10px 5px 20px #e1eaf0;
-
 }
 
 .filters-button:hover {
     background: #eef4ff;
+    color: #087dc1;
+    border: 1px solid #dbe5ea;
+}
+
+.filter-input{
+    width: 120px;
+    border: 1px solid #bcc3c6;
+    border-radius: 5px;
+    padding: 0 5px;
+    margin-right: 10px;
 }
 
 .input-search::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
@@ -117,9 +128,11 @@
 
 .table {
     width: 100%;
+    table-layout: auto; 
     border-collapse: collapse;
     font-size: 13px;
 }
+
 
 .table th {
     align-content: center;

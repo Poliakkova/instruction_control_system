@@ -18,7 +18,7 @@ export const listInstructions = async () => {
         const keyResponse = await getKey();
         const uuidKey = keyResponse.data;
 
-        console.log("uuidKey " + uuidKey);
+        console.log("listInstructions - uuidKey " + uuidKey);
 
         // Додавання ключа до HTTP-запиту
         const response = await axios.get(REST_API_GET_ALL_URL, {
@@ -27,6 +27,7 @@ export const listInstructions = async () => {
             }
         });
 
+        console.log("listInstructions - response " + response);
         return response;
 
     }catch (error) {
@@ -86,13 +87,14 @@ export const deleteInstruction = async (instructionTitle, navigate) => {
     }
 }
 
-export const updateInstructionStatus = async (title, status) => {
+export const updateInstructionStatus = async (instruction) => {
     try {
         // Отримання ключа
         const keyResponse = await getKey();
         const uuidKey = keyResponse.data;
 
         console.log("uuidKey " + uuidKey);
+        console.log("updateINSTR " + instruction);
 
         const response = await fetch('http://localhost:8090/instructions/status/update', {
             method: 'PUT',
@@ -100,20 +102,53 @@ export const updateInstructionStatus = async (title, status) => {
                 'Content-Type': 'application/json',
                 'key': uuidKey, // Передаємо ваш UUID ключ
             },
-            body: JSON.stringify({
-                title, // Наприклад, передаємо title інструкції
-                status, // Передаємо новий статус
-            }),
+            body: JSON.stringify(instruction),  
         });
 
-        if (!response.ok) {
-            throw new Error('Failed to update status');
+        if (response.status === 200) {
+            alert('Статус інструкції успішно оновлено');
+        }
+    } catch (error) {
+        console.error('Помилка при оновленні статусу інструкції:', error);
+        alert('Не вдалося оновити статус інструкції');
+    }
+};
+
+export const updateInstruction = async (instruction, navigator) => {
+    console.log(JSON.stringify(instruction));
+
+    // Перевірка наявності хоча б одного користувача
+    if (!instruction.users || instruction.users.length === 0) {
+        alert("Необхідно призначити принаймні одного відповідального");
+        return;
+    }
+    
+    try {
+        console.log(JSON.stringify(instruction));
+
+        // Отримання ключа
+        const keyResponse = await getKey();
+        const uuidKey = keyResponse.data;
+
+        console.log("uuidKey " + uuidKey);
+
+        // Додавання ключа до HTTP-запиту
+        const response = await fetch("http://localhost:8090/instructions/update", {
+            method: 'POST',
+            headers: {
+                'key': uuidKey,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(instruction)
+        });
+
+        if (response.ok) {
+            alert('Доручення успішно оновлено');
+            navigator(`/instructions/${encodeURIComponent(instruction.code)}`);
         }
 
-        console.log('Status updated successfully');
-        return response.json(); // Можливо, вам потрібна відповідь із сервера
-    } catch (error) {
-        console.error('Error updating status:', error);
-        throw error; // Передаємо помилку далі
+    }catch (error) {
+        console.error('Помилка при оновленні інструкції:', error);
+        alert('Помилка при оновленні доручення. Перевірте дані');
     }
 };

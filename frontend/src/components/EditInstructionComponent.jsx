@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {useNavigate, useParams } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import { listUsers } from '../sevices/UserService'
-import { getKey } from '../sevices/InstructionService'
+import { getKey, updateInstruction } from '../sevices/InstructionService'
 import axios from 'axios';
 
 const EditInstructionComponent = () => {
@@ -13,9 +13,10 @@ const EditInstructionComponent = () => {
         navigator('/instructions/new')
     }
 
-    const { title } = useParams(); // Отримуємо параметр title з URL
+    const { code } = useParams(); // Отримуємо параметр title з URL
 
     const [instruction, setInstruction] = useState({
+        code: code,
         makingTime: '',
         protocol: '',
         title: '',
@@ -29,6 +30,12 @@ const EditInstructionComponent = () => {
         users: []
     }); 
 
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        console.log("handleSubmit - instruction " + instruction);
+        updateInstruction(instruction, navigator);
+    };
+
     useEffect(() => {
         const fetchInstruction = async () => {
             try {
@@ -37,7 +44,7 @@ const EditInstructionComponent = () => {
                 const uuidKey = keyResponse.data;
                 console.log("uuidKey " + uuidKey);
 
-                const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(title)}`, {
+                const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(code)}`, {
                     headers: {
                         'key': uuidKey, // передайте ваш ключ у заголовку
                     },
@@ -48,7 +55,7 @@ const EditInstructionComponent = () => {
             }
         };
     fetchInstruction();
-    }, [title]);
+    }, [code]);
 
     // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
     useEffect(() => {
@@ -97,41 +104,7 @@ const EditInstructionComponent = () => {
             }));
     };
 
-    const addInstruction = async (e) => {
-        e.preventDefault();
-        console.log(JSON.stringify(instruction));
-        
-        try {
-            e.preventDefault();
-            console.log(JSON.stringify(instruction));
     
-            // Отримання ключа
-            const keyResponse = await getKey();
-            const uuidKey = keyResponse.data;
-    
-            console.log("uuidKey " + uuidKey);
-    
-            // Додавання ключа до HTTP-запиту
-            const response = await fetch("http://localhost:8090/instructions/new/processing", {
-                method: 'POST',
-                headers: {
-                    'key': uuidKey,
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(instruction)
-            });
-    
-            if (response.ok) {
-                alert('Доручення успішно створене');
-            } else {
-                alert('Помилка при створенні доручення. Перевірте дані');
-                }
-    
-        }catch (error) {
-            console.error(error);
-            throw error;
-        }
-    };
 
     // Створюємо стан для пошукового запиту
     const [searchTerm, setSearchTerm] = useState('');
@@ -175,29 +148,29 @@ const EditInstructionComponent = () => {
         <div className="main-content">
             <h2 className='text-center mb-3'>Виправте доручення</h2>
             <div className="content">
-            <form onSubmit={addInstruction}>
+            <form onSubmit={handleSubmit}>
+                <div style={{margin: 10, fontWeight: 600}}>Код доручення: {instruction.code}</div>
                 <div className="form-floating">
-                    <input type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
+                    <input required type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
                     onChange={handleChange}  max={255} value={instruction.protocol}/>
                     <label htmlFor="protocol">Протокол засідання кафедри №</label>
                 </div>
 
                 <div className="form-floating">
-                    <input type="date" className="form-control" id="makingTime" placeholder="Дата видачі доручення" 
+                    <input required type="date" className="form-control" id="makingTime" placeholder="Дата видачі доручення" 
                     onChange={handleChangeMakingDate} value={formatDate(instruction.makingTime)}/>
                     <label htmlFor="makingTime">Дата видачі доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <input type="text" className="form-control" id="title" placeholder="Назва доручення" 
+                    <input required type="text" className="form-control" id="title" placeholder="Назва доручення" 
                     onChange={handleChange} max={255} value={instruction.title}/>
                     <label htmlFor="title">Назва доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <select className="form-select" id="type" aria-label="Тип доручення" 
+                    <select required className="form-select" id="type" aria-label="Тип доручення" 
                     onChange={handleChange}  max={255} value={instruction.type}>
-                        <option disabled>Оберіть тип доручення</option>
                         <option value='Науково-методична робота'>Науково-методична робота</option>
                         <option value='Навчально-виховна робота'>Навчально-виховна робота</option>
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
@@ -207,19 +180,19 @@ const EditInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <input type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
+                    <input required type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
                     onChange={handleChange}  max={255} value={instruction.sourceOfInstruction}/>
                     <label htmlFor="sourceOfInstruction">Звідки отримали доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <textarea type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
+                    <textarea required type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
                     onChange={handleChange}  max={255} value={instruction.shortDescription}/>
                     <label htmlFor="shortDescription">Короткий опис доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <textarea type="text" className="form-control" id="text" placeholder="Текст доручення" 
+                    <textarea required type="text" className="form-control" id="text" placeholder="Текст доручення" 
                     onChange={handleChange}  max={255} value={instruction.text} style={{height: 'fit-content'}}/>
                     <label htmlFor="text">Текст доручення</label>
                 </div>
@@ -258,13 +231,13 @@ const EditInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <input type="date" className="form-control" id="startTime" placeholder="Дата початку виконання" 
+                    <input required type="date" className="form-control" id="startTime" placeholder="Дата початку виконання" 
                     onChange={handleChangeDate} value={instruction.startTime.split('T')[0]}/>
                     <label htmlFor="startTime">Дата початку виконання</label>
                 </div>
 
                 <div className="form-floating">
-                    <input type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
+                    <input required type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
                     onChange={handleChangeDate} value={instruction.expTime.split('T')[0]}/>
                     <label htmlFor="expTime">Дата дедлайну</label>
                 </div>

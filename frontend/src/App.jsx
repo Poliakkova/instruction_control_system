@@ -27,9 +27,9 @@ function App() {
             <Route path='/instructions' element={<ListInstructionsComponent />}></Route>
             <Route path='/instructions/archived' element={<ListArchivedComponent />}></Route>
             <Route path='/instructions/instruction' element={<InstructionComponent />}></Route>
-            <Route path="/instructions/:title" element={<InstructionComponent />} />
+            <Route path="/instructions/:code" element={<InstructionComponent />} />
             <Route path='/instructions/new' element={<CreateInstructionComponent />}></Route>
-            <Route path='/instructions/edit/:title' element={<EditInstructionComponent />}></Route>
+            <Route path='/instructions/edit/:code' element={<EditInstructionComponent />}></Route>
             <Route path='/login' element={<LoginComponent />}></Route>
             <Route path='/users' element={<UsersComponent />}></Route>
             <Route path='/users/new' element={<AddUserComponent />}></Route>

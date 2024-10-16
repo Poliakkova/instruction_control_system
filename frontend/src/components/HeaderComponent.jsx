@@ -4,8 +4,6 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 
 const HeaderComponent = () => {
   return (
@@ -22,6 +20,7 @@ const HeaderComponent = () => {
                   
                 </Nav>
                 <Nav>
+                  <Nav.Link title="Cповіщення увімкнено"><i className="bi bi-bell-fill" style={{ fontSize: '18px'}}></i></Nav.Link>
                   <NavDropdown
                     id="nav-dropdown-dark-example"
                     title="email@gmail.com"

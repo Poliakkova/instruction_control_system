@@ -1,7 +1,10 @@
 import React, {useEffect, useState} from 'react'
 import {useNavigate} from 'react-router-dom'
+import Dropdown from 'react-bootstrap/Dropdown';
+
+import { listUsers, deleteUser } from '../sevices/UserService'
+
 import '../css/Users.css'
-import { listUsers } from '../sevices/UserService'
 
 const UsersComponent = () => {
 
@@ -22,6 +25,62 @@ const UsersComponent = () => {
         navigator('/users/new')
     }
 
+    const [filteredUsers, setFilteredUsers] = useState([]);
+    const availableRoles = ["Адмін", "Викладач", "Студ.представник"];
+    const [filters, setFilters] = useState({
+        role: []
+    });
+
+    // Створюємо стан для пошукового запиту
+    const [searchTerm, setSearchTerm] = useState('');
+
+    const applyFiltersAndSearch  = () => {
+        let filtered = users;
+
+        // Filter by selected types
+        if (filters.role.length > 0) {
+            filtered = filtered.filter(user => filters.role.includes(user.userJobTitle));
+        }
+
+        // Apply the search term
+        const searchWords = searchTerm.toLowerCase().trim();
+        if (searchWords) {
+            filtered = filtered.filter((item) => {
+                return (
+                    item.userSurname.toLowerCase().includes(searchWords) ||
+                    item.userName.toLowerCase().includes(searchWords) ||
+                    item.userPatronymic.toLowerCase().includes(searchWords) ||
+                    item.userLogin.toLowerCase().includes(searchWords) ||
+                    item.userJobTitle.toLowerCase().includes(searchWords) ||
+                    item.userEmail.toLowerCase().includes(searchWords)
+                );
+            });
+        }
+
+        setFilteredUsers(filtered);
+    };
+
+    // Automatically apply filters and search when filters or search term changes
+    useEffect(() => {
+        applyFiltersAndSearch();
+    }, [filters, searchTerm, users]);
+
+    // Handle changes in search term
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleCheckboxChange = (event, role) => {
+        const { name, checked } = event.target;
+        setFilters((prevFilters) => {
+            const updatedArray = checked
+                ? [...prevFilters[name], role]  // Add type/status if checked
+                : prevFilters[name].filter((item) => item !== role); // Remove if unchecked
+
+            return { ...prevFilters, [name]: updatedArray };
+        });
+    };
+
     return (
     <div className='wrapper'>
         <div className="sidebar">
@@ -30,7 +89,39 @@ const UsersComponent = () => {
 
         <div className="main-content">
             <div className="filters">
-                <button className='filters-button'>Фільтри</button>
+            <Dropdown>
+                        <Dropdown.Toggle className='filters-button' id="dropdown-basic">
+                            Фільтри
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{width: 340, boxShadow: '10px 5px 20px #e1eaf0'}}>
+                            <div className="px-3">
+                                <div className='mt-2'>
+                                    <label style={{color: '#3782e2'}}>Роль:</label>
+                                    {availableRoles.map((role) => (
+                                        <div key={role}>
+                                            <input
+                                                type="checkbox"
+                                                name="role"
+                                                id={role}
+                                                value={role}
+                                                onChange={(e) => handleCheckboxChange(e, role)}
+                                            />
+                                            <label htmlFor={role}>{role}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </Dropdown.Menu>
+                    </Dropdown>
+
+                    <input
+                    type="text"
+                    placeholder="Пошук за полем..."
+                    className="me-2 input-search"
+                    aria-label="Search"
+                    value={searchTerm}
+                    onChange={handleSearchChange} // Оновлюємо стан при введенні
+                    />
             </div>
 
             <div className="content">
@@ -50,8 +141,8 @@ const UsersComponent = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {
-                            users.map((user, index) => 
+                        { filteredUsers.length > 0 ? (
+                            filteredUsers.map((user, index) => 
                                 <tr key={user.id} style={{ cursor: 'pointer' }}>
                                     <td>{index + 1}</td>
                                     <td>{user.userJobTitle}</td>
@@ -66,50 +157,14 @@ const UsersComponent = () => {
                                         <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
                                     )}</td>
                                     <td><a href='/users/edit'><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
-                                    <td><i className="bi bi-trash3" title="Видалити" style={{ fontSize: '18px'}}></i></td>
+                                    <td><i onClick={() => deleteUser(user.userLogin, navigator)} className="bi bi-trash3" title="Видалити" style={{ fontSize: '18px'}}></i></td>
                                 </tr>
-                            )
+                            )) : (
+                            <tr>
+                              <td colSpan="12" style={{ textAlign: 'center' }}>Немає доступних користувачів</td>
+                            </tr>
+                          )
                         }
-                        {/* <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
-                            <td>1</td>
-                            <td>Адмін</td>
-                            <td>Іванов</td>
-                            <td>Іван</td>
-                            <td>Іванович</td>
-                            <td>email1@gmail.com</td>
-                            <td><a href='/users/edit'><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
-                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Студ.представник</td>
-                            <td>Петренко</td>
-                            <td>Петро</td>
-                            <td>Петрович</td>
-                            <td>email1@gmail.com</td>
-                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>Викладач</td>
-                            <td>Семенков</td>
-                            <td>Семен</td>
-                            <td>Семенович</td>
-                            <td>email1@gmail.com</td>
-                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Викладач</td>
-                            <td>Тарасенко</td>
-                            <td>Тарас</td>
-                            <td>Тарасович</td>
-                            <td>email1@gmail.com</td>
-                            <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                            <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                        </tr> */}
                     </tbody>
                 </table>
             </div>

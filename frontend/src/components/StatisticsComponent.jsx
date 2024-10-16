@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import {useNavigate} from 'react-router-dom';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
-import '@xyflow/react/dist/style.css';
-import '../css/Statistics.css';
-import { listInstructions } from '../sevices/InstructionService';
-
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
+
+import '@xyflow/react/dist/style.css';
+import '../css/Statistics.css';
+import { listInstructions } from '../sevices/InstructionService';
+import { listUsers } from '../sevices/UserService';
 
 // Реєструємо елементи для chart.js
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
@@ -21,6 +22,8 @@ const InstructionComponent = () => {
   }
 
   const [instructions, setInstructions] = useState([])
+  const [users, setUsers] = useState([])
+
   const [instructionTypeData, setInstructionTypeData] = useState({
     labels: [],
     datasets: []
@@ -29,67 +32,50 @@ const InstructionComponent = () => {
     labels: [],
     datasets: []
   });
+  const [userRoleData, setUserRoleData] = useState({
+    labels: [],
+    datasets: []
+  });
 
+
+  // useEffect(() => {
+  //   listInstructions().then((response) => {
+  //       console.log('Дані з API:', response.data); // Перевірте, що ви отримуєте дані
+  //       if (response.data && response.data.length > 0) {
+  //       setInstructions(response.data);
+  //       updateChartData(response.data); // Оновлюємо дані для діаграм
+  //   }}).catch(error => {
+  //       console.error(error);
+  //   })
+  // }, [])
 
   useEffect(() => {
-    listInstructions().then((response) => {
-        console.log('Дані з API:', response.data); // Перевірте, що ви отримуєте дані
-        if (response.data && response.data.length > 0) {
-        setInstructions(response.data);
-        updateChartData(response.data); // Оновлюємо дані для діаграм
-    }}).catch(error => {
-        console.error(error);
-    })
-  }, [])
+    // Використовуємо Promise.all для виконання обох запитів одночасно
+    Promise.all([listInstructions(), listUsers()])
+      .then(([instructionsResponse, usersResponse]) => {
+        console.log('Дані з API (інструкції):', instructionsResponse.data);
+        console.log('Дані з API (користувачі):', usersResponse.data);
+        
+        if (instructionsResponse.data && instructionsResponse.data.length > 0) {
+          setInstructions(instructionsResponse.data); // Оновлюємо стан для інструкцій
+        }
 
-  // const typeData = {
-  //   labels: ['Науково-методична робота', 'Навчально-виховна робота', 'Профорієнтаційна робота', 'Навчально-організаційна робота'],
-  //   datasets: [
-  //     {
-  //       label: '# зразків',
-  //       data: [12, 19, 3, 5],
-  //       backgroundColor: [
-  //         'rgba(255, 99, 132, 0.2)',
-  //         'rgba(245, 39, 183, 0.2)',
-  //         'rgba(152, 39, 245, 0.2)',
-  //         'rgba(54, 162, 235, 0.2)',
-  //       ],
-  //       borderColor: [
-  //         'rgba(255, 99, 132, 1)',
-  //         'rgba(245, 39, 183, 1)',
-  //         'rgba(152, 39, 245, 1)',
-  //         'rgba(54, 162, 235, 1)',
-  //       ],
-  //       borderWidth: 1,
-  //     },
-  //   ]
-  // }
+        if (usersResponse.data && usersResponse.data.length > 0) {
+          setUsers(usersResponse.data); // Оновлюємо стан для користувачів
+        }
 
-  // const statusData = {
-  //   labels: ['Назначено', 'В роботі', 'Очікує затвердження', 'Затверджено'],
-  //   datasets: [
-  //     {
-  //       label: '# зразків',
-  //       data: [12, 19, 3, 6],
-  //       backgroundColor: [
-  //         'rgba(255, 131, 74, 0.2)',
-  //         'rgba(255, 219, 74, 0.2)',
-  //         'rgba(76, 175, 80, 0.2)',
-  //         'rgba(173, 181, 189, 0.2)',
-  //       ],
-  //       borderColor: [
-  //         'rgba(255, 131, 74, 1)',
-  //         'rgba(255, 219, 74, 1)',
-  //         'rgba(76, 175, 80, 1)',
-  //         'rgba(173, 181, 189, 1)',
-  //       ],
-  //       borderWidth: 1,
-  //     },
-  //   ]
-  // }
+        // Оновлюємо дані для діаграми, передаючи інструкції та користувачів
+        updateChartData(instructionsResponse.data, usersResponse.data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+  }, []);
 
-  const updateChartData = (instructions) => {
+  const updateChartData = (instructions, users) => {
     console.log("updateChartData - instructions: " + instructions);
+    console.log("updateChartData - users: " + users);
+
     // Підрахунок для типів
     const typeCounts = {
       'Науково-методична робота': 0,
@@ -106,6 +92,13 @@ const InstructionComponent = () => {
       'FINISHED': 0,
     };
 
+    // Підрахунок для статусів
+    const roleCounts = {
+      'Адмін': 0,
+      'Викладач': 0,
+      'Студ.представник': 0,
+    };
+
     instructions.forEach((instruction) => {
       console.log('Instruction: ', instruction); // Перевіряємо кожну інструкцію
 
@@ -120,11 +113,14 @@ const InstructionComponent = () => {
       }
     });
 
-    console.log(Object.keys(typeCounts));
-    console.log(Object.values(typeCounts));
-    console.log(Object.keys(statusCounts));
-    console.log(Object.values(statusCounts));
-    console.log(statusCounts['CREATED']);
+    users.forEach((user) => {
+      console.log('user: ', user); // Перевіряємо кожну інструкцію
+
+      // Підрахунок типів
+      if (roleCounts[user.userJobTitle] !== undefined) {
+        roleCounts[user.userJobTitle]++;
+      }
+    });
 
     // Оновлюємо дані для діаграми по типах
     setInstructionTypeData({
@@ -178,33 +174,40 @@ const InstructionComponent = () => {
         },
       ],
     });
+
+    console.log("setUserRoleData "+ roleCounts['Адмін'] + " " + roleCounts['Викладач'] + " " + roleCounts['Студ.представник']);
+
+    // Оновлюємо дані для діаграми по статусах
+    setUserRoleData({
+      labels: ['Адмін', 'Викладач', 'Студ.представник'],
+      datasets: [
+        {
+          label: '# зразків',
+          data: [
+            roleCounts['Адмін'],
+            roleCounts['Викладач'],
+            roleCounts['Студ.представник'],
+          ],
+          backgroundColor: [
+            'rgba(255, 0, 0, 0.2)',
+            'rgba(0, 255, 0, 0.2)',
+            'rgba(0, 0, 255, 0.2)',
+          ],
+          borderColor: [
+            'rgba(255, 0, 0, 1)',
+            'rgba(0, 255, 0, 1)',
+            'rgba(0, 0, 255, 1)',
+          ],
+          borderWidth: 1,
+        },
+      ],
+    });
   };
 
-      // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
-      useEffect(() => {
-        console.log("typeData UPDATED: ", instructionTypeData);
-      }, [instructionTypeData]);
-
-  const userRolesData = {
-    labels: ['Викладач', 'Студ.представник', 'Адмін'],
-    datasets: [
-      {
-        label: '# зразків',
-        data: [30, 3, 2],
-        backgroundColor: [
-          'rgba(255, 0, 0, 0.2)',
-          'rgba(0, 255, 0, 0.2)',
-          'rgba(0, 0, 255, 0.2)',
-        ],
-        borderColor: [
-          'rgba(255, 0, 0, 1)',
-          'rgba(0, 255, 0, 1)',
-          'rgba(0, 0, 255, 1)',
-        ],
-        borderWidth: 1,
-      },
-    ]
-  }
+  // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
+  useEffect(() => {
+    console.log("typeData UPDATED: ", instructionTypeData);
+  }, [instructionTypeData]);
 
     // Функція для генерації випадкового кольору
   function getRandomColor() {
@@ -307,23 +310,23 @@ const InstructionComponent = () => {
             <Pie className='pie' data={instructionStatusData} options={options} />
           </Col>
         </Row>
-{/* 
+
         <h3 className='title' style={{marginTop: "30px"}}>Статистика користувачів</h3>
         <hr></hr>
         <Row style={{marginLeft: 'auto'}}>
           <Col className='diagram mr-3' style={{marginRight: '20px'}}>
             <div className="diagram-title ">Розподіл ролей користувачів</div>
-            <Pie className='pie' data={userRolesData} options={options} />
+            <Pie className='pie' data={userRoleData} options={options} />
           </Col>
-          <Col className='diagram' style={{marginRight: '20px'}}>
+          {/* <Col className='diagram' style={{marginRight: '20px'}}>
             <div className="diagram-title">Є відповідальними</div>
             <Pie className='pie' data={headData} options={options} />
           </Col>
           <Col className='diagram'>
             <div className="diagram-title">Є виконавцями</div>
             <Pie className='pie' data={performerData} options={options} />
-          </Col>
-        </Row> */}
+          </Col> */}
+        </Row>
       </div>
     </div>
   )

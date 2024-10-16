@@ -1,11 +1,12 @@
 import React, {useEffect, useState} from 'react'
-import { archivedInstructions } from '../sevices/InstructionService'
 import {useNavigate} from 'react-router-dom'
 import Table from 'react-bootstrap/Table';
+import Dropdown from 'react-bootstrap/Dropdown';
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/ListInstructions.css'
-import { deleteInstruction } from '../sevices/InstructionService';
 
+import { archivedInstructions, deleteInstruction } from '../sevices/InstructionService';
 
 const ListArchivedComponent = () => {
 
@@ -26,12 +27,12 @@ const ListArchivedComponent = () => {
         navigator('/instructions/new');
     };
 
-    const editInstruction = (title) => {
-        navigator(`/instructions/edit/${encodeURIComponent(title)}`);
+    const editInstruction = (code) => {
+        navigator(`/instructions/edit/${encodeURIComponent(code)}`);
     };
 
-    const handleRowClick = (title) => {
-        navigator(`/instructions/${encodeURIComponent(title)}`);
+    const handleRowClick = (code) => {
+        navigator(`/instructions/${encodeURIComponent(code)}`);
     };
 
     const statusMapping = {
@@ -58,26 +59,113 @@ const ListArchivedComponent = () => {
         }
     };
 
+    const [filteredInstructions, setFilteredInstructions] = useState([]);
+    const availableTypes = ["Науково-методична робота", "Навчально-виховна робота", "Профорієнтаційна робота", "Навчально-організаційна робота"];
+    const [filters, setFilters] = useState({
+        makingTimeFrom: '',
+        makingTimeTo: '',
+        startTimeFrom: '',
+        startTimeTo: '',
+        expTimeFrom: '',
+        expTimeTo: '',
+        type: [],
+        status: [],
+    });
     // Створюємо стан для пошукового запиту
     const [searchTerm, setSearchTerm] = useState('');
 
-    // Фільтрація даних на основі пошукового запиту
-    const filteredData = instructions.filter((item) => {
-        const searchWords = searchTerm.toLowerCase().trim();
-        console.log("SEARCH " + searchTerm);
-        console.log("DATE " + new Date(item.startTime).toLocaleDateString())
-        console.log("DATE2 " + new Date(item.expTime).toLocaleDateString())
+    const applyFiltersAndSearch  = () => {
+        let filtered = instructions;
 
-        return new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
-        item.sourceOfInstruction.toLowerCase().includes(searchWords) ||
-        item.protocol.toLowerCase().includes(searchWords) ||
-        item.type.toLowerCase().includes(searchWords) ||
-        item.title.toLowerCase().includes(searchWords) ||
-        item.shortDescription.toLowerCase().includes(searchWords) ||
-        new Date(item.startTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
-        new Date(item.expTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
-        statusMapping[item.status].toLowerCase().includes(searchWords)
-    });
+        // Filter by date range
+        if (filters.makingTimeFrom) {
+            filtered = filtered.filter(instruction => {
+                console.log("1 instr.data: " + new Date(instruction.makingTime) + " filter.data: " + new Date(filters.makingTimeFrom));
+                console.log(new Date(instruction.makingTime) >= new Date(filters.makingTimeFrom));
+                return new Date(instruction.makingTime) >= new Date(filters.makingTimeFrom)});
+        }
+        if (filters.makingTimeTo) {
+            filtered = filtered.filter(instruction => {
+                console.log("2 instr.data: " + new Date(instruction.makingTime) + " filter.data: " + new Date(filters.makingTimeTo));
+                return new Date(instruction.makingTime) <= new Date(filters.makingTimeTo)});
+        }
+        if (filters.startTimeFrom) {
+            filtered = filtered.filter(instruction => {
+                console.log("3 instr.data: " + new Date(instruction.startTime) + " filter.data: " + new Date(filters.startTimeFrom));
+                return new Date(instruction.startTime) >= new Date(filters.startTimeFrom)});
+        }
+        if (filters.startTimeTo) {
+            filtered = filtered.filter(instruction => {
+                console.log("4 instr.data: " + new Date(instruction.startTime) + " filter.data: " + new Date(filters.startTimeTo));
+                console.log(new Date(instruction.startTime) <= new Date(filters.startTimeTo));
+                return new Date(instruction.startTime) <= new Date(filters.startTimeTo)});
+        }
+        if (filters.expTimeFrom) {
+            filtered = filtered.filter(instruction => {
+                console.log("5 instr.data: " + new Date(instruction.expTime) + " filter.data: " + new Date(filters.expTimeFrom));
+                return new Date(instruction.expTime) >= new Date(filters.expTimeFrom)});
+        }
+        if (filters.expTimeTo) {
+            filtered = filtered.filter(instruction => {
+                console.log("6 instr.data: " + new Date(instruction.expTime) + " filter.data: " + new Date(filters.expTimeTo));
+                return new Date(instruction.expTime) <= new Date(filters.expTimeTo)});
+        }
+
+        // Filter by selected types
+        if (filters.type.length > 0) {
+            filtered = filtered.filter(instruction => filters.type.includes(instruction.type));
+        }
+
+        // Apply the search term
+        const searchWords = searchTerm.toLowerCase().trim();
+        if (searchWords) {
+            filtered = filtered.filter((item) => {
+                return (
+                    new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
+                    item.sourceOfInstruction.toLowerCase().includes(searchWords) ||
+                    item.protocol.toLowerCase().includes(searchWords) ||
+                    item.type.toLowerCase().includes(searchWords) ||
+                    item.title.toLowerCase().includes(searchWords) ||
+                    item.shortDescription.toLowerCase().includes(searchWords) ||
+                    item.code.toLowerCase().includes(searchWords) ||
+                    new Date(item.startTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
+                    new Date(item.expTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
+                    statusMapping[item.status].toLowerCase().includes(searchWords)
+                );
+            });
+        }
+
+        setFilteredInstructions(filtered);
+    };
+
+    // Automatically apply filters and search when filters or search term changes
+    useEffect(() => {
+        applyFiltersAndSearch();
+    }, [filters, searchTerm, instructions]);
+
+    // Handle changes in search term
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
+    const handleFilterChange = (event) => {
+        const { name, value } = event.target;
+        setFilters({
+            ...filters,
+            [name]: value,
+        });
+    };
+
+    const handleCheckboxChange = (event, type) => {
+        const { name, checked } = event.target;
+        setFilters((prevFilters) => {
+            const updatedArray = checked
+                ? [...prevFilters[name], type]  // Add type/status if checked
+                : prevFilters[name].filter((item) => item !== type); // Remove if unchecked
+
+            return { ...prevFilters, [name]: updatedArray };
+        });
+    };
 
     return (
     <body>
@@ -88,16 +176,52 @@ const ListArchivedComponent = () => {
                 <a className="menu-item" href='/instructions/archived'><i className="bi bi-archive"></i>Архів</a>
             </div>
 
-            <div className="main-content">
+            <div className="main-content" style={{width: '100%', overflowX: 'auto'}}>
                 <div className="filters">
-                    <button className='filters-button'>Фільтри</button>
+                <Dropdown>
+                        <Dropdown.Toggle className='filters-button' id="dropdown-basic">
+                            Фільтри
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu style={{width: 340, boxShadow: '10px 5px 20px #e1eaf0'}}>
+                            <div className="px-3">
+                                <span className='d-block' style={{color: '#3782e2'}}>Дата створення</span>
+                                <label>з: <input className='filter-input' type="date" name="makingTimeFrom" onChange={handleFilterChange} /></label>
+                                <label>до: <input className='filter-input' type="date" name="makingTimeTo" onChange={handleFilterChange} /></label>
+                                <br></br>
+                                <span className='d-block mt-2' style={{color: '#3782e2'}}>Дата початку</span>
+                                <label>з: <input className='filter-input' type="date" name="startTimeFrom" onChange={handleFilterChange} /></label>
+                                <label>до: <input className='filter-input' type="date" name="startTimeTo" onChange={handleFilterChange} /></label>
+                                <br></br>
+                                <span className='d-block mt-2' style={{color: '#3782e2'}}>Дедлайн</span>
+                                <label>з: <input className='filter-input' type="date" name="expTimeFrom" onChange={handleFilterChange} /></label>
+                                <label>до: <input className='filter-input' type="date" name="expTimeTo" onChange={handleFilterChange} /></label>
+                                <br></br>
+                                {/* Checkbox filters for Types */}
+                                <div className='mt-2'>
+                                    <label style={{color: '#3782e2'}}>Тип:</label>
+                                    {availableTypes.map((type) => (
+                                        <div key={type}>
+                                            <input
+                                                type="checkbox"
+                                                name="type"
+                                                value={type}
+                                                onChange={(e) => handleCheckboxChange(e, type)}
+                                            />
+                                            <label htmlFor='type'>{type}</label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </Dropdown.Menu>
+                    </Dropdown>
+
                     <input
                     type="text"
                     placeholder="Пошук за ключовими словами..."
                     className="me-2 input-search"
                     aria-label="Search"
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)} // Оновлюємо стан при введенні
+                    onChange={handleSearchChange} // Оновлюємо стан при введенні
                     />
                 </div>
 
@@ -107,12 +231,12 @@ const ListArchivedComponent = () => {
                             <tr>
                                 <th>№</th>
                                 <th>Дата створення</th>
-                                <th>Відповідальні</th>
-                                <th>Джерело</th>
                                 <th>Протокол засідання</th>
+                                <th>Джерело</th>
                                 <th>Тип</th>
-                                <th>Назва</th>
-                                <th>Опис</th>
+                                <th>Відповідальні</th>
+                                <th style={{minWidth: 200}}>Назва</th>
+                                <th style={{minWidth: 200}}>Опис</th>
                                 <th>Початок</th>
                                 <th>Дедлайн</th>
                                 <th>Статус</th>
@@ -121,94 +245,39 @@ const ListArchivedComponent = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {
-                            filteredData.map((instruction, index) => 
-                                <tr key={instruction.id} onClick={() => handleRowClick(instruction.title)} style={{ cursor: 'pointer' }}>
-                                <td>{index + 1}</td>
+                        { filteredInstructions.length > 0 ? (
+                            filteredInstructions.map((instruction, index) => 
+                                <tr key={instruction.id} onClick={() => handleRowClick(instruction.code)} style={{ cursor: 'pointer' }}>
+                                <td>{instruction.code}</td>
                                 <td>{new Date(instruction.makingTime).toLocaleDateString()}</td>
-                                <td>{instruction.users.map(user =>
-                                    <span>{user.userSurname} {user.userName} {user.userPatronymic}<br></br></span>
-                                )}</td>
-                                <td>{instruction.sourceOfInstruction}</td>
                                 <td>{instruction.protocol}</td>
+                                <td>{instruction.sourceOfInstruction}</td>
                                 <td>{instruction.type}</td>
+                                <td>{instruction.users.map(user =>
+                                    <p style={{margin: 5}}>{user.userSurname} {user.userName} {user.userPatronymic},<br></br></p>
+                                )}</td>
                                 <td>{instruction.title}</td>
                                 <td>{instruction.shortDescription}</td>
                                 <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                                 <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
                                 <td><span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>{statusMapping[instruction.status] || 'Невідомий статус'}</span></td>
-                                <td><i title="Сповіщення увімкнено" className="bi bi-pencil-square" style={{ fontSize: '18px'}}
+                                <td style={{padding: '10px 0'}}><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px', margin:0}}
                                     onClick={(event) => {
                                         event.stopPropagation(); // Зупиняємо спливання події
-                                        editInstruction(instruction.title); // Викликаємо функцію редагування
+                                        editInstruction(instruction.code); // Викликаємо функцію редагування
                                       }}></i></td>
-                                <td><i title="Видалити" className="bi bi-trash3" style={{ fontSize: '18px'}}
+                                <td style={{padding: '10px 0'}}><i title="Видалити" className="bi bi-trash3" style={{ fontSize: '18px', margin:0}}
                                     onClick={(event) => {
                                         event.stopPropagation();
-                                        deleteInstruction(instruction.title, navigator);
+                                        deleteInstruction(instruction.code, navigator);
                                       }}></i></td>
                             </tr>)
+                            ) : (
+                                <tr>
+                                  <td colSpan="12" style={{ textAlign: 'center' }}>Немає доступних доручень</td>
+                                </tr>
+                              )
                             }
-                            {/* <tr onClick={() => handleRowClick(1)} style={{ cursor: 'pointer' }}>
-                                <td><input type='checkbox'/></td>
-                                <td>11.09.24</td>
-                                <td>Адмін</td>
-                                <td>Викладач</td>
-                                <td>МОН</td>
-                                <td>Науково-методична робота</td>
-                                <td>Доручення 1</td>
-                                <td>Зробити це</td>
-                                <td>12.09.24</td>
-                                <td>12.10.24</td>
-                                <td><span className="status orange">Назначено</span></td>
-                                <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                                <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                            </tr>
-                            <tr>
-                                <td><input type='checkbox'/></td>
-                                <td>15.09.24</td>
-                                <td>Адмін</td>
-                                <td>Викладач2</td>
-                                <td>AAA</td>
-                                <td>Навчально-виховна робота</td>
-                                <td>Доручення 2</td>
-                                <td>Зробити те</td>
-                                <td>16.09.24</td>
-                                <td>10.10.24</td>
-                                <td><span className="status yellow">В роботі</span></td>
-                                <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                                <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                            </tr>
-                            <tr>
-                                <td><input type='checkbox'/></td>
-                                <td>15.09.24</td>
-                                <td>Адмін</td>
-                                <td>Викладач3</td>
-                                <td>ФБР</td>
-                                <td>Профорієнтаційна робота</td>
-                                <td>Доручення 3</td>
-                                <td>Зробити пяте</td>
-                                <td>16.11.24</td>
-                                <td>10.12.24</td>
-                                <td><span className="status green">Очікує затвердження</span></td>
-                                <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                                <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                            </tr>
-                            <tr>
-                                <td><input type='checkbox'/></td>
-                                <td>15.09.24</td>
-                                <td>Адмін</td>
-                                <td>Викладач4</td>
-                                <td>ЦРУ</td>
-                                <td>Навчально-організаційна робота</td>
-                                <td>Доручення 4</td>
-                                <td>Зробити десяте</td>
-                                <td>16.10.24</td>
-                                <td>10.11.24</td>
-                                <td><span className="status grey">Затверджено</span></td>
-                                <td><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></td>
-                                <td><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></td>
-                            </tr> */}
                         </tbody>
                     </Table>
                 </div>

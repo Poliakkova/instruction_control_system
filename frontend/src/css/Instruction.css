@@ -140,6 +140,54 @@
     background: #fffb8e;
 }
 
+.button-document {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #e4c2ff;
+    border: 2px solid #6500b8;
+    color: #6500b8;
+}
+
+.button-document:hover{
+    background: #d4a0ff;
+}
+
+.button-prepare {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffe3c2;
+    border: 2px solid #7c4200;
+    color: #7c4200;
+}
+
+.button-prepare:hover{
+    background: #ffd7a9;
+}
+
+.button-parallel {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #c2c2ff;
+    border: 2px solid #000099;
+    color: #000099;
+}
+
+.button-parallel:hover{
+    background: #9c9cff;
+}
+
+.button-sticky {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffeb3b;
+    border: 2px solid #cf7500;
+    color: #cf7500;
+}
+
+.button-sticky:hover{
+    background: #f4db00;
+}
+
 .button-update {
     border-radius: 5px;
     padding: 0 15px;

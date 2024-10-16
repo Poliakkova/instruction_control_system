@@ -1,11 +1,17 @@
 import React, {useState} from 'react'
+import {useNavigate} from 'react-router-dom'
+
+import { addUser } from '../sevices/UserService'
+
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/AddUser.css'
 
 const AddUserComponent = () => {
 
+  const navigator = useNavigate();
+
   function navigateCreateUser(){
-    navigator('/users/new')
+    navigator('/users/new');
   }
 
   const [user, setUser] = useState({
@@ -27,22 +33,13 @@ const AddUserComponent = () => {
     }));
   };
 
-  const addUser = async (e) => {
-    e.preventDefault();
-    console.log(JSON.stringify(user));
-    
-    const response = await fetch('http://localhost:8090/users/new', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(user)
-    });
-    
-    if (response.ok) {
-      alert('Користувач успішно створений');
-    } else {
-      alert('Помилка при створенні користувача. Перевірте дані');
+  const handleSubmit = async (e) => {
+    e.preventDefault(); // Запобігає перезавантаженню сторінки
+
+    try {
+      await addUser(user, navigator); // Викликаємо функцію додавання користувача
+    } catch (error) {
+      console.error('Error adding user:', error);
     }
   };
 
@@ -56,10 +53,10 @@ const AddUserComponent = () => {
       <h2 className='text-center mb-3 text-bold'>Додайте користувача</h2>
 
       <div className="content">
-      <form  onSubmit={addUser}>
+      <form  onSubmit={handleSubmit}>
         <div className="form-floating mb-3 mt-3">
           <select required className="form-select" id="userJobTitle" aria-label="Choose role"  onChange={handleChange}>
-            {/* <option selected>Оберіть роль користувача</option> */}
+            <option selected>Оберіть роль користувача</option>
             <option value="Студ.представник">Студ.представник</option>
             <option value="Викладач">Викладач</option>
             <option value="Адмін">Адмін</option>
