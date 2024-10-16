@@ -1,5 +1,6 @@
 package kpi.iate.instructions_control_system.dto;
 
+import kpi.iate.instructions_control_system.enums.UserRole;
 import lombok.*;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class UserEntityDto {
 
     private String userPatronymic;
 
-    private String userJobTitle;
+    private UserRole userJobTitle;
 
     private String userEmail;
 

@@ -4,6 +4,7 @@ import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.entity.Instructions;
 import kpi.iate.instructions_control_system.entity.UserEntity;
+import kpi.iate.instructions_control_system.enums.UserRole;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -11,7 +12,7 @@ import org.mapstruct.Named;
 import java.util.Date;
 
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = UserMapper.class)
 public interface InstructionMapper {
 
     @Mapping(target = "startTime", source = "startTime", qualifiedByName = "mapDate")
@@ -39,7 +40,7 @@ public interface InstructionMapper {
         userEntityDto.setUserName(userEntity.getUserName());
         userEntityDto.setUserPatronymic(userEntity.getUserPatronymic());
         userEntityDto.setUserSurname(userEntity.getUserSurname());
-        userEntityDto.setUserJobTitle(userEntity.getUserJobTitle());
+        userEntityDto.setUserJobTitle(UserRole.valueOf(userEntity.getUserJobTitle()));
         userEntityDto.setUserEmail(userEntity.getUserEmail());
         userEntityDto.setUserLogin(userEntity.getUserLogin());
         return userEntityDto;

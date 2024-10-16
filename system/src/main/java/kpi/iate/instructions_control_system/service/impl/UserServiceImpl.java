@@ -2,6 +2,7 @@ package kpi.iate.instructions_control_system.service.impl;
 
 import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.entity.UserEntity;
+import kpi.iate.instructions_control_system.enums.UserRole;
 import kpi.iate.instructions_control_system.exception.UserNotFoundException;
 import kpi.iate.instructions_control_system.mapper.UserMapper;
 import kpi.iate.instructions_control_system.repository.InstructionsRepository;
@@ -48,7 +49,7 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public void createUser(UserEntityDto userEntityDto) {
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserJobTitle(userEntityDto.getUserJobTitle());
+        userEntity.setUserJobTitle(userEntityDto.getUserJobTitle().name());
         userEntity.setUserName(userEntityDto.getUserName());
         userEntity.setUserPatronymic(userEntityDto.getUserPatronymic());
         userEntity.setUserSurname(userEntityDto.getUserSurname());
@@ -77,7 +78,7 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserSurname(userEntityDto.getUserSurname());
         userEntity.setUserName(userEntityDto.getUserName());
         userEntity.setUserPatronymic(userEntityDto.getUserPatronymic());
-        userEntity.setUserJobTitle(userEntityDto.getUserJobTitle());
+        userEntity.setUserJobTitle(userEntityDto.getUserJobTitle().name());
         userEntity.setEnableNotification(userEntityDto.isEnableNotification());
 
         userRepository.save(userEntity);

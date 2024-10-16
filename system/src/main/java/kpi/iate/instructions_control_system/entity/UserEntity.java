@@ -1,5 +1,6 @@
 package kpi.iate.instructions_control_system.entity;
 
+import kpi.iate.instructions_control_system.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -53,4 +54,5 @@ public class UserEntity {
 
     @Column(name = "user_enable_notification")
     private boolean enableNotification;
+
 }
