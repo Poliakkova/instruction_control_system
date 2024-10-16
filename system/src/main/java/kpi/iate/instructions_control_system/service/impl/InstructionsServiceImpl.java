@@ -79,16 +79,6 @@ public class InstructionsServiceImpl implements InstructionsService {
         return listOfInstructionDto;
     }
 //--------------------------------------------------------------------------
-    @Override
-    @Transactional(readOnly = true)
-    public List<InstructionsDto> getInstructionsFilteredByHeadSurname(final UUID key, final String headSurname){
-        validateKey(key);
-
-        List <Instructions> listOfInstructions = getAllInstructionsFromRepo();
-        List <InstructionsDto> listOfInstructionsDto = convertInstructionListToDtoList(listOfInstructions);
-
-       return headSurnameFilter.filterInstructionsByHeadSurname(headSurname, listOfInstructionsDto);
-    }
 
     @Override
     @Transactional(readOnly = true)
