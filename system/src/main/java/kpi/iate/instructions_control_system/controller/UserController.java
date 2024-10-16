@@ -37,7 +37,7 @@ public class UserController {
     }
 
     @Operation(summary = "get user by login")
-    @PostMapping("/get/{userLogin}")
+    @GetMapping("/get/{userLogin}")
     public UserEntityDto getUserByLogin(@RequestParam String userLogin) {
         return userService.findUserByLoginConverted(userLogin);
     }
