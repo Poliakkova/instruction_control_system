@@ -13,8 +13,6 @@ public interface InstructionsService {
 
     List<InstructionsDto> getAllInstructions(final UUID key);
 
-    List<InstructionsDto> getInstructionsFilteredByHeadSurname(UUID key, String headSurname);
-
     List<InstructionsDto> getInstructionsFilteredByStartDate(UUID key, String startDate);
 
     List<InstructionsDto> getInstructionsFilteredByExpDate(UUID key,  String expDate);

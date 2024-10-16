@@ -20,15 +20,4 @@ public interface UserMapper {
     default UserRole mapTitle(String userJobTitle){
         return UserRole.valueOf(userJobTitle);
     }
-//    @Named("mapInstructions")
-//    default InstructionsDto mapUsers(Instructions instructions){
-//        InstructionsDto instructionsDto = new InstructionsDto();
-//        userEntityDto.setUserName(userEntity.getUserName());
-//        userEntityDto.setUserPatronymic(userEntity.getUserPatronymic());
-//        userEntityDto.setUserSurname(userEntity.getUserSurname());
-//        userEntityDto.setUserJobTitle(userEntity.getUserJobTitle());
-//        userEntityDto.setUserEmail(userEntity.getUserEmail());
-//        userEntityDto.setUserLogin(userEntity.getUserLogin());
-//        return userEntityDto;
-//    }
 }
