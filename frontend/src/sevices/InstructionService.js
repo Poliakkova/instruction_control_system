@@ -134,7 +134,7 @@ export const updateInstruction = async (instruction, navigator) => {
 
         // Додавання ключа до HTTP-запиту
         const response = await fetch("http://localhost:8090/instructions/update", {
-            method: 'POST',
+            method: 'PUT',
             headers: {
                 'key': uuidKey,
                 'Content-Type': 'application/json',

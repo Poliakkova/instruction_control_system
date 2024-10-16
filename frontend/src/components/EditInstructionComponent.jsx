@@ -152,7 +152,7 @@ const EditInstructionComponent = () => {
                 <div style={{margin: 10, fontWeight: 600}}>Код доручення: {instruction.code}</div>
                 <div className="form-floating">
                     <input required type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
-                    onChange={handleChange}  max={255} value={instruction.protocol}/>
+                    onChange={handleChange}  maxLength={255} value={instruction.protocol}/>
                     <label htmlFor="protocol">Протокол засідання кафедри №</label>
                 </div>
 
@@ -164,13 +164,13 @@ const EditInstructionComponent = () => {
 
                 <div className="form-floating">
                     <input required type="text" className="form-control" id="title" placeholder="Назва доручення" 
-                    onChange={handleChange} max={255} value={instruction.title}/>
+                    onChange={handleChange} maxLength={255} value={instruction.title}/>
                     <label htmlFor="title">Назва доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <select required className="form-select" id="type" aria-label="Тип доручення" 
-                    onChange={handleChange}  max={255} value={instruction.type}>
+                    onChange={handleChange}  maxLength={255} value={instruction.type}>
                         <option value='Науково-методична робота'>Науково-методична робота</option>
                         <option value='Навчально-виховна робота'>Навчально-виховна робота</option>
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
@@ -181,19 +181,19 @@ const EditInstructionComponent = () => {
 
                 <div className="form-floating">
                     <input required type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
-                    onChange={handleChange}  max={255} value={instruction.sourceOfInstruction}/>
+                    onChange={handleChange}  maxLength={255} value={instruction.sourceOfInstruction}/>
                     <label htmlFor="sourceOfInstruction">Звідки отримали доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <textarea required type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
-                    onChange={handleChange}  max={255} value={instruction.shortDescription}/>
+                    onChange={handleChange}  maxLength={255} value={instruction.shortDescription}/>
                     <label htmlFor="shortDescription">Короткий опис доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <textarea required type="text" className="form-control" id="text" placeholder="Текст доручення" 
-                    onChange={handleChange}  max={255} value={instruction.text} style={{height: 'fit-content'}}/>
+                    onChange={handleChange}  maxLength={255} value={instruction.text} style={{height: 'fit-content'}}/>
                     <label htmlFor="text">Текст доручення</label>
                 </div>
 

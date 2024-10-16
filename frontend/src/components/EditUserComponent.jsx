@@ -1,7 +1,7 @@
-import React, {useState} from 'react'
-import {useNavigate} from 'react-router-dom'
+import React, {useState, useEffect} from 'react'
+import {useNavigate, useParams} from 'react-router-dom'
 
-import { updateUser } from '../sevices/UserService'
+import { updateUser, getUserByLogin } from '../sevices/UserService'
 
 import 'bootstrap/dist/css/bootstrap.min.css'
 import '../css/AddUser.css'
@@ -14,14 +14,33 @@ const EditUserComponent = () => {
     navigator('/users/new')
   }
 
+  const { userLogin } = useParams(); // Отримуємо параметр з URL
+
   const [user, setUser] = useState({
     userJobTitle: '',
     userSurname: '',
     userName: '',
     userPatronymic: '',
     userEmail: '',
-    userLogin: 'Smirnov.F'
+    userLogin: userLogin
   });
+
+  useEffect(() => {
+    // Викликаємо функцію для отримання користувача за логіном
+    const fetchUser = async () => {
+      try {
+        const userData = await getUserByLogin(userLogin);
+        console.log('Дані користувача:', userData); 
+        setUser(userData); // Оновлюємо стан з даними користувача
+      } catch (error) {
+        console.error('Error fetching instruction:', error);
+      }
+    };
+
+    if (userLogin) {
+      fetchUser(); // Викликаємо функцію тільки якщо є логін
+    }
+  }, [userLogin]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,15 +68,16 @@ const EditUserComponent = () => {
 
       <div className="content">
       <form onSubmit={handleSubmit}>
+        <div style={{margin: 10, fontWeight: 600}}>Логін користувача: {user.userLogin}</div>
         <div className="form-floating mb-3 mt-3">
           <select className="form-select" id="userJobTitle" name="userJobTitle" aria-label="Choose role"
           defaultValue=""
           value={user.userJobTitle}
           onChange={handleChange}>
             <option value="">Оберіть роль користувача</option>
-            <option value="Адмін">Адмін</option>
-            <option value="Студ.представник">Студ.представник</option>
-            <option value="Викладач">Викладач</option>
+            <option value="ADMIN">Адмін</option>
+            <option value="STUDENT">Студ.представник</option>
+            <option value="TEACHER">Викладач</option>
           </select>
           <label htmlFor="userJobTitle">Оберіть роль користувача</label>
         </div>
@@ -65,26 +85,26 @@ const EditUserComponent = () => {
         <div className="form-floating">
           <input type="text" className="form-control" id="userSurname" name="userSurname" placeholder="Прізвище"
           value={user.userSurname}
-          onChange={handleChange}/>
+          onChange={handleChange} maxLength={255}/>
           <label htmlFor="userSurname">Прізвище</label>
         </div>
         <div className="form-floating">
           <input type="text" className="form-control" id="userName" name="userName" placeholder="Ім'я"
           value={user.userName}
-          onChange={handleChange}/>
+          onChange={handleChange} maxLength={255}/>
           <label htmlFor="userName">Ім'я</label>
         </div>
         <div className="form-floating">
           <input type="text" className="form-control" id="userPatronymic" name="userPatronymic" placeholder="По-батькові"
           value={user.userPatronymic}
-          onChange={handleChange}/>
+          onChange={handleChange} maxLength={255}/>
           <label htmlFor="userPatronymic">По-батькові</label>
         </div>
 
         <div className="form-floating mt-3">
           <input type="email" className="form-control" id="userEmail" name="userEmail" placeholder="Пошта"
           value={user.userEmail}
-          onChange={handleChange}/>
+          onChange={handleChange} maxLength={255}/>
           <label htmlFor="userEmail">Пошта</label>
         </div>
 

@@ -25,6 +25,14 @@ const UsersComponent = () => {
         navigator('/users/new')
     }
 
+    const handleRowClick = (userLogin) => {
+        navigator(`/users/${encodeURIComponent(userLogin)}`);
+    };
+
+    const editUser = (userLogin) => {
+        navigator(`/users/edit/${encodeURIComponent(userLogin)}`);
+    };
+
     const [filteredUsers, setFilteredUsers] = useState([]);
     const availableRoles = ["Адмін", "Викладач", "Студ.представник"];
     const [filters, setFilters] = useState({
@@ -79,6 +87,12 @@ const UsersComponent = () => {
 
             return { ...prevFilters, [name]: updatedArray };
         });
+    };
+
+    const statusMappingRoles = {
+        ADMIN: 'Адмін',
+        TEACHER: 'Викладач',
+        STUDENT: 'Студ.представник'
     };
 
     return (
@@ -143,9 +157,9 @@ const UsersComponent = () => {
                     <tbody>
                         { filteredUsers.length > 0 ? (
                             filteredUsers.map((user, index) => 
-                                <tr key={user.id} style={{ cursor: 'pointer' }}>
+                                <tr key={user.id} style={{ cursor: 'pointer' }} onClick={() => handleRowClick(user.userLogin)}>
                                     <td>{index + 1}</td>
-                                    <td>{user.userJobTitle}</td>
+                                    <td>{statusMappingRoles[user.userJobTitle] || 'Невідомий статус'}</td>
                                     <td>{user.userLogin}</td>
                                     <td>{user.userSurname}</td>
                                     <td>{user.userName}</td>
@@ -156,7 +170,10 @@ const UsersComponent = () => {
                                     ) : (
                                         <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
                                     )}</td>
-                                    <td><a href='/users/edit'><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
+                                    <td><a onClick={(event) => {
+                                        event.stopPropagation(); // Зупиняємо спливання події
+                                        editUser(user.userLogin); // Викликаємо функцію редагування
+                                      }}><i title="Редагувати" className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a></td>
                                     <td><i onClick={() => deleteUser(user.userLogin, navigator)} className="bi bi-trash3" title="Видалити" style={{ fontSize: '18px'}}></i></td>
                                 </tr>
                             )) : (

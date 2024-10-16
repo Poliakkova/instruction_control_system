@@ -6,6 +6,30 @@ export const listUsers = async () => {
     return axios.get(REST_API_GET_USERS_URL);
 }
 
+// Функція для отримання користувача за логіном
+export const getUserByLogin = async (userLogin) => {
+    try {
+      const response = await axios.get(`http://localhost:8090/users/get/{userLogin}?userLogin=${userLogin}`);
+      console.log("Отримано дані користувача:", response.data);
+      return response.data; // Повертаємо дані користувача
+    } catch (error) {
+        if (error.response) {
+          // Сервер відповів з кодом статусу, що не в діапазоні 2xx
+          console.error('Помилка при отриманні користувача:', error.response.data);
+          console.error('Статус відповіді:', error.response.status);
+          console.error('Заголовки відповіді:', error.response.headers);
+        } else if (error.request) {
+          // Запит був зроблений, але відповіді не отримано
+          console.error('Запит був зроблений, але відповіді не отримано:', error.request);
+        } else {
+          // Щось інше трапилось під час налаштування запиту
+          console.error('Помилка при налаштуванні запиту:', error.message);
+        }
+        console.error('Конфігурація запиту:', error.config);
+        throw error; // Викидаємо помилку для обробки в компоненті
+      }
+  };
+
 export const addUser = async (user, navigator) => {
     console.log(JSON.stringify(user));
 

@@ -241,7 +241,7 @@ const ListInstructionsComponent = () => {
                     <input
                     type="text"
                     placeholder="Пошук за ключовими словами..."
-                    className="me-2 input-search"
+                    className="input-search"
                     aria-label="Search"
                     value={searchTerm}
                     onChange={handleSearchChange} // Оновлюємо стан при введенні

@@ -25,8 +25,8 @@ const HeaderComponent = () => {
                     id="nav-dropdown-dark-example"
                     title="email@gmail.com"
                     menuVariant="dark">
-                    <NavDropdown.Item href="#action/3.1">Налаштування</NavDropdown.Item>
-                    <NavDropdown.Divider />
+                    {/* <NavDropdown.Item href="#action/3.1">Налаштування</NavDropdown.Item>
+                    <NavDropdown.Divider /> */}
                     <NavDropdown.Item href="#action/3.4">Вийти</NavDropdown.Item>
                   </NavDropdown>
                 </Nav>

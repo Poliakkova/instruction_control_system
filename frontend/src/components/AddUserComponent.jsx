@@ -57,9 +57,9 @@ const AddUserComponent = () => {
         <div className="form-floating mb-3 mt-3">
           <select required className="form-select" id="userJobTitle" aria-label="Choose role"  onChange={handleChange}>
             <option selected>Оберіть роль користувача</option>
-            <option value="Студ.представник">Студ.представник</option>
-            <option value="Викладач">Викладач</option>
-            <option value="Адмін">Адмін</option>
+            <option value="STUDENT">Студ.представник</option>
+            <option value="TEACHER">Викладач</option>
+            <option value="ADMIN">Адмін</option>
           </select>
           <label for="userJobTitle">Оберіть роль користувача</label>
         </div>

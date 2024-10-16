@@ -36,6 +36,10 @@ const InstructionComponent = () => {
     labels: [],
     datasets: []
   });
+  const [userLoadData, setUserLoadData] = useState({
+    labels: [],
+    datasets: []
+  });
 
 
   // useEffect(() => {
@@ -94,9 +98,9 @@ const InstructionComponent = () => {
 
     // Підрахунок для статусів
     const roleCounts = {
-      'Адмін': 0,
-      'Викладач': 0,
-      'Студ.представник': 0,
+      'ADMIN': 0,
+      'TEACHER': 0,
+      'STUDENT': 0,
     };
 
     instructions.forEach((instruction) => {
@@ -113,12 +117,22 @@ const InstructionComponent = () => {
       }
     });
 
+    // Підрахунок кількості інструкцій для кожного користувача
+    const userInstructionCounts = {};
+
     users.forEach((user) => {
       console.log('user: ', user); // Перевіряємо кожну інструкцію
 
       // Підрахунок типів
       if (roleCounts[user.userJobTitle] !== undefined) {
         roleCounts[user.userJobTitle]++;
+      }
+
+      // Підрахунок кількості інструкцій для кожного користувача
+      if (user.instructions) {
+        userInstructionCounts[user.userLogin] = user.instructions.length;
+      } else {
+        userInstructionCounts[user.userLogin] = 0; // Якщо немає інструкцій
       }
     });
 
@@ -175,7 +189,7 @@ const InstructionComponent = () => {
       ],
     });
 
-    console.log("setUserRoleData "+ roleCounts['Адмін'] + " " + roleCounts['Викладач'] + " " + roleCounts['Студ.представник']);
+    console.log("setUserRoleData "+ roleCounts['ADMIN'] + " " + roleCounts['TEACHER'] + " " + roleCounts['STUDENT']);
 
     // Оновлюємо дані для діаграми по статусах
     setUserRoleData({
@@ -184,9 +198,9 @@ const InstructionComponent = () => {
         {
           label: '# зразків',
           data: [
-            roleCounts['Адмін'],
-            roleCounts['Викладач'],
-            roleCounts['Студ.представник'],
+            roleCounts['ADMIN'],
+            roleCounts['TEACHER'],
+            roleCounts['STUDENT'],
           ],
           backgroundColor: [
             'rgba(255, 0, 0, 0.2)',
@@ -198,6 +212,23 @@ const InstructionComponent = () => {
             'rgba(0, 255, 0, 1)',
             'rgba(0, 0, 255, 1)',
           ],
+          borderWidth: 1,
+        },
+      ],
+    });
+
+      // Генеруємо кольори для всіх користувачів
+    const colors = generateColors(users.length);
+
+    // Оновлюємо дані для діаграми по кількості інструкцій для кожного користувача
+    setUserLoadData({
+      labels: Object.keys(userInstructionCounts), // Логіни користувачів
+      datasets: [
+        {
+          label: 'Кількість інструкцій',
+          data: Object.values(userInstructionCounts), // Кількість інструкцій для кожного користувача
+          backgroundColor: colors.backgroundColors,
+          borderColor: colors.borderColors,
           borderWidth: 1,
         },
       ],
@@ -229,35 +260,6 @@ const InstructionComponent = () => {
     }
 
     return { backgroundColors, borderColors };
-  }
-
-  // Генеруємо кольори для всіх користувачів
-  const colors = generateColors(4);
-
-  const headData = {
-    labels: ['Викладач1', 'Викладач2', 'Викладач3', 'Викладач4'],
-    datasets: [
-      {
-        label: '# зразків',
-        data: [8, 5, 2, 4],
-        backgroundColor: colors.backgroundColors,
-        borderColor: colors.borderColors,
-        borderWidth: 1,
-      },
-    ]
-  }
-
-  const performerData = {
-    labels: ['Викладач1', 'Викладач2', 'Викладач3', 'Викладач4'],
-    datasets: [
-      {
-        label: '# зразків',
-        data: [0, 7, 5, 6],
-        backgroundColor: colors.backgroundColors,
-        borderColor: colors.borderColors,
-        borderWidth: 1,
-      },
-    ]
   }
 
   const options = {
@@ -318,11 +320,11 @@ const InstructionComponent = () => {
             <div className="diagram-title ">Розподіл ролей користувачів</div>
             <Pie className='pie' data={userRoleData} options={options} />
           </Col>
-          {/* <Col className='diagram' style={{marginRight: '20px'}}>
-            <div className="diagram-title">Є відповідальними</div>
-            <Pie className='pie' data={headData} options={options} />
+          <Col className='diagram' style={{marginRight: '20px'}}>
+            <div className="diagram-title">Навантаження користувачів</div>
+            <Pie className='pie' data={userLoadData} options={options} />
           </Col>
-          <Col className='diagram'>
+          {/* <Col className='diagram'>
             <div className="diagram-title">Є виконавцями</div>
             <Pie className='pie' data={performerData} options={options} />
           </Col> */}
