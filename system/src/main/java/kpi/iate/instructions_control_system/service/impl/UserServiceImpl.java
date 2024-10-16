@@ -36,6 +36,13 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UserNotFoundException(String.format("User with login %s not found!", userLogin)));
         return userEntity;
     }
+    @Override
+    @Transactional(readOnly = true)
+    public UserEntityDto findUserByLoginConverted(final String userLogin) {
+        UserEntity userEntity = userRepository.findByUserLogin(userLogin)
+                .orElseThrow(() -> new UserNotFoundException(String.format("User with login %s not found!", userLogin)));
+        return userMapper.userToDto(userEntity);
+    }
 
     @Override
     @Transactional

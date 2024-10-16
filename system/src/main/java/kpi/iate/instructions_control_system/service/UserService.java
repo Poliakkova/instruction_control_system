@@ -9,6 +9,7 @@ public interface UserService {
     UserEntity findUserById (final String userId);
 
     UserEntity findUserByLogin (final String userLogin);
+    UserEntityDto findUserByLoginConverted(final String userLogin);
 
     void createUser(UserEntityDto userEntityDto);
 

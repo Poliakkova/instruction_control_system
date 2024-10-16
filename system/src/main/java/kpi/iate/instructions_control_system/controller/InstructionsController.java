@@ -60,7 +60,7 @@ public class InstructionsController {
     }
 
     @Operation(summary = "Update instruction")
-    @PostMapping("/update")
+    @PutMapping("/update")
     public void updateInstruction(@RequestHeader(value = "key") UUID key,
                                   @Parameter(description = "Instruction details")
                                   @RequestBody InstructionsDto instructionsDto) {

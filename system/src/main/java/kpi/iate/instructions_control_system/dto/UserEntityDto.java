@@ -2,6 +2,8 @@ package kpi.iate.instructions_control_system.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -20,6 +22,8 @@ public class UserEntityDto {
     private String userEmail;
 
     private String userLogin;
+
+    private List<InstructionsDto> instructions;
 
     private boolean enableNotification;
 }

@@ -35,4 +35,10 @@ public class UserController {
     public void deleteUser(@RequestParam String userLogin) {
         userService.deleteUser(userLogin);
     }
+
+    @Operation(summary = "get user by login")
+    @PostMapping("/get/{userLogin}")
+    public UserEntityDto getUserByLogin(@RequestParam String userLogin) {
+        return userService.findUserByLoginConverted(userLogin);
+    }
 }
