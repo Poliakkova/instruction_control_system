@@ -72,7 +72,7 @@ const UserComponent = () => {
     CONFIRMATION: 'Очікує затвердження',
     IN_PROGRESS: 'В роботі',
     CANCELLED: 'Скасовано',
-    FINISHED: 'Затверджено',
+    FINISHED: 'Виконано',
   };
 
   const statusMappingRoles = {
@@ -90,7 +90,7 @@ const UserComponent = () => {
         return 'status yellow';
     case 'Очікує затвердження':
         return 'status green';
-    case 'Затверджено':
+    case 'Виконано':
         return 'status grey';
     default:
         return 'status grey';
@@ -120,7 +120,7 @@ const UserComponent = () => {
           <Table responsive className="table table-hover mt-5">
               <thead>
                   <tr>
-                      <th>№</th>
+                      <th>Код доручення</th>
                       <th>Дата створення</th>
                       <th>Протокол засідання</th>
                       <th>Джерело</th>
