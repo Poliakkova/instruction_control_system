@@ -581,7 +581,7 @@ const InstructionComponent = () => {
         </Accordion>
         </div>
 
-        <div className="comments">
+        {/* <div className="comments">
           <form className="comment-section">
             <div className="image"><img src="../user_icon.png"></img></div>
             <div className="input-comment-block">
@@ -603,31 +603,10 @@ const InstructionComponent = () => {
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   )
 }
 
 export default InstructionComponent
-
-// {"nodes":
-//   [{"id":"3","position":{"x":-195,"y":-165},"data":{"label":"Початок"},"type":"customInput","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"4","position":{"x":-195,"y":-90},"data":{"label":"Новий вузол 4"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"5","position":{"x":-195,"y":-15},"data":{"label":"Новий вузол 5"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"6","position":{"x":-180,"y":60},"data":{"label":"Новий вузол 6"},"type":"diamond","measured":{"width":131,"height":70},"selected":false,"dragging":false},
-//     {"id":"7","position":{"x":-15,"y":120},"data":{"label":"Новий вузол 7"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"8","position":{"x":-360,"y":120},"data":{"label":"Новий вузол 8"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"9","position":{"x":-360,"y":195},"data":{"label":"Новий вузол 9"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"10","position":{"x":-15,"y":195},"data":{"label":"Новий вузол 10"},"type":"custom","measured":{"width":150,"height":40},"selected":false,"dragging":false},
-//     {"id":"11","position":{"x":-180,"y":330},"data":{"label":"Кінець"},"type":"customOutput","measured":{"width":150,"height":40},"selected":true,"dragging":false}],
-//  "edges":
-//   [{"source":"3","sourceHandle":"source-bottom","target":"4","targetHandle":"target-top","id":"edge-1728953158141","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"4","sourceHandle":"source-bottom","target":"5","targetHandle":"target-top","id":"edge-1728953164279","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"5","sourceHandle":"source-bottom","target":"6","id":"edge-1728953169931","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"6","sourceHandle":"source-left","target":"8","targetHandle":"target-top","id":"edge-1728953190997","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"6","sourceHandle":"source-right","target":"7","targetHandle":"target-top","id":"edge-1728953198856","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"8","sourceHandle":"source-bottom","target":"9","targetHandle":"target-top","id":"edge-1728953209424","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"7","sourceHandle":"source-bottom","target":"10","targetHandle":"target-top","id":"edge-1728953213182","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"9","sourceHandle":"source-bottom","target":"11","targetHandle":"target-top","id":"edge-1728953219392","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}},
-//     {"source":"10","sourceHandle":"source-bottom","target":"11","targetHandle":"target-top","id":"edge-1728953222442","label":"↓","animated":true,"markerEnd":{"type":"arrowclosed"}}]}
