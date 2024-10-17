@@ -41,7 +41,7 @@ const ListInstructionsComponent = () => {
         CONFIRMATION: 'Очікує затвердження',
         IN_PROGRESS: 'В роботі',
         CANCELLED: 'Скасовано',
-        FINISHED: 'Затверджено',
+        FINISHED: 'Виконано',
     };
 
     // Функція для визначення класу на основі статусу
@@ -53,7 +53,7 @@ const ListInstructionsComponent = () => {
             return 'status yellow';
         case 'Очікує затвердження':
             return 'status green';
-        case 'Затверджено':
+        case 'Виконано':
             return 'status grey';
         default:
             return 'status grey';
@@ -62,7 +62,7 @@ const ListInstructionsComponent = () => {
 
     const [filteredInstructions, setFilteredInstructions] = useState([]);
     const availableTypes = ["Науково-методична робота", "Навчально-виховна робота", "Профорієнтаційна робота", "Навчально-організаційна робота"];
-    const availableStatuses = ["Назначено", "В роботі", "Очікує затвердження", "Затверджено"];
+    const availableStatuses = ["Назначено", "В роботі", "Очікує затвердження", "Виконано"];
     const [filters, setFilters] = useState({
         makingTimeFrom: '',
         makingTimeTo: '',
@@ -134,6 +134,7 @@ const ListInstructionsComponent = () => {
                     item.type.toLowerCase().includes(searchWords) ||
                     item.title.toLowerCase().includes(searchWords) ||
                     item.shortDescription.toLowerCase().includes(searchWords) ||
+                    item.fullDescription.toLowerCase().includes(searchWords) ||
                     item.code.toLowerCase().includes(searchWords) ||
                     new Date(item.startTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
                     new Date(item.expTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
@@ -259,7 +260,8 @@ const ListInstructionsComponent = () => {
                                 <th>Тип</th>
                                 <th>Відповідальні</th>
                                 <th style={{minWidth: 200}}>Назва</th>
-                                <th style={{minWidth: 200}}>Опис</th>
+                                <th style={{minWidth: 200}}>Короткий опис</th>
+                                <th style={{minWidth: 200}}>Повний опис</th>
                                 <th>Початок</th>
                                 <th>Дедлайн</th>
                                 <th>Статус</th>
@@ -281,6 +283,7 @@ const ListInstructionsComponent = () => {
                                 )}</td>
                                 <td>{instruction.title}</td>
                                 <td>{instruction.shortDescription}</td>
+                                <td>{instruction.fullDescription}</td>
                                 <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                                 <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
                                 <td><span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>{statusMapping[instruction.status] || 'Невідомий статус'}</span></td>

@@ -23,6 +23,7 @@ const EditInstructionComponent = () => {
         type: '',
         sourceOfInstruction: '',
         shortDescription: '',
+        full: '',
         text: '',
         startTime: '',
         expTime: '',
@@ -189,6 +190,12 @@ const EditInstructionComponent = () => {
                     <textarea required type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
                     onChange={handleChange}  maxLength={255} value={instruction.shortDescription}/>
                     <label htmlFor="shortDescription">Короткий опис доручення</label>
+                </div>
+
+                <div className="form-floating">
+                    <textarea required type="text" className="form-control" id="fullDescription" placeholder="Повний опис доручення" 
+                    onChange={handleChange}  maxLength={255}/>
+                    <label htmlFor="fullDescription">Повний опис доручення</label>
                 </div>
 
                 <div className="form-floating">

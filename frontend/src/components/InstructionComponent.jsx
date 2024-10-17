@@ -455,7 +455,7 @@ const InstructionComponent = () => {
               <option value="CREATED" className='status orange'>Назначено</option>
               <option value="IN_PROGRESS" className='status yellow'>В роботі</option>
               <option value="CONFIRMATION" className='status green'>Очікує затвердження</option>
-              <option value="FINISHED" className='status grey'>Затверджено</option>
+              <option value="FINISHED" className='status grey'>Виконано</option>
             </select>
           </div>
 
@@ -479,7 +479,8 @@ const InstructionComponent = () => {
           <p><span className='bold'>Джерело: </span>{instruction.sourceOfInstruction}</p>
           <p><span className='bold'>Тип: </span>{instruction.type}</p>
 
-          <br></br>
+          <p>Короткий опис: {instruction.shortDescription}</p>
+          <p>Повний опис: {instruction.fullDescription}</p>
           <p>{instruction.text}</p>
 
           <br></br>

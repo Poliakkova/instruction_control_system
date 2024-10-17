@@ -127,7 +127,8 @@ const UserComponent = () => {
                       <th>Тип</th>
                       <th>Відповідальні</th>
                       <th style={{minWidth: 200}}>Назва</th>
-                      <th style={{minWidth: 200}}>Опис</th>
+                      <th style={{minWidth: 200}}>Короткий Опис</th>
+                      <th style={{minWidth: 200}}>Повний Опис</th>
                       <th>Початок</th>
                       <th>Дедлайн</th>
                       <th>Статус</th>
@@ -149,6 +150,7 @@ const UserComponent = () => {
                       )}</td>
                       <td>{instruction.title}</td>
                       <td>{instruction.shortDescription}</td>
+                      <td>{instruction.fullDescription}</td>
                       <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                       <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
                       <td><span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>{statusMapping[instruction.status] || 'Невідомий статус'}</span></td>

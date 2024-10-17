@@ -34,7 +34,7 @@ const UsersComponent = () => {
     };
 
     const [filteredUsers, setFilteredUsers] = useState([]);
-    const availableRoles = ["Адмін", "Викладач", "Студ.представник"];
+    const availableRoles = ["ADMIN", "TEACHER", "STUDENT"];
     const [filters, setFilters] = useState({
         role: []
     });
@@ -59,7 +59,7 @@ const UsersComponent = () => {
                     item.userName.toLowerCase().includes(searchWords) ||
                     item.userPatronymic.toLowerCase().includes(searchWords) ||
                     item.userLogin.toLowerCase().includes(searchWords) ||
-                    item.userJobTitle.toLowerCase().includes(searchWords) ||
+                    statusMappingRoles[item.userJobTitle].toLowerCase().includes(searchWords) ||
                     item.userEmail.toLowerCase().includes(searchWords)
                 );
             });
@@ -120,7 +120,7 @@ const UsersComponent = () => {
                                                 value={role}
                                                 onChange={(e) => handleCheckboxChange(e, role)}
                                             />
-                                            <label htmlFor={role}>{role}</label>
+                                            <label htmlFor={role}>{statusMappingRoles[role]}</label>
                                         </div>
                                     ))}
                                 </div>
