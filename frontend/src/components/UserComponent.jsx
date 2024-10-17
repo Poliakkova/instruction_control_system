@@ -110,12 +110,12 @@ const UserComponent = () => {
         <div>{user.userSurname} {user.userName} {user.userPatronymic}</div>
         <div>Роль: {statusMappingRoles[user.userJobTitle] || 'Невідомий статус'}</div>
         <div>Логін: {user.userLogin}</div>
-        <div>Пошта: {user.userEmail} <span>{user.enableNotification ? (
+        <div>Пошта: {user.userEmail} </div>
+        {/* <span>{user.enableNotification ? (
             <i title="Сповіщення увімкнено" className="bi bi-bell-fill" style={{ color: 'green' }}></i> // іконка для увімкнених сповіщень
         ) : (
             <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
-        )}</span></div>
-        
+        )}</span> */}
 
           <Table responsive className="table table-hover mt-5">
               <thead>

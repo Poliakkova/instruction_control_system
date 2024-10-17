@@ -20,7 +20,7 @@ const HeaderComponent = () => {
                   
                 </Nav>
                 <Nav>
-                  <Nav.Link title="Cповіщення увімкнено"><i className="bi bi-bell-fill" style={{ fontSize: '18px'}}></i></Nav.Link>
+                  {/* <Nav.Link title="Cповіщення увімкнено"><i className="bi bi-bell-fill" style={{ fontSize: '18px'}}></i></Nav.Link> */}
                   <NavDropdown
                     id="nav-dropdown-dark-example"
                     title="email@gmail.com"
