@@ -253,7 +253,7 @@ const ListInstructionsComponent = () => {
                     <Table responsive className="table table-hover">
                         <thead>
                             <tr>
-                                <th>№</th>
+                                <th>Код доручення</th>
                                 <th>Дата створення</th>
                                 <th>Протокол засідання</th>
                                 <th>Джерело</th>

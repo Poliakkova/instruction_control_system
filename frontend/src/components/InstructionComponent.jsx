@@ -3,7 +3,7 @@ import {useNavigate, useParams } from 'react-router-dom'
 import Accordion from 'react-bootstrap/Accordion';
 import { ReactFlow, Background, Controls, MiniMap, 
          addEdge, applyNodeChanges, applyEdgeChanges,
-         Handle, Position, ReactFlowProvider,  useReactFlow } from '@xyflow/react';
+         Handle, Position } from '@xyflow/react';
 
 import '@xyflow/react/dist/style.css';
 import '../css/Instruction.css'
