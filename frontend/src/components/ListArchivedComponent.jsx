@@ -16,7 +16,10 @@ const ListArchivedComponent = () => {
 
     useEffect(() => {
         archivedInstructions().then((response) => {
-            setInstructions(response.data);
+            const sortedInstructions = response.data.sort((a, b) => {
+                return new Date(b.makingTime) - new Date(a.makingTime);
+            });
+            setInstructions(sortedInstructions);
         }).catch(error => {
             console.error(error);
         })

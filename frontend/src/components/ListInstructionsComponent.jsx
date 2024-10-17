@@ -17,7 +17,7 @@ const ListInstructionsComponent = () => {
     useEffect(() => {
         listInstructions().then((response) => {
             const sortedInstructions = response.data.sort((a, b) => {
-                return new Date(a.makingTime) - new Date(b.makingTime);
+                return new Date(b.makingTime) - new Date(a.makingTime);
             });
             setInstructions(sortedInstructions);
             setFilteredInstructions(sortedInstructions);
