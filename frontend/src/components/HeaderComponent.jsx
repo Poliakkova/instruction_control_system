@@ -19,17 +19,17 @@ const HeaderComponent = () => {
 
                   
                 </Nav>
-                <Nav>
+                {/* <Nav> */}
                   {/* <Nav.Link title="Cповіщення увімкнено"><i className="bi bi-bell-fill" style={{ fontSize: '18px'}}></i></Nav.Link> */}
-                  <NavDropdown
+                  {/* <NavDropdown
                     id="nav-dropdown-dark-example"
                     title="email@gmail.com"
-                    menuVariant="dark">
+                    menuVariant="dark"> */}
                     {/* <NavDropdown.Item href="#action/3.1">Налаштування</NavDropdown.Item>
                     <NavDropdown.Divider /> */}
-                    <NavDropdown.Item href="#action/3.4">Вийти</NavDropdown.Item>
+                    {/* <NavDropdown.Item href="#action/3.4">Вийти</NavDropdown.Item>
                   </NavDropdown>
-                </Nav>
+                </Nav> */}
                 
               </Navbar.Collapse>
             </Container>
