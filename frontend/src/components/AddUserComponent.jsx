@@ -21,7 +21,7 @@ const AddUserComponent = () => {
     userPatronymic: '',
     userEmail: '',
     userLogin: '',
-    enableNotification: false
+    enableNotification: true
   });
 
   const handleChange = (e) => {

@@ -10,26 +10,36 @@ import kpi.iate.instructions_control_system.exception.KeyIsNotValidException;
 import kpi.iate.instructions_control_system.filters.DateFilter;
 import kpi.iate.instructions_control_system.filters.HeadSurnameFilter;
 import kpi.iate.instructions_control_system.mapper.InstructionMapper;
+import kpi.iate.instructions_control_system.mapper.StatusMapper;
 import kpi.iate.instructions_control_system.mapper.UserMapper;
 import kpi.iate.instructions_control_system.parser.StringToDateLongParser;
 import kpi.iate.instructions_control_system.repository.AuthKeyRepository;
 import kpi.iate.instructions_control_system.repository.InstructionsRepository;
 import kpi.iate.instructions_control_system.repository.UserRepository;
 import kpi.iate.instructions_control_system.service.InstructionsService;
+import kpi.iate.instructions_control_system.service.MailService;
 import kpi.iate.instructions_control_system.service.UserService;
 import kpi.iate.instructions_control_system.validation.AuthKeyValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 import org.springframework.util.CollectionUtils;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class InstructionsServiceImpl implements InstructionsService {
+
+    @Autowired
+    MailService mailService;
 
     private final AuthKeyRepository authKeyRepository;
 
@@ -121,6 +131,29 @@ public class InstructionsServiceImpl implements InstructionsService {
                 instructions.getHeads().add(updatedUser);
                 userRepository.save(updatedUser);
                 instructionsRepository.save(instructions);
+
+                System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
+                        user.getUserEmail(), user.getUserLogin());
+                if (user.getUserEmail() != null && user.isEnableNotification()) {
+                    System.out.println("HAS EMAIL");
+                    Instant instant = Instant.ofEpochSecond(instructions.getExpTime());
+                    LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    String formattedDate = dateTime.format(formatter);
+
+                    String message = String.format(
+                            "Вітаю, %s!\n" +
+                                    "Вас призначено відповідальним за доручення \"%s\"\n" +
+                                    "%s\n" +
+                                    "Виконати до: %s\n" +
+                                    "Ознайомтеся детальніше на http://127.0.0.1:3000/instructions\n" +
+                                    "Гарного дня!",
+                            user.getUserName(), instructions.getTitle(),
+                            instructions.getShortDescription(), formattedDate
+                    );
+                    mailService.send(user.getUserEmail(), "Доручення НН ІАТЕ", message);
+                }
+
             });
         }
         instructions.setTitle(instructionsDto.getTitle());
@@ -158,6 +191,28 @@ public class InstructionsServiceImpl implements InstructionsService {
                             addInstructionsToUser(userEntity, instructions);
                             instructionsRepository.save(instructions);
                             userRepository.save(userEntity);
+
+                            System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
+                                    userEntity.getUserEmail(), userEntity.getUserLogin());
+                            if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
+                                System.out.println("HAS EMAIL");
+                                Instant instant = Instant.ofEpochSecond(instructions.getExpTime());
+                                LocalDateTime dateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
+                                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                                String formattedDate = dateTime.format(formatter);
+
+                                String message = String.format(
+                                        "Вітаю, %s!\n" +
+                                                "Вас призначено відповідальним за доручення \"%s\"\n" +
+                                                "%s\n" +
+                                                "Виконати до: %s\n" +
+                                                "Ознайомтеся детальніше на http://127.0.0.1:3000/instructions\n" +
+                                                "Гарного дня!",
+                                        userEntity.getUserName(), instructions.getTitle(),
+                                        instructions.getShortDescription(), formattedDate
+                                );
+                                mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
+                            }
                         }
                     });
             return instructionMapper.instructionToDto(instructions);
@@ -204,6 +259,33 @@ public class InstructionsServiceImpl implements InstructionsService {
         InstructionStatus instructionStatus = InstructionStatus.valueOf(instructionsDto.getStatus());
         instructions.setStatus(instructionStatus.name());
         instructionsRepository.save(instructions);
+
+        instructionsDto.getUsers().stream()
+                .filter(Objects::nonNull)
+                .forEach(user -> {
+                    UserEntity userEntity = userService.findUserByLogin(user.getUserLogin());
+                    if (userEntity != null) {
+                        System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
+                                userEntity.getUserEmail(), userEntity.getUserLogin());
+                        if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
+                            System.out.println("HAS EMAIL");
+                            // Отримуємо перекладений статус
+                            String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
+                            String message = String.format(
+                                    "Вітаю, %s!\n" +
+                                            "Змінено статус доручення \"%s\"\n" +
+                                            "Новий статус: %s\n" +
+                                            "Ознайомтеся детальніше на http://127.0.0.1:3000/instructions\n" +
+                                            "Гарного дня!",
+                                    userEntity.getUserName(), instructions.getTitle(),
+                                    translatedStatus
+                            );
+                            mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
+                        }
+
+
+                    }
+                });
     }
 
     private List<Instructions> getAllInstructionsFromRepo() {
@@ -247,6 +329,20 @@ public class InstructionsServiceImpl implements InstructionsService {
         users.stream().filter(Objects::nonNull).forEach(user -> {
             user.getInstructions().remove(instructions);
             userRepository.save(user);
+
+//            System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
+//                    user.getUserEmail(), user.getUserLogin());
+//            if (user.getUserEmail() != null && user.isEnableNotification()) {
+//                System.out.println("HAS EMAIL");
+//                String message = String.format(
+//                        "Вітаю, %s!\n" +
+//                                "Ви були усунуті від доручення \"%s\"\n" +
+//                                "Ознайомтеся детальніше на http://127.0.0.1:3000/instructions\n" +
+//                                "Гарного дня!",
+//                        user.getUserName(), instructions.getTitle()
+//                );
+//                mailService.send(user.getUserEmail(), "Доручення НН ІАТЕ", message);
+//            }
         });
     }
 }

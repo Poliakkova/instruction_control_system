@@ -4,11 +4,14 @@ import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.entity.UserEntity;
 import kpi.iate.instructions_control_system.enums.UserRole;
 import kpi.iate.instructions_control_system.exception.UserNotFoundException;
+import kpi.iate.instructions_control_system.mapper.StatusMapper;
 import kpi.iate.instructions_control_system.mapper.UserMapper;
 import kpi.iate.instructions_control_system.repository.InstructionsRepository;
 import kpi.iate.instructions_control_system.repository.UserRepository;
+import kpi.iate.instructions_control_system.service.MailService;
 import kpi.iate.instructions_control_system.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +22,9 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    @Autowired
+    MailService mailService;
 
     private final UserMapper userMapper;
     private final UserRepository userRepository;
@@ -57,6 +63,22 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserLogin(userEntityDto.getUserLogin());
         userEntity.setEnableNotification(userEntityDto.isEnableNotification());
         userRepository.save(userEntity);
+
+        if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
+            System.out.println("HAS EMAIL");
+            String message = String.format(
+                    "Вітаю, %s %s %s!\n" +
+                            "Вам було створено акаунт у Доручення НН ІАТЕ\n" +
+                            "Логін: %s\n" +
+                            "Пароль: 1\n" +
+                            "Ознайомтеся з особистим кабінетом http://127.0.0.1:3000/instructions\n" +
+                            "Якщо виявили помилку, будь ласка, повідомте відповідального!\n" +
+                            "Гарного дня!",
+                    userEntity.getUserSurname(), userEntity.getUserName(), userEntity.getUserPatronymic(),
+                    userEntity.getUserLogin()
+            );
+            mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
+        }
     }
     @Override
     @Transactional(readOnly = true)

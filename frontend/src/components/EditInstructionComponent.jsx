@@ -117,8 +117,6 @@ const EditInstructionComponent = () => {
         return itemText.toLowerCase().includes(searchWords)
     });
 
-    const [selectedUsers, setSelectedUsers] = useState([]);
-
     const handleCheckboxChange = (userLogin) => {
         const isAlreadySelected = instruction.users.some(user => user.userLogin === userLogin);
         const updatedUsers = isAlreadySelected 

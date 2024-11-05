@@ -130,6 +130,15 @@ const ListInstructionsComponent = () => {
         const searchWords = searchTerm.toLowerCase().trim();
         if (searchWords) {
             filtered = filtered.filter((item) => {
+                let includeUser = false;
+                item.users.forEach((user) => {
+                    if (user.userSurname.toLowerCase().includes(searchWords) ||
+                    user.userName.toLowerCase().includes(searchWords) ||
+                    user.userPatronymic.toLowerCase().includes(searchWords)) {
+                        includeUser = true;
+                    }
+                });
+        
                 return (
                     new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
                     item.sourceOfInstruction.toLowerCase().includes(searchWords) ||
@@ -139,6 +148,7 @@ const ListInstructionsComponent = () => {
                     item.shortDescription.toLowerCase().includes(searchWords) ||
                     item.fullDescription.toLowerCase().includes(searchWords) ||
                     item.code.toLowerCase().includes(searchWords) ||
+                    includeUser ||
                     new Date(item.startTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
                     new Date(item.expTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
                     statusMapping[item.status].toLowerCase().includes(searchWords)
