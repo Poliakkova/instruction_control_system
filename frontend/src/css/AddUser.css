@@ -18,3 +18,9 @@ input {
     box-shadow: none;
     border: none;
 }
+
+.user-title {
+    text-align: center;
+    font-weight: 600;
+}
+

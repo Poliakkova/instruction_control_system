@@ -13,61 +13,16 @@
     min-height: 700px;
 }
 
-/* Sidebar */
-.sidebar {
-    width: fit-content;
-    background-color: #fff;
-    padding: 20px;
-}
-
-.sidebar h2 {
-    font-size: 18px;
-    margin-bottom: 20px;
-}
-
-.sidebar .menu-item {
-    margin: 5px 0;
-    padding: 10px 33px;
-    display: block;
-    text-decoration: none;
-    color: black;
-}
-
-.sidebar .menu-item:hover {
-    background: #f3f6f8;
-    border-radius: 7px;
-}
-
-.sidebar .menu-item i{
-    margin-right: 10px;
-}
-
-.sidebar button {
-    width: 220px;
-    padding: 13px 33px;    
-    background-color: #ffb400;
-    border: none;
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    margin-bottom: 10px;
-}
-
-.sidebar button:hover {
-    background-color: #ff9e00;
-}
-
 /* Main Content */
 .main-content {
     flex: 1;
     padding: 20px;
-    margin-right: 100px;
+    /* margin-right: 100px; */
     /* overflow-x: auto; */
 }
 
 .content {
-    padding: 10px;
+    padding: 11px;
     border-radius: 7px;
     background: white;
     box-shadow: 10px 5px 20px #e1eaf0;
@@ -126,11 +81,32 @@
 
 }
 
+/* Стилі для закріплення стовпців */
+.sticky-col {
+    position: sticky;
+    right: 0;
+    background-color: white; /* Задайте фон, щоб було зручно читати текст */
+    z-index: 1;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.sticky-col:nth-child(10) { /* Позиція для третього з кінця стовпця */
+    right: 60px;
+}
+
+.sticky-col:nth-child(11) { /* Позиція для другого з кінця стовпця */
+    right: 30px;
+}
+
+.sticky-col:nth-child(12) { /* Позиція для останнього стовпця */
+    right: 0;
+}
+
 .table {
     width: 100%;
     table-layout: auto; 
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 12px;
 }
 
 
@@ -144,6 +120,14 @@
     text-align: left;
     border-bottom: 1px solid #dbe5ea;
     background-color: #fff;
+    /* display: inline-block; */
+    
+    /* text-overflow: ellipsis; */
+}
+
+.table td div{
+    max-height: 85px;
+    overflow-y: auto;
 }
 
 .status {

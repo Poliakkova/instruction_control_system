@@ -1,9 +1,13 @@
 package kpi.iate.instructions_control_system.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import kpi.iate.instructions_control_system.dto.PasswordChangeRequest;
 import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.service.UserService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,7 +35,7 @@ public class UserController {
         userService.updateUser(userEntityDto);
     }
     @Operation(summary = "delete user")
-    @PostMapping("/delete/{userLogin}")
+    @PostMapping("/delete")
     public void deleteUser(@RequestParam String userLogin) {
         userService.deleteUser(userLogin);
     }
@@ -41,4 +45,20 @@ public class UserController {
     public UserEntityDto getUserByLogin(@RequestParam String userLogin) {
         return userService.findUserByLoginConverted(userLogin);
     }
+
+    @Operation(summary = "Change user's password")
+    @PutMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody PasswordChangeRequest request) {
+        userService.changePassword(request.getUserLogin(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok("Пароль успішно змінено");
+    }
+
+//    @GetMapping("/current-user")
+//    public ResponseEntity<UserEntityDto> getCurrentUser(@AuthenticationPrincipal UserEntityDto userDetails) {
+//        if (userDetails != null) {
+//            return ResponseEntity.ok(userDetails);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//    }
 }

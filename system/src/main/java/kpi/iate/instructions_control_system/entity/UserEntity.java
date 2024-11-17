@@ -1,13 +1,18 @@
 package kpi.iate.instructions_control_system.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import kpi.iate.instructions_control_system.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "control_system_user")
-public class UserEntity {
+public class UserEntity implements UserDetails {
 
     @Id
     @GeneratedValue(generator = "UUID")
@@ -55,4 +60,43 @@ public class UserEntity {
     @Column(name = "user_enable_notification")
     private boolean enableNotification;
 
+    @JsonIgnore
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(userJobTitle));
+    }
+
+    @Override
+    public String getPassword() {
+        return userPassword;
+    }
+
+    @Override
+    public String getUsername() {
+        return userEmail;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

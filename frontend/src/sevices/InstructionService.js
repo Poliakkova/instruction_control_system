@@ -1,53 +1,70 @@
 import axios from "axios";
 
-const REST_API_GET_ALL_URL = "http://localhost:8090/instructions/get/all";
-
-const REST_API_GET_ARCHIVED_URL = "http://localhost:8090/instructions/archived";
-
-const REST_API_ADD_URL = "http://localhost:8090/instructions/new/processing";
-
-const REST_API_KEY_URL = "http://localhost:8090/instructions/key";
-
-export const getKey = () => {
-    return axios.get(REST_API_KEY_URL);
+//Функція отримання ключа
+export const getKey = (token) => {
+    return axios.get(`http://localhost:8090/instructions/key`, 
+        {
+            headers: {Authorization: `Bearer ${token}`}
+        });
 }
 
-export const listInstructions = async () => {
+//Функція отримання конкретного доручення
+export const getInstruction = async (code, token) => {
     try {
         // Отримання ключа
-        const keyResponse = await getKey();
+        const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
-        console.log("listInstructions - uuidKey " + uuidKey);
+        const response = await axios.get(`http://localhost:8090/instructions/get/${encodeURIComponent(code)}`, {
+            headers: {
+                key: uuidKey, // передаємо ключ у заголовку
+                Authorization: `Bearer ${token}`
+            },
+        });
+        return response.data;
+
+    } catch (error) {
+        console.error('Error fetching instruction:', error);
+        throw error;
+    }
+};
+
+//Функція отримання усіх доручень
+export const listInstructions = async (token) => {
+    try {
+        // Отримання ключа
+        const keyResponse = await getKey(token);
+        const uuidKey = keyResponse.data;
 
         // Додавання ключа до HTTP-запиту
-        const response = await axios.get(REST_API_GET_ALL_URL, {
+        const response = await axios.get(`http://localhost:8090/instructions/get/all`, {
             headers: {
-                'key': uuidKey
-            }
+                key: uuidKey,
+                Authorization: `Bearer ${token}`
+            },
         });
-
-        console.log("listInstructions - response " + response);
         return response;
 
     }catch (error) {
-        console.error(error);
+        console.error('Error fetching instructions:', error);
         throw error;
     }
 }
 
-export const archivedInstructions = async () => {
+//Функція отримання усіх архівних доручень
+export const archivedInstructions = async (token) => {
     try {
         // Отримання ключа
-        const keyResponse = await getKey();
+        const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
         console.log("uuidKey " + uuidKey);
 
         // Додавання ключа до HTTP-запиту
-        const response = await axios.get(REST_API_GET_ARCHIVED_URL, {
+        const response = await axios.get(`http://localhost:8090/instructions/archived`, {
             headers: {
-                'key': uuidKey
+                'key': uuidKey,
+                Authorization: `Bearer ${token}`
             }
         });
 
@@ -59,14 +76,14 @@ export const archivedInstructions = async () => {
     }
 }
 
-// Функція для видалення інструкції
-export const deleteInstruction = async (instructionTitle, navigate) => {
-    const isConfirmed = window.confirm(`Ви дійсно хочете видалити інструкцію: ${instructionTitle}?`);
+// Функція для видалення доручення
+export const deleteInstruction = async (instructionTitle, navigate, token) => {
+    const isConfirmed = window.confirm(`Ви дійсно хочете видалити інструкцію?`);
   
     if (isConfirmed) {
       try {
         // Отримання ключа
-        const keyResponse = await getKey();
+        const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
         console.log("uuidKey " + uuidKey);
@@ -75,6 +92,7 @@ export const deleteInstruction = async (instructionTitle, navigate) => {
         await axios.post(`http://localhost:8090/instructions/${encodeURIComponent(instructionTitle)}`, null, {
           headers: {
             key: uuidKey, // передаємо ключ в заголовку
+            Authorization: `Bearer ${token}`
           },
         });
         
@@ -87,22 +105,22 @@ export const deleteInstruction = async (instructionTitle, navigate) => {
     }
 }
 
-export const updateInstructionStatus = async (instruction) => {
+//Функція оновлення статусу доручення
+export const updateInstructionStatus = async (instruction, token) => {
     try {
+        console.log("----UPDATE TOKEN: " + token);
         // Отримання ключа
-        const keyResponse = await getKey();
+        const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
         console.log("uuidKey " + uuidKey);
         console.log("updateINSTR " + instruction);
 
-        const response = await fetch('http://localhost:8090/instructions/status/update', {
-            method: 'PUT',
+        const response = await axios.put('http://localhost:8090/instructions/status/update', instruction, {
             headers: {
-                'Content-Type': 'application/json',
-                'key': uuidKey, // Передаємо ваш UUID ключ
+                key: uuidKey, // Передаємо ваш UUID ключ
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(instruction),  
         });
 
         if (response.status === 200) {
@@ -114,7 +132,8 @@ export const updateInstructionStatus = async (instruction) => {
     }
 };
 
-export const updateInstruction = async (instruction, navigator) => {
+//Функція оновлення доручення
+export const updateInstruction = async (instruction, navigate, token) => {
     console.log(JSON.stringify(instruction));
 
     // Перевірка наявності хоча б одного користувача
@@ -127,28 +146,66 @@ export const updateInstruction = async (instruction, navigator) => {
         console.log(JSON.stringify(instruction));
 
         // Отримання ключа
-        const keyResponse = await getKey();
+        const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
         console.log("uuidKey " + uuidKey);
 
         // Додавання ключа до HTTP-запиту
-        const response = await fetch("http://localhost:8090/instructions/update", {
-            method: 'PUT',
+        const response = await axios.put("http://localhost:8090/instructions/update", instruction, {
             headers: {
-                'key': uuidKey,
-                'Content-Type': 'application/json',
+                key: uuidKey,
+                Authorization: `Bearer ${token}`
             },
-            body: JSON.stringify(instruction)
         });
 
-        if (response.ok) {
+        if (response.status === 200) {
             alert('Доручення успішно оновлено');
-            navigator(`/instructions/${encodeURIComponent(instruction.code)}`);
+            navigate(`/instructions/${encodeURIComponent(instruction.code)}`);
         }
 
     }catch (error) {
         console.error('Помилка при оновленні інструкції:', error);
         alert('Помилка при оновленні доручення. Перевірте дані');
+    }
+};
+
+//Функція створення доручення
+export const createInstruction = async (e, instruction, navigate, token) => {
+    e.preventDefault();
+    console.log(JSON.stringify(instruction));
+
+    console.log("Instruction Code:", instruction.code);
+    
+    if (!instruction.code) {
+        alert("Відсутній унікальний код доручення!");
+        return;
+    }
+
+    // Перевірка наявності хоча б одного користувача
+    if (!instruction.users || instruction.users.length === 0) {
+        alert("Необхідно призначити принаймні одного відповідального");
+        return;
+    }
+
+    try {
+        // Отримання ключа
+        const keyResponse = await getKey(token);
+        const uuidKey = keyResponse.data;
+
+        const response = await axios.post('http://localhost:8090/instructions/new/processing', instruction, {
+            headers: {
+                key: uuidKey, // передаємо ключ у заголовку
+                Authorization: `Bearer ${token}`
+            },
+        });
+
+        alert('Доручення створено успішно!');
+        navigate(`/instructions/${encodeURIComponent(instruction.code)}`)
+        return response.data; // Повертаємо створену інструкцію (InstructionsDto)
+
+    } catch (error) {
+        console.error('Error creating instruction:', error);
+        throw error;
     }
 };

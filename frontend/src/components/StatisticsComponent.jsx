@@ -8,6 +8,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 
 import '@xyflow/react/dist/style.css';
 import '../css/Statistics.css';
+
+import SideBarInstructionComponent from './panels/SideBarInstructionComponent';
 import { listInstructions } from '../sevices/InstructionService';
 import { listUsers } from '../sevices/UserService';
 
@@ -15,11 +17,6 @@ import { listUsers } from '../sevices/UserService';
 ChartJS.register(ArcElement, Tooltip, Legend, ChartDataLabels);
 
 const InstructionComponent = () => {
-  const navigator = useNavigate();
-
-  function createInstruction(){
-    navigator('/instructions/new')
-  }
 
   const [instructions, setInstructions] = useState([])
   const [users, setUsers] = useState([])
@@ -55,7 +52,7 @@ const InstructionComponent = () => {
 
   useEffect(() => {
     // Використовуємо Promise.all для виконання обох запитів одночасно
-    Promise.all([listInstructions(), listUsers()])
+    Promise.all([listInstructions(localStorage.getItem("token")), listUsers(localStorage.getItem("token"))])
       .then(([instructionsResponse, usersResponse]) => {
         console.log('Дані з API (інструкції):', instructionsResponse.data);
         console.log('Дані з API (користувачі):', usersResponse.data);
@@ -293,11 +290,7 @@ const InstructionComponent = () => {
 
   return (
     <div className="wrapper">
-      <div className="sidebar">
-          <button onClick={() => createInstruction()}>Створити доручення</button>
-          <a className="menu-item" href='/instructions'><i className="bi bi-card-list"></i>Усі</a>
-          <a className="menu-item" href='/instructions/archived'><i className="bi bi-archive"></i>Архів</a>
-      </div>
+      <SideBarInstructionComponent />
 
       <div className="main-content">
         <h3 className='title'>Статистика доручень</h3>
