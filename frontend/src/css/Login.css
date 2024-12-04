@@ -1,0 +1,159 @@
+body {
+    margin: 0;
+    font-family: 'Roboto', Arial, Tahoma, Helvetica, "Liberation Sans", sans-serif;
+    background-color: #f3f6f8;
+}
+
+.page{
+    margin: 0;
+    display: flex;
+    justify-content: flex-start;
+}
+
+.login-section {
+    background-color: #ffffff;
+    margin: 20px;
+    padding: 80px 100px;
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    border-radius: 15px;
+}
+
+.page h1 {
+    margin: 0;
+    color: #000000;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.page h3{
+    margin-top: 24px;
+    color: #000;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.page p {
+    margin: 5px 0;
+    color: #6b6b6b;
+}
+
+.page form {
+    width: 100%;
+    /* margin-top: 20px; */
+}
+
+.page label {
+    display: block;
+    margin-top: 10px;
+    color: #000;
+}
+
+.login, .password {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    outline: none;
+    font: inherit;
+}
+
+.password-label{
+    position: relative;
+}
+
+.password-label input {
+    display: block;
+    padding: 10px 45px 10px 10px;
+}
+
+.password-label button {
+    position: absolute;
+    right: 1px;
+    bottom: 1px;
+    width: 44px;
+    height: 44px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.forgot-remember{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.remember-me {
+    display: flex;
+    align-items: baseline;
+}
+
+.remember-me input, .remember-me label {
+    cursor: pointer;
+}
+
+.remember-me input {
+    margin-right: 5px;
+}
+
+.forgot-password {
+    color: #6b6b6b;
+    text-decoration: none;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.login-button {
+    width: 100%;
+    margin-top: 20px;
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: 3px solid #000;
+    background-color: #000;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+.login-button:hover {
+    background-color: transparent;
+    color: #000;
+    transition: 0.5s;
+}
+
+.image-section {
+    background-color: #f3f6f8;
+    padding: 0;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-pic {
+    width: 400px;
+}
+
+.logo {
+    align-items: end;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.logo img {
+    height: 60px;
+    margin-right: 10px;
+}
+
+.logo span {
+    font-size: 32px;
+    font-weight: bold;
+    color: #000;
+}

@@ -1,0 +1,258 @@
+.main-content {
+    flex: 1;
+    padding: 20px;
+}
+
+.instruction {
+    background: #fff;
+    border-radius: 7px;
+    padding: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
+}
+
+.instruction-control {
+    display: flex;
+    margin-bottom: 40px;
+    align-items: center;
+}
+
+.bi-pencil-square, .bi-trash3 {
+    margin-right: 5px;
+    padding: 3px 6px 0;
+    cursor: pointer;
+    border-radius: 5px;
+    color: #000;
+}
+
+.bi-pencil-square:hover {
+    color: #50aaff;
+}
+
+.bi-trash3:hover {
+    color: #ff6969;
+}
+
+.instruction .status {
+    margin: 0 0 0 auto;
+    height: fit-content;
+    width: fit-content;
+    cursor: pointer;
+}
+
+.status{
+    border: none;
+}
+
+.form-select:focus {
+    box-shadow: none;
+}
+
+.uni-name {
+    color: #000;
+    text-align: center;
+}
+
+.instruction h2, h4{
+    text-align: center;
+    font-weight: 600;
+}
+
+.bold {
+    font-weight: 600;
+}
+
+.comment-section, .process-map {
+    display: flex;
+    background: #fff;
+    border-radius: 7px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+
+}
+
+.process-map {
+    display: block;
+}
+
+.map{
+    border: 2px solid #adb5bd;
+    border-radius: 5px;
+    height: 500px;
+}
+
+.accordion-button {
+    font-weight: 600;
+    color: #6c757d;
+    background: #cfe2ff;
+}
+
+.accordion-button:focus {
+    box-shadow: none;
+}
+
+.button-start {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #bdffcd;
+    border: 2px solid #006e1b;
+    color: #006e1b;
+}
+
+.button-start:hover{
+    background: #84ffa3;
+}
+
+.button-finish {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffbdbd;
+    border: 2px solid #7b0000;
+    color: #7b0000;
+}
+
+.button-finish:hover {
+    background: #ffa3a3;
+}
+
+.button-square {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #d7fcfc;
+    border: 2px solid #006767;
+    color: #006767;
+}
+
+.button-square:hover{
+    background: #a3ffff;
+}
+
+.button-diamond {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #fffdbd;
+    border: 2px solid #cc6200;
+    color: #cc6200;
+}
+
+.button-diamond:hover{
+    background: #fffb8e;
+}
+
+.button-document {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #e4c2ff;
+    border: 2px solid #6500b8;
+    color: #6500b8;
+}
+
+.button-document:hover{
+    background: #d4a0ff;
+}
+
+.button-prepare {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffe3c2;
+    border: 2px solid #7c4200;
+    color: #7c4200;
+}
+
+.button-prepare:hover{
+    background: #ffd7a9;
+}
+
+.button-parallel {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #c2c2ff;
+    border: 2px solid #000099;
+    color: #000099;
+}
+
+.button-parallel:hover{
+    background: #9c9cff;
+}
+
+.button-sticky {
+    padding: 0 15px;
+    border-radius: 20px;
+    background: #ffeb3b;
+    border: 2px solid #cf7500;
+    color: #cf7500;
+}
+
+.button-sticky:hover{
+    background: #f4db00;
+}
+
+.button-update {
+    border-radius: 5px;
+    padding: 0 15px;
+}
+
+.button-update:hover{
+    background: #cfe2ff;
+}
+
+.button-save {
+    margin-top: 10px;
+    padding: 6px 12px;
+    border-radius: 7px;
+    border: none;
+    background: #81b8ff;
+}
+
+.image img {
+    height: 40px;
+}
+
+.input-comment-block{
+    margin-left: 10px;
+    width: 100%;
+}
+
+.name {
+    display: inline-block;
+    margin: 5px 0 5px 0;
+    font-weight: 600;
+    color: #3782e2;
+    font-size: 14px;
+}
+
+.input-comment-block textarea {
+    padding: 10px;
+    border: 1px solid #adb5bd;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 100px;
+}
+
+.input-comment-block textarea:focus-visible{
+    outline: none;
+}
+
+.send-button {
+    height: fit-content;
+    margin-left: 10px;
+    background: #81b8ff;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    padding: 5px 10px 3px;
+    align-self: end;
+    margin-bottom: 6px;
+}
+
+.send-button:hover, .button-save:hover{
+    background: #669ee7;
+}
+
+.datetime {
+    margin-left: 10px;
+    color: #797f84;
+    font-weight: normal;
+    font-size: 12px;
+}
