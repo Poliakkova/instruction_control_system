@@ -26,8 +26,13 @@ public class ReqRes {
     private String jobTitle;
     private String email;
     private String login;
-    private boolean enableNotification;
     private String password;
+
+    private boolean notifyWeekReport;
+    private boolean notifyMissedDeadline;
+    private boolean notifyNewInstruction;
+    private boolean notifyStatusChange;
+    private boolean notifyNewComment;
 
     private UserEntity user;
     private List<UserEntityDto> usersList;

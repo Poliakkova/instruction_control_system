@@ -1,5 +1,6 @@
 package kpi.iate.instructions_control_system.service;
 
+import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.dto.ReqRes;
 import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.entity.UserEntity;
@@ -27,6 +28,4 @@ public interface UserService {
     ReqRes refreshToken(ReqRes req);
 
     ReqRes getMyInfo(String email);
-
-//    String generateJwtToken(LoginDTO loginDTO);
 }

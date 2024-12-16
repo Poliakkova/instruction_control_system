@@ -57,8 +57,20 @@ public class UserEntity implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "instruction_id"))
     private List<Instructions> instructions;
 
-    @Column(name = "user_enable_notification")
-    private boolean enableNotification;
+    @Column(name = "user_notify_week_report")
+    private boolean notifyWeekReport;
+
+    @Column(name = "user_notify_missed_deadline")
+    private boolean notifyMissedDeadline;
+
+    @Column(name = "user_notify_new_instruction")
+    private boolean notifyNewInstruction;
+
+    @Column(name = "user_notify_status_change")
+    private boolean notifyStatusChange;
+
+    @Column(name = "user_new_comment")
+    private boolean notifyNewComment;
 
     @JsonIgnore
     @Override

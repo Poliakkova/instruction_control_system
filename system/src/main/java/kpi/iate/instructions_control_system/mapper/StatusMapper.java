@@ -6,9 +6,9 @@ public class StatusMapper {
     private static final Map<String, String> statusMapping = new HashMap<>();
 
     static {
-        statusMapping.put("CREATED", "Назначено");
-        statusMapping.put("CONFIRMATION", "Очікує затвердження");
-        statusMapping.put("IN_PROGRESS", "В роботі");
+        statusMapping.put("CREATED", "Внесено");
+        statusMapping.put("REGISTERED", "Зареєстровано");
+        statusMapping.put("IN_PROGRESS", "Виконується");
         statusMapping.put("CANCELLED", "Скасовано");
         statusMapping.put("FINISHED", "Виконано");
     }

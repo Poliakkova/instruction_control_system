@@ -31,7 +31,7 @@ const CreateInstructionComponent = () => {
         full: '',
         shortDescription: '',
         text: '',
-        startTime: '',
+        startTime: '0',
         expTime: '',
         status: 'CREATED',
         mapProcess: '',
@@ -115,7 +115,7 @@ const CreateInstructionComponent = () => {
             <div className="content">
             <form onSubmit={() => createInstruction(event, instruction, navigate, localStorage.getItem("token"))}>
                 <div className="form-floating">
-                    <input required type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
+                    <input type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
                     onChange={handleChange}  maxLength={255}/>
                     <label htmlFor="protocol">Протокол засідання кафедри №</label>
                 </div>
@@ -140,11 +140,11 @@ const CreateInstructionComponent = () => {
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
                         <option value='Навчально-організаційна робота'>Навчально-організаційна робота</option>
                     </select>
-                    <label htmlFor="type">Тип доручення</label>
+                    <label htmlFor="type">Напрям доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <input required type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
+                    <input type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
                     onChange={handleChange}  maxLength={255}/>
                     <label htmlFor="sourceOfInstruction">Звідки отримали доручення</label>
                 </div>
@@ -156,13 +156,13 @@ const CreateInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <textarea required type="text" className="form-control" id="fullDescription" placeholder="Повний опис доручення" 
+                    <textarea type="text" className="form-control" id="fullDescription" placeholder="Повний опис доручення" 
                     onChange={handleChange}  maxLength={255}/>
                     <label htmlFor="fullDescription">Повний опис доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <textarea required type="text" className="form-control" id="text" placeholder="Текст доручення" 
+                    <textarea type="text" className="form-control" id="text" placeholder="Текст доручення" 
                     onChange={handleChange}  maxLength={255} style={{height: 'fit-content'}}/>
                     <label htmlFor="text">Текст доручення</label>
                 </div>
@@ -171,7 +171,7 @@ const CreateInstructionComponent = () => {
                     border: '1px solid #dee2e6',
                     borderRadius: 6,
                     padding: '16px 12px'}}>
-                    <div style={{marginBottom: 10}}>Оберіть відповідальних</div>
+                    <div style={{marginBottom: 10}}>Оберіть виконавця</div>
                     <div>
                         <input type="text"
                         placeholder="Пошук за іменем..."
@@ -201,15 +201,9 @@ const CreateInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <input required type="date" className="form-control" id="startTime" placeholder="Дата початку виконання" 
-                    onChange={handleChangeDate}/>
-                    <label htmlFor="startTime">Дата початку виконання</label>
-                </div>
-
-                <div className="form-floating">
                     <input required type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
                     onChange={handleChangeDate}/>
-                    <label htmlFor="expTime">Дата дедлайну</label>
+                    <label htmlFor="expTime">Виконати до</label>
                 </div>
 
                 <button type="submit" className='add-user-button mt-3 mb-3'>Зберегти доручення</button>

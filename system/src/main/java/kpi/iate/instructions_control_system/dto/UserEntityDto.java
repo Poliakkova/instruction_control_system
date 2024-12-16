@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import javax.persistence.Column;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -33,7 +34,15 @@ public class UserEntityDto implements UserDetails {
 
     private List<InstructionsDto> instructions;
 
-    private boolean enableNotification;
+    private boolean notifyWeekReport;
+
+    private boolean notifyMissedDeadline;
+
+    private boolean notifyNewInstruction;
+
+    private boolean notifyStatusChange;
+
+    private boolean notifyNewComment;
 
     private String userPassword;
 

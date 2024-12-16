@@ -6,6 +6,7 @@ import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.enums.InstructionStatus;
 import kpi.iate.instructions_control_system.service.InstructionsService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -88,5 +89,13 @@ public class InstructionsController {
     @GetMapping("/archived")
     public List<InstructionsDto> getArchivedInstructions(@RequestHeader(value = "key") UUID key) {
         return instructionsService.getArchivedInstructions();
+    }
+
+    @Operation(summary = "send email")
+    @PostMapping("/send-emails")
+    public ResponseEntity<?> sendEmailToInstructionUsers(@RequestHeader(value = "key") UUID key,
+                                                         @RequestBody InstructionsDto instructionsDto) {
+        instructionsService.sendEmailToInstructionUsers(key, instructionsDto);
+        return ResponseEntity.ok("Повідомлення успішно відправлено");
     }
 }

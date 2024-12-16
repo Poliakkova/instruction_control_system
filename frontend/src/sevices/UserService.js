@@ -89,18 +89,17 @@ export const deleteUser = async (userLogin, navigator, token) => {
 
 //Функція зміни пароля
 export const changePassword = async (userLogin, oldPassword, newPassword, token) => {
-try {
-    const response = await axios.put('http://localhost:8090/users/change-password',
-    { userLogin, oldPassword, newPassword },
-    { headers: { Authorization: `Bearer ${token}` } }
-    );
+    try {
+        const response = await axios.put('http://localhost:8090/users/change-password',
+        { userLogin, oldPassword, newPassword },
+        { headers: { Authorization: `Bearer ${token}` } }
+        );
 
-    if (response.status === 200) {
-    alert('Пароль успішно змінено');
+        if (response.status === 200) {
+        alert('Пароль успішно змінено');
+        }
+    } catch (error) {
+        console.error('Помилка під час зміни пароля:', error.response.data);
+        alert('Не вдалося змінити пароль. Перевірте введені дані.');
     }
-} catch (error) {
-    console.error('Помилка під час зміни пароля:', error.response.data);
-    alert('Не вдалося змінити пароль. Перевірте введені дані.');
-}
 };
-  

@@ -108,7 +108,6 @@ export const deleteInstruction = async (instructionTitle, navigate, token) => {
 //Функція оновлення статусу доручення
 export const updateInstructionStatus = async (instruction, token) => {
     try {
-        console.log("----UPDATE TOKEN: " + token);
         // Отримання ключа
         const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
@@ -134,15 +133,11 @@ export const updateInstructionStatus = async (instruction, token) => {
 
 //Функція оновлення доручення
 export const updateInstructionComment = async (instruction, navigate, token) => {
-    console.log("ENTER COMMENT "+JSON.stringify(instruction));
 
     try {
         // Отримання ключа
-        console.log("TOKEN" + token)
         const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
-
-        console.log("COMMENT uuidKey " + uuidKey);
 
         // Додавання ключа до HTTP-запиту
         const response = await axios.put("http://localhost:8090/instructions/update", instruction, {
@@ -152,14 +147,31 @@ export const updateInstructionComment = async (instruction, navigate, token) => 
             },
         });
 
-        console.log(response.data)
-
         if (response.status === 200) {
+            try {
+                console.log("RESPONCE 2")
+                // Отримання ключа
+                const keyResponse = await getKey(token);
+                const uuidKey = keyResponse.data;
+
+                const response2 = await axios.post("http://localhost:8090/instructions/send-emails", instruction, {
+                    headers: {
+                        key: uuidKey,
+                        Authorization: `Bearer ${token}`
+                    },
+                });
+
+                console.log(response2.status);
+            } catch (error) {
+                console.error('Помилка сповіщення:', error);
+                alert('Не вийшло надіслати сповіщення');
+            }
+
             navigate(`/instructions/${encodeURIComponent(instruction.code)}`);
         } 
 
     }catch (error) {
-        console.error('Помилка при оновленні інструкції:', error);
+        console.error('Помилка додавання коментаря:', error);
         alert('Помилка додавання коментаря');
     }
 };

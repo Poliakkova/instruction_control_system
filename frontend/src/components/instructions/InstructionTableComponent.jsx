@@ -18,15 +18,15 @@ const InstructionTableComponent = ({
         <Table responsive className="table table-hover">
             <thead>
                 <tr>
-                    <th>Дата створення</th>
-                    <th>Протокол засідання</th>
+                    <th>Дата видачі доручення</th>
+                    <th>Протокол засідання кафедри №</th>
                     <th>Джерело</th>
-                    <th>Тип</th>
-                    <th style={{ minWidth: 150 }}>Відповідальні</th>
+                    <th>Напрям</th>
+                    <th style={{ minWidth: 150 }}>Виконавець</th>
                     <th style={{ minWidth: 200 }}>Назва</th>
                     <th style={{ minWidth: 200 }}>Короткий опис</th>
-                    <th>Початок</th>
-                    <th>Дедлайн</th>
+                    <th>Виконати до</th>
+                    <th>Коли виконали</th>
                     <th className="sticky-col">Статус</th>
                     <th className="sticky-col"></th>
                     <th className="sticky-col"></th>
@@ -51,14 +51,14 @@ const InstructionTableComponent = ({
                             </td>
                             <td><div>{instruction.title}</div></td>
                             <td><div>{instruction.shortDescription}</div></td>
-                            <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                             <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
+                            <td>{instruction.startTime!="1970-01-01T00:00:00.000+00:00" ? new Date(instruction.startTime).toLocaleDateString() : ''}</td>
                             <td className="sticky-col">
                                 <span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>
                                     {statusMapping[instruction.status] || 'Невідомий статус'}
                                 </span>
                             </td>
-                            {isAdmin || isTeacher ? <td className="sticky-col" style={{ padding: '10px 0' }}>
+                            {isAdmin ? <td className="sticky-col" style={{ padding: '10px 0' }}>
                                 <i
                                     title="Редагувати"
                                     className="bi bi-pencil-square"

@@ -133,7 +133,7 @@
 .status {
     color: #fff;
     border-radius: 5px;
-    width: 130px;
+    width: 100px;
     height: 25px;
     display: block;
     text-align: center;
@@ -154,4 +154,8 @@
 
 .orange {
     background-color: #ff834a;
+}
+
+.red {
+    background-color: #ff4a4a;
 }

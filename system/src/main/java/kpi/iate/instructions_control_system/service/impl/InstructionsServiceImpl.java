@@ -135,9 +135,9 @@ public class InstructionsServiceImpl implements InstructionsService {
 
                 System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
                         user.getUserEmail(), user.getUserLogin());
-                if (user.getUserEmail() != null && user.isEnableNotification()) {
+                if (user.getUserEmail() != null && user.isNotifyNewInstruction()) {
                     String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-                    String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
+//                    String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                     String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
 
                     String message = String.format(
@@ -150,7 +150,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                     "Короткий опис: %s\n\n" +
                                     "Повний опис: %s\n\n" +
                                     "Текст доручення: %s\n\n" +
-                                    "Початок роботи: %s\n\n" +
+//                                    "Початок роботи: %s\n\n" +
                                     "Виконати до: %s\n\n" +
                                     "Ознайомтеся детальніше на http://localhost:3000//instructions/%s\n" +
                                     "Гарного дня!",
@@ -163,7 +163,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                             instructions.getShortDescription(),
                             instructions.getFullDescription(),
                             instructions.getText(),
-                            formattedDateStart,
+//                            formattedDateStart,
                             formattedDateExp,
                             instructions.getCode()
                     );
@@ -211,10 +211,10 @@ public class InstructionsServiceImpl implements InstructionsService {
 
                             System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
                                     userEntity.getUserEmail(), userEntity.getUserLogin());
-                            if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
+                            if (userEntity.getUserEmail() != null && userEntity.isNotifyNewInstruction()) {
 
                                 String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-                                String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
+//                                String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                                 String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
 
                                 String message = String.format(
@@ -227,7 +227,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                                 "Короткий опис: %s\n\n" +
                                                 "Повний опис: %s\n\n" +
                                                 "Текст доручення: %s\n\n" +
-                                                "Початок роботи: %s\n\n" +
+//                                                "Початок роботи: %s\n\n" +
                                                 "Виконати до: %s\n\n" +
                                                 "Ознайомтеся детальніше на http://localhost:3000//instructions/%s\n" +
                                                 "Гарного дня!",
@@ -240,7 +240,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                         instructions.getShortDescription(),
                                         instructions.getFullDescription(),
                                         instructions.getText(),
-                                        formattedDateStart,
+//                                        formattedDateStart,
                                         formattedDateExp,
                                         instructions.getCode()
                                 );
@@ -300,10 +300,10 @@ public class InstructionsServiceImpl implements InstructionsService {
                     if (userEntity != null) {
                         System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
                                 userEntity.getUserEmail(), userEntity.getUserLogin());
-                        if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
+                        if (userEntity.getUserEmail() != null && userEntity.isNotifyStatusChange()) {
 
                             String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-                            String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
+//                            String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                             String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
                             String message = String.format(
                                     "Вітаю, %s!\n" +
@@ -314,7 +314,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                             "Короткий опис: %s\n\n" +
                                             "Повний опис: %s\n\n" +
                                             "Текст доручення: %s\n\n" +
-                                            "Початок роботи: %s\n\n" +
+//                                            "Початок роботи: %s\n\n" +
                                             "Виконати до: %s\n\n" +
                                             "Ознайомтеся детальніше на http://localhost:3000/instructions/%s\n" +
                                             "Гарного дня!",
@@ -326,11 +326,11 @@ public class InstructionsServiceImpl implements InstructionsService {
                                     instructions.getShortDescription(),
                                     instructions.getFullDescription(),
                                     instructions.getText(),
-                                    formattedDateStart,
+//                                    formattedDateStart,
                                     formattedDateExp,
                                     instructions.getCode()
                             );
-                            mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
+                            mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ - Новий статус", message);
                         }
 
 
@@ -394,5 +394,43 @@ public class InstructionsServiceImpl implements InstructionsService {
 //                mailService.send(user.getUserEmail(), "Доручення НН ІАТЕ", message);
 //            }
         });
+    }
+
+    @Override
+    public void sendEmailToInstructionUsers(UUID key, InstructionsDto instructionsDto) {
+        Assert.notNull(instructionsDto, "Instruction DTO couldn`t be null while updating status");
+        validateKey(key);
+
+        Instructions instructions = instructionsRepository.getInstructionByCode(instructionsDto.getCode())
+                .orElseThrow(() -> new InstructionNotFoundException(String.format("No instruction with code %s was found", instructionsDto.getCode())));
+
+        instructionsDto.getUsers().stream()
+                .filter(Objects::nonNull)
+                .forEach(user -> {
+                    UserEntity userEntity = userService.findUserByLogin(user.getUserLogin());
+                    if (userEntity != null) {
+                        if (userEntity.getUserEmail() != null && userEntity.isNotifyNewComment()) {
+
+                            String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
+                            String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
+                            String message = String.format(
+                                    "Вітаю, %s!\n" +
+                                            "Ви отримали новий коментар до доручення \"%s\"\n\n" +
+                                            "Короткий опис доручення: %s\n\n" +
+                                            "Статус доручення: %s\n\n" +
+                                            "Виконати до: %s\n\n" +
+                                            "Перегляньте коментар на http://localhost:3000/instructions/%s\n" +
+                                            "Гарного дня!",
+                                    userEntity.getUserName(),
+                                    instructions.getTitle(),
+                                    instructions.getShortDescription(),
+                                    translatedStatus,
+                                    formattedDateExp,
+                                    instructions.getCode()
+                            );
+                            mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ - Новий коментар", message);
+                        }
+                    }
+                });
     }
 }

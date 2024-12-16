@@ -25,7 +25,7 @@ public class ExpiredInstructionNotificationServiceImpl implements ExpiredInstruc
 
 
     //second minute hour day-of-month month day-of-week
-    @Scheduled(cron = "0 48 2 * * ?", zone = "Europe/Kiev")
+    @Scheduled(cron = "0 9 22 * * ?", zone = "Europe/Kiev")
     @Override
     @Transactional
     public void sendDeadlineNotification() {
@@ -39,19 +39,23 @@ public class ExpiredInstructionNotificationServiceImpl implements ExpiredInstruc
 
         // Надсилання повідомлень для наближення дедлайну
         listInst.stream()
-                .filter(instruction -> "CREATED".equals(instruction.getStatus()) || "IN_PROGRESS".equals(instruction.getStatus()))
+                .filter(instruction -> "CREATED".equals(instruction.getStatus()) ||
+                        "IN_PROGRESS".equals(instruction.getStatus()) ||
+                        "REGISTERED".equals(instruction.getStatus()))
                 .forEach(instruction -> {
                     long expTimeMillis = instruction.getExpTime() * 1000; // Дедлайн у мілісекундах
                     long daysToDeadline = (expTimeMillis - currentTimeMillis) / (24 * 60 * 60 * 1000); // Різниця в днях
 
-                    if (daysToDeadline == 7 || daysToDeadline == 3 || daysToDeadline == 1) {
+                    if (daysToDeadline == 7 /*|| daysToDeadline == 3 || daysToDeadline == 1*/) {
                         sendReminderEmail(instruction, daysToDeadline);
                     }
                 });
 
         // Надсилання повідомлень про пропущений дедлайн
         listInst.stream()
-                .filter(instruction -> "CREATED".equals(instruction.getStatus()) || "IN_PROGRESS".equals(instruction.getStatus()))
+                .filter(instruction -> "CREATED".equals(instruction.getStatus()) ||
+                        "IN_PROGRESS".equals(instruction.getStatus()) ||
+                        "REGISTERED".equals(instruction.getStatus()))
                 .forEach(instruction -> {
                     long expTimeMillis = instruction.getExpTime() * 1000; // Дедлайн у мілісекундах
                     long daysAfterDeadline = (currentTimeMillis - expTimeMillis) / (24 * 60 * 60 * 1000); // Різниця в днях після дедлайну
@@ -65,7 +69,7 @@ public class ExpiredInstructionNotificationServiceImpl implements ExpiredInstruc
     // Надсилання повідомлення про наближення дедлайну
     private void sendReminderEmail(Instructions instruction, long daysToDeadline) {
         instruction.getHeads().forEach(user -> {
-            if (user.isEnableNotification() && user.getUserEmail() != null) {
+            if (user.isNotifyWeekReport() && user.getUserEmail() != null) {
                 String formattedDateExp = unixDateToStringParser.unixDateToString(instruction.getExpTime());
                 String translatedStatus = StatusMapper.getStatusName(instruction.getStatus());
 
@@ -97,7 +101,7 @@ public class ExpiredInstructionNotificationServiceImpl implements ExpiredInstruc
     // Надсилання повідомлення про пропущений дедлайн
     private void sendMissedDeadlineEmail(Instructions instruction) {
         instruction.getHeads().forEach(user -> {
-            if (user.isEnableNotification() && user.getUserEmail() != null) {
+            if (user.isNotifyMissedDeadline() && user.getUserEmail() != null) {
                 String formattedDateExp = unixDateToStringParser.unixDateToString(instruction.getExpTime());
                 String translatedStatus = StatusMapper.getStatusName(instruction.getStatus());
 

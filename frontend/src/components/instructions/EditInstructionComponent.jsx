@@ -156,7 +156,7 @@ const EditInstructionComponent = () => {
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
                         <option value='Навчально-організаційна робота'>Навчально-організаційна робота</option>
                     </select>
-                    <label htmlFor="type">Тип доручення</label>
+                    <label htmlFor="type">Напрям доручення</label>
                 </div>
 
                 <div className="form-floating">
@@ -187,7 +187,7 @@ const EditInstructionComponent = () => {
                     border: '1px solid #dee2e6',
                     borderRadius: 6,
                     padding: '16px 12px'}}>
-                    <div style={{marginBottom: 10}}>Оберіть відповідальних</div>
+                    <div style={{marginBottom: 10}}>Оберіть виконавця</div>
                     <div>
                         <input type="text"
                         placeholder="Пошук за іменем..."
@@ -217,15 +217,9 @@ const EditInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <input required type="date" className="form-control" id="startTime" placeholder="Дата початку виконання" 
-                    onChange={handleChangeDate} value={instruction.startTime.split('T')[0]}/>
-                    <label htmlFor="startTime">Дата початку виконання</label>
-                </div>
-
-                <div className="form-floating">
                     <input required type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
                     onChange={handleChangeDate} value={instruction.expTime.split('T')[0]}/>
-                    <label htmlFor="expTime">Дата дедлайну</label>
+                    <label htmlFor="expTime">Виконати до</label>
                 </div>
 
                 <button type="submit" className='add-user-button mt-3 mb-3'>Оновити доручення</button>

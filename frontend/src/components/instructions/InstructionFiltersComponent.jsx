@@ -34,7 +34,7 @@ const InstructionFiltersComponent = ({
                             до: <input className="filter-input" type="date" name="startTimeTo" onChange={handleFilterChange} />
                         </label>
                         <br />
-                        <span className="d-block mt-2" style={{ color: '#3782e2' }}>Дедлайн</span>
+                        <span className="d-block mt-2" style={{ color: '#3782e2' }}>Термін виконання</span>
                         <label>
                             з: <input className="filter-input" type="date" name="expTimeFrom" onChange={handleFilterChange} />
                         </label>

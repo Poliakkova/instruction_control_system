@@ -26,4 +26,7 @@ public interface InstructionsService {
     List<InstructionsDto> getArchivedInstructions();
 
     void updateInstructionStatus(final UUID key, final InstructionsDto instructionsDto);
+
+    void sendEmailToInstructionUsers(UUID key, InstructionsDto instructionsDto);
+
 }

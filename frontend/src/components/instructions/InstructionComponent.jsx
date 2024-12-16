@@ -13,6 +13,7 @@ import { getInstruction, deleteInstruction, updateInstructionStatus, updateInstr
 import useNodeFlow from './js/useNodeFlow';
 import nodeTypes from './js/nodeTypes';
 import LoginService from '../../sevices/LoginService';
+import { getStatusClassFromDBValue } from './js/statusUtils';
 
 
 const InstructionComponent = () => {
@@ -80,22 +81,6 @@ const InstructionComponent = () => {
     }
   };
 
-  // Функція для визначення класу на основі статусу
-  const getStatusClass = (status) => {
-    switch (status) {
-      case 'CREATED':
-        return 'status orange';
-      case 'IN_PROGRESS':
-        return 'status yellow';
-      case 'CONFIRMATION':
-        return 'status green';
-      case 'FINISHED':
-        return 'status grey';
-      default:
-        return 'status grey';
-    }
-  };
-
   useEffect(() => {
     setSelectedStatus(instruction.status); // Оновлюємо вибраний статус при зміні вхідних даних
   }, [instruction.status]);
@@ -160,25 +145,27 @@ const InstructionComponent = () => {
       <div className="main-content">
         <div className="instruction">
           <div className="instruction-control">
-            {isAdmin || isTeacher ? <a title="Редагувати" onClick={() => {editInstruction(instruction.code)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
+            {isAdmin ? <a title="Редагувати" onClick={() => {editInstruction(instruction.code)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
             :<a title="Немає доступу"><i className="bi bi-pencil-square" style={{ fontSize: '18px', color: 'lightgray'}}></i></a>}
             
             {isAdmin ? <a title="Видалити" onClick={() => {deleteInstruction(instruction.code, navigator, localStorage.getItem("token"))}}><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
             :<a title="Немає доступу"><i className="bi bi-trash3" style={{ fontSize: '18px', color: 'lightgray'}}></i></a>}
 
-            {isAdmin || isTeacher ? <select className={`form-select status ${getStatusClass(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
+            {isAdmin || isTeacher ? <select className={`form-select status ${getStatusClassFromDBValue(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
             value={selectedStatus} onChange={handleChangeStatus}>
-              <option value="CREATED" className='status orange'>Назначено</option>
-              <option value="IN_PROGRESS" className='status yellow'>В роботі</option>
-              <option value="CONFIRMATION" className='status green'>Очікує затвердження</option>
+              <option value="CREATED" className='status orange'>Внесено</option>
+              <option value="REGISTERED" className='status yellow'>Зареєстровано</option>
+              <option value="IN_PROGRESS" className='status green'>Виконується</option>
               <option value="FINISHED" className='status grey'>Виконано</option>
+              <option value="CANCELLED" className='status green'>Скасовано</option>
             </select>
-            : <select className={`form-select status ${getStatusClass(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
+            : <select className={`form-select status ${getStatusClassFromDBValue(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
             value={selectedStatus}>
-              <option value="CREATED" className='status orange'>Назначено</option>
-              <option value="IN_PROGRESS" className='status yellow'>В роботі</option>
-              <option value="CONFIRMATION" className='status green'>Очікує затвердження</option>
+              <option value="CREATED" className='status orange'>Внесено</option>
+              <option value="REGISTERED" className='status yellow'>Зареєстровано</option>
+              <option value="IN_PROGRESS" className='status green'>Виконується</option>
               <option value="FINISHED" className='status grey'>Виконано</option>
+              <option value="CANCELLED" className='status green'>Скасовано</option>
             </select>}
           </div>
 
@@ -191,7 +178,8 @@ const InstructionComponent = () => {
           <br></br>
           <div className="block">
             <p>Код доручення: {instruction.code}</p>
-            <p>Протокол №{instruction.protocol} засідання кафедри від {new Date(instruction.makingTime).toLocaleDateString()}</p>
+            <p>Протокол №{instruction.protocol} засідання кафедри</p>
+            <p>Дата видачі доручення: {new Date(instruction.makingTime).toLocaleDateString()}</p>
           </div>
 
           <br></br>
@@ -200,7 +188,7 @@ const InstructionComponent = () => {
           <br></br>
           <h4>{instruction.title}</h4>
           <p><span className='bold'>Джерело: </span>{instruction.sourceOfInstruction}</p>
-          <p><span className='bold'>Тип: </span>{instruction.type}</p>
+          <p><span className='bold'>Напрям доручення: </span>{instruction.type}</p>
 
           <p>Короткий опис: {instruction.shortDescription}</p>
           <p>Повний опис: {instruction.fullDescription}</p>
@@ -293,7 +281,7 @@ const InstructionComponent = () => {
         </Accordion>
         </div>
 
-        <div className="comments">
+        {isAdmin || isTeacher ? <div className="comments">
           <form className="comment-section" onSubmit={handleSubmitComment}>
             <div className="image"><img src="../user_icon.png"></img></div>
             <div className="input-comment-block">
@@ -312,6 +300,7 @@ const InstructionComponent = () => {
             </div>
           </div>
         </div> 
+        :<></>}
 
         {/* <div className="comments">
           <form className="comment-section">

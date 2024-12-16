@@ -1,5 +1,6 @@
 package kpi.iate.instructions_control_system.service.impl;
 
+import kpi.iate.instructions_control_system.dto.InstructionsDto;
 import kpi.iate.instructions_control_system.dto.ReqRes;
 import kpi.iate.instructions_control_system.dto.UserEntityDto;
 import kpi.iate.instructions_control_system.entity.UserEntity;
@@ -66,22 +67,26 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserSurname(userEntityDto.getUserSurname());
         userEntity.setUserEmail(userEntityDto.getUserEmail());
         userEntity.setUserLogin(userEntityDto.getUserLogin());
-        userEntity.setEnableNotification(userEntityDto.isEnableNotification());
+        userEntity.setNotifyNewInstruction(userEntityDto.isNotifyNewInstruction());
+        userEntity.setNotifyNewComment(userEntityDto.isNotifyNewComment());
+        userEntity.setNotifyMissedDeadline(userEntityDto.isNotifyMissedDeadline());
+        userEntity.setNotifyStatusChange(userEntityDto.isNotifyStatusChange());
+        userEntity.setNotifyWeekReport(userEntityDto.isNotifyWeekReport());
         userEntity.setUserPassword(this.passwordEncoder.encode(userEntityDto.getUserPassword()));
         userRepository.save(userEntity);
 
-        if (userEntity.getUserEmail() != null && userEntity.isEnableNotification()) {
-            System.out.println("HAS EMAIL");
+        if (userEntity.getUserEmail() != null) {
             String message = String.format(
                     "Вітаю, %s %s %s!\n" +
                             "Вам було створено акаунт у Доручення НН ІАТЕ\n" +
                             "Логін: %s\n" +
-                            "Пароль: 1\n" +
+                            "Пароль: %s\n" +
                             "Ознайомтеся з особистим кабінетом http://127.0.0.1:3000/instructions\n" +
                             "Якщо виявили помилку, будь ласка, повідомте відповідального!\n" +
                             "Гарного дня!",
                     userEntity.getUserSurname(), userEntity.getUserName(), userEntity.getUserPatronymic(),
-                    userEntity.getUserLogin()
+                    userEntity.getUserLogin(),
+                    userEntity.getPassword()
             );
             mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
         }
@@ -107,8 +112,11 @@ public class UserServiceImpl implements UserService {
         userEntity.setUserName(userEntityDto.getUserName());
         userEntity.setUserPatronymic(userEntityDto.getUserPatronymic());
         userEntity.setUserJobTitle(userEntityDto.getUserJobTitle().name());
-        userEntity.setEnableNotification(userEntityDto.isEnableNotification());
-
+        userEntity.setNotifyNewInstruction(userEntityDto.isNotifyNewInstruction());
+        userEntity.setNotifyNewComment(userEntityDto.isNotifyNewComment());
+        userEntity.setNotifyMissedDeadline(userEntityDto.isNotifyMissedDeadline());
+        userEntity.setNotifyStatusChange(userEntityDto.isNotifyStatusChange());
+        userEntity.setNotifyWeekReport(userEntityDto.isNotifyWeekReport());
         userRepository.save(userEntity);
     }
 
@@ -170,7 +178,11 @@ public class UserServiceImpl implements UserService {
             response.setEmail(user.getUserEmail());
             response.setLogin(user.getUserLogin());
             response.setPassword(user.getUserPassword());
-            response.setEnableNotification(user.isEnableNotification());
+            response.setNotifyNewInstruction(user.isNotifyNewInstruction());
+            response.setNotifyNewComment(user.isNotifyNewComment());
+            response.setNotifyMissedDeadline(user.isNotifyMissedDeadline());
+            response.setNotifyStatusChange(user.isNotifyStatusChange());
+            response.setNotifyWeekReport(user.isNotifyWeekReport());
 
             response.setRefreshToken(refreshToken);
             response.setExpirationTime("24Hrs");
@@ -228,6 +240,7 @@ public class UserServiceImpl implements UserService {
         return reqRes;
 
     }
+
 
 //    @Override
 //    public LoginResponce loginUser(LoginDTO loginDTO) {
