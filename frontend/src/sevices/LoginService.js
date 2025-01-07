@@ -18,7 +18,6 @@ class LoginService {
     static async login (login, password) {
         try {
             const response = await axios.post(`http://localhost:8090/auth/login/`, {login,password});
-            console.log("response: " + response.data.login)
             return response.data;
         } catch(err)  {
             throw err;
@@ -44,14 +43,17 @@ class LoginService {
 
     static isAuthenticated () {
         const token = localStorage.getItem('token');
-        console.log("isAuthenticated: " + !!token + " " + token);
         return !!token;
     }
 
     static isAdmin ()  {
         const role = localStorage.getItem('jobTitle');
-        console.log("isAdmin: "+ (role === "ADMIN") + " " + role);
         return role === "ADMIN";
+    }
+
+    static isHeadAdmin ()  {
+        const role = localStorage.getItem('jobTitle');
+        return role === "HEAD_ADMIN";
     }
 
     static isTeacher ()  {
@@ -70,7 +72,6 @@ class LoginService {
 
     static isNotification () {
         const enabled = localStorage.getItem('enableNotification')
-        console.log(enabled);
         return enabled === "true";
     }
 }

@@ -15,16 +15,15 @@ const EditInstructionComponent = () => {
 
     const [instruction, setInstruction] = useState({
         code: code,
-        makingTime: '',
         protocol: '',
         title: '',
         type: '',
         sourceOfInstruction: '',
         shortDescription: '',
-        fullDescription: '',
-        text: '',
+        report: '',
         startTime: '',
         expTime: '',
+        doneTime: '',
         mapProcess: '',
         users: []
     }); 
@@ -131,21 +130,21 @@ const EditInstructionComponent = () => {
             <form onSubmit={handleSubmit}>
                 <div style={{margin: 10, fontWeight: 600}}>Код доручення: {instruction.code}</div>
                 <div className="form-floating">
-                    <input required type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
+                    <input type="text" className="form-control" id="protocol" placeholder="Протокол засідання кафедри №" 
                     onChange={handleChange}  maxLength={255} value={instruction.protocol}/>
                     <label htmlFor="protocol">Протокол засідання кафедри №</label>
                 </div>
 
                 <div className="form-floating">
-                    <input required type="date" className="form-control" id="makingTime" placeholder="Дата видачі доручення" 
-                    onChange={handleChangeMakingDate} value={formatDate(instruction.makingTime)}/>
-                    <label htmlFor="makingTime">Дата видачі доручення</label>
+                    <input required type="date" className="form-control" id="startTime" placeholder="Дата видачі доручення" 
+                    onChange={handleChangeDate} value={instruction.startTime.split('T')[0]}/>
+                    <label htmlFor="startTime">* Дата видачі доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <input required type="text" className="form-control" id="title" placeholder="Назва доручення" 
                     onChange={handleChange} maxLength={255} value={instruction.title}/>
-                    <label htmlFor="title">Назва доручення</label>
+                    <label htmlFor="title">* Назва доручення</label>
                 </div>
 
                 <div className="form-floating">
@@ -156,11 +155,11 @@ const EditInstructionComponent = () => {
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
                         <option value='Навчально-організаційна робота'>Навчально-організаційна робота</option>
                     </select>
-                    <label htmlFor="type">Напрям доручення</label>
+                    <label htmlFor="type">* Напрям доручення</label>
                 </div>
 
                 <div className="form-floating">
-                    <input required type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
+                    <input type="text" className="form-control" id="sourceOfInstruction" placeholder="Звідки отримали доручення" 
                     onChange={handleChange}  maxLength={255} value={instruction.sourceOfInstruction}/>
                     <label htmlFor="sourceOfInstruction">Звідки отримали доручення</label>
                 </div>
@@ -168,26 +167,14 @@ const EditInstructionComponent = () => {
                 <div className="form-floating">
                     <textarea required type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
                     onChange={handleChange}  maxLength={255} value={instruction.shortDescription}/>
-                    <label htmlFor="shortDescription">Короткий опис доручення</label>
-                </div>
-
-                <div className="form-floating">
-                    <textarea required type="text" className="form-control" id="fullDescription" placeholder="Повний опис доручення" 
-                    onChange={handleChange}  maxLength={255} value={instruction.fullDescription}/>
-                    <label htmlFor="fullDescription">Повний опис доручення</label>
-                </div>
-
-                <div className="form-floating">
-                    <textarea required type="text" className="form-control" id="text" placeholder="Текст доручення" 
-                    onChange={handleChange}  maxLength={255} value={instruction.text} style={{height: 'fit-content'}}/>
-                    <label htmlFor="text">Текст доручення</label>
+                    <label htmlFor="shortDescription">* Короткий опис доручення</label>
                 </div>
 
                 <div className="custom-form-floating" style={{
                     border: '1px solid #dee2e6',
                     borderRadius: 6,
                     padding: '16px 12px'}}>
-                    <div style={{marginBottom: 10}}>Оберіть виконавця</div>
+                    <div style={{marginBottom: 10}}>* Оберіть виконавця</div>
                     <div>
                         <input type="text"
                         placeholder="Пошук за іменем..."
@@ -217,9 +204,9 @@ const EditInstructionComponent = () => {
                 </div>
 
                 <div className="form-floating">
-                    <input required type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
+                    <input required type="date" className="form-control" id="expTime" placeholder="Кінцевий термін" 
                     onChange={handleChangeDate} value={instruction.expTime.split('T')[0]}/>
-                    <label htmlFor="expTime">Виконати до</label>
+                    <label htmlFor="expTime">* Виконати до</label>
                 </div>
 
                 <button type="submit" className='add-user-button mt-3 mb-3'>Оновити доручення</button>

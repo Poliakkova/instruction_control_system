@@ -90,15 +90,15 @@
     box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
 }
 
-.sticky-col:nth-child(10) { /* Позиція для третього з кінця стовпця */
+.sticky-col:nth-child(11) { /* Позиція для третього з кінця стовпця */
     right: 60px;
 }
 
-.sticky-col:nth-child(11) { /* Позиція для другого з кінця стовпця */
+.sticky-col:nth-child(12) { /* Позиція для другого з кінця стовпця */
     right: 30px;
 }
 
-.sticky-col:nth-child(12) { /* Позиція для останнього стовпця */
+.sticky-col:nth-child(13) { /* Позиція для останнього стовпця */
     right: 0;
 }
 

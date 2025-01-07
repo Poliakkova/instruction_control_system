@@ -71,11 +71,11 @@ const UserComponent = () => {
         <div>Логін: {user.userLogin}</div>
         <div style={{display:'flex'}}>
           <div style={{marginRight: 10}}>Пошта: {user.userEmail} </div>
-          <span>{user.enableNotification ? (
+          {/* <span>{user.enableNotification ? (
               <i title="Сповіщення увімкнено" className="bi bi-bell-fill" style={{ color: 'green' }}></i> // іконка для увімкнених сповіщень
           ) : (
               <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
-          )}</span>
+          )}</span> */}
         </div>
 
           <h4>Доручення</h4>

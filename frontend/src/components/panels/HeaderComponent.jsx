@@ -13,6 +13,8 @@ const HeaderComponent = () => {
   const navigate = useNavigate();
   const isAuthenticatedFromService = LoginService.isAuthenticated();
   const isAdmin = LoginService.isAdmin();
+  const isHeadAdmin = LoginService.isHeadAdmin();
+
   const [isNotification, setIsNotification] = useState(LoginService.isNotification());
   const userData = LoginService.getUserData();
 
@@ -43,8 +45,8 @@ const HeaderComponent = () => {
               <Navbar.Toggle aria-controls="navbar-dark-example" />
               <Navbar.Collapse id="navbar-dark-example">
                 <Nav className="me-auto">
-                  {isAdmin ? <Nav.Link href="/users">Користувачі</Nav.Link>:<></>}
-                  {isAdmin ? <Nav.Link href="/statistics">Статистика</Nav.Link>:<></>}
+                  {isAdmin || isHeadAdmin ? <Nav.Link href="/users">Користувачі</Nav.Link>:<></>}
+                  {isAdmin || isHeadAdmin? <Nav.Link href="/statistics">Статистика</Nav.Link>:<></>}
                 </Nav>
 
                 {isAuthenticatedFromService ? <Nav>

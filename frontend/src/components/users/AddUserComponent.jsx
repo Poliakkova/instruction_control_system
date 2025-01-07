@@ -56,6 +56,7 @@ const AddUserComponent = () => {
             <option value="STUDENT">Студ.представник</option>
             <option value="TEACHER">Викладач</option>
             <option value="ADMIN">Адмін</option>
+            <option value="HEAD_ADMIN">Головний Адмін</option>
           </select>
           <label htmlFor="userJobTitle">Оберіть роль користувача</label>
         </div>

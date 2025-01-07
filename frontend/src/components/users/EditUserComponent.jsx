@@ -94,6 +94,7 @@ const EditUserComponent = () => {
           onChange={handleChange}>
             <option value="">Оберіть роль користувача</option>
             <option value="ADMIN">Адмін</option>
+            <option value="HEAD_ADMIN">Головний Адмін</option>
             <option value="STUDENT">Студ.представник</option>
             <option value="TEACHER">Викладач</option>
           </select>

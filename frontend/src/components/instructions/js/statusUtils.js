@@ -46,6 +46,7 @@ export const getStatusClass = (status) => {
 
 export const statusMappingRoles = {
     ADMIN: 'Адмін',
+    HEAD_ADMIN: 'Головний Адмін',
     TEACHER: 'Викладач',
     STUDENT: 'Студ.представник'
 };

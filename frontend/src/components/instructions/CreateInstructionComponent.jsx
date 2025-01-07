@@ -23,16 +23,15 @@ const CreateInstructionComponent = () => {
 
     const [instruction, setInstruction] = useState({
         code: `${new Date().getTime()}`,
-        makingTime: '',
         protocol: '',
         title: '',
         type: '',
         sourceOfInstruction: '',
-        full: '',
         shortDescription: '',
-        text: '',
-        startTime: '0',
+        report: '',
+        startTime: '',
         expTime: '',
+        doneTime: '0',
         status: 'CREATED',
         mapProcess: '',
         users: [],
@@ -59,17 +58,6 @@ const CreateInstructionComponent = () => {
         ...prevState,
         [id]: isoDateString
         }));
-    };
-
-    const handleChangeMakingDate = (e) => {
-        const { id, value } = e.target;
-        const timestamp = new Date(value).getTime(); // Перетворюємо у мілісекунди
-        console.log("ID, VALUE " + id + " " + timestamp);
-
-        setInstruction(prevState => ({
-            ...prevState,
-            [id]: timestamp
-            }));
     };
 
     // Створюємо стан для пошукового запиту
@@ -120,27 +108,27 @@ const CreateInstructionComponent = () => {
                     <label htmlFor="protocol">Протокол засідання кафедри №</label>
                 </div>
 
-                <div className="form-floating">
-                    <input required type="date" className="form-control" id="makingTime" placeholder="Дата видачі доручення" 
-                    onChange={handleChangeMakingDate}/>
-                    <label htmlFor="makingTime">Дата видачі доручення</label>
+                <div className="form-floating" onClick={() => document.getElementById('startTime').showPicker?.()}>
+                    <input required type="date" className="form-control" id="startTime" placeholder="Дата видачі доручення" 
+                    onChange={handleChangeDate}/>
+                    <label htmlFor="startTime">* Дата видачі доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <input required type="text" className="form-control" id="title" placeholder="Назва доручення" 
                     onChange={handleChange} maxLength={255}/>
-                    <label htmlFor="title">Назва доручення</label>
+                    <label htmlFor="title">* Назва доручення</label>
                 </div>
 
                 <div className="form-floating">
                     <select required className="form-select" id="type" aria-label="Тип доручення" onChange={handleChange}  maxLength={255}>
-                        <option selected value='Науково-методична робота'>Оберіть тип доручення</option>
+                        <option selected value='Науково-методична робота'>Оберіть напрям доручення</option>
                         <option value='Науково-методична робота'>Науково-методична робота</option>
                         <option value='Навчально-виховна робота'>Навчально-виховна робота</option>
                         <option value='Профорієнтаційна робота'>Профорієнтаційна робота</option>
                         <option value='Навчально-організаційна робота'>Навчально-організаційна робота</option>
                     </select>
-                    <label htmlFor="type">Напрям доручення</label>
+                    <label htmlFor="type">* Напрям доручення</label>
                 </div>
 
                 <div className="form-floating">
@@ -152,26 +140,14 @@ const CreateInstructionComponent = () => {
                 <div className="form-floating">
                     <textarea required type="text" className="form-control" id="shortDescription" placeholder="Короткий опис доручення" 
                     onChange={handleChange}  maxLength={255}/>
-                    <label htmlFor="shortDescription">Короткий опис доручення</label>
-                </div>
-
-                <div className="form-floating">
-                    <textarea type="text" className="form-control" id="fullDescription" placeholder="Повний опис доручення" 
-                    onChange={handleChange}  maxLength={255}/>
-                    <label htmlFor="fullDescription">Повний опис доручення</label>
-                </div>
-
-                <div className="form-floating">
-                    <textarea type="text" className="form-control" id="text" placeholder="Текст доручення" 
-                    onChange={handleChange}  maxLength={255} style={{height: 'fit-content'}}/>
-                    <label htmlFor="text">Текст доручення</label>
+                    <label htmlFor="shortDescription">* Короткий опис доручення</label>
                 </div>
 
                 <div className="custom-form-floating" style={{
                     border: '1px solid #dee2e6',
                     borderRadius: 6,
                     padding: '16px 12px'}}>
-                    <div style={{marginBottom: 10}}>Оберіть виконавця</div>
+                    <div style={{marginBottom: 10}}>* Оберіть виконавця</div>
                     <div>
                         <input type="text"
                         placeholder="Пошук за іменем..."
@@ -200,10 +176,10 @@ const CreateInstructionComponent = () => {
                     </div>
                 </div>
 
-                <div className="form-floating">
+                <div className="form-floating" onClick={() => document.getElementById('expTime').showPicker?.()}>
                     <input required type="date" className="form-control" id="expTime" placeholder="Дата дедлайну" 
                     onChange={handleChangeDate}/>
-                    <label htmlFor="expTime">Виконати до</label>
+                    <label htmlFor="expTime">* Виконати до</label>
                 </div>
 
                 <button type="submit" className='add-user-button mt-3 mb-3'>Зберегти доручення</button>

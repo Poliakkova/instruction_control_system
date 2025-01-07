@@ -2,11 +2,9 @@ import { useState, useEffect } from 'react';
 
 const useFilters = (instructions, statusMapping) => {
     const availableTypes = ["Науково-методична робота", "Навчально-виховна робота", "Профорієнтаційна робота", "Навчально-організаційна робота"];
-    const availableStatuses = ["Назначено", "В роботі", "Очікує затвердження", "Виконано"];
+    const availableStatuses = ["Внесено", "Зареєстровано", "Виконується", "Виконано", "Скасовано"];
 
     const [filters, setFilters] = useState({
-        makingTimeFrom: '',
-        makingTimeTo: '',
         startTimeFrom: '',
         startTimeTo: '',
         expTimeFrom: '',
@@ -23,12 +21,6 @@ const useFilters = (instructions, statusMapping) => {
         let filtered = instructions;
 
         // Фільтрація за діапазоном дат
-        if (filters.makingTimeFrom) {
-            filtered = filtered.filter(instruction => new Date(instruction.makingTime) >= new Date(filters.makingTimeFrom));
-        }
-        if (filters.makingTimeTo) {
-            filtered = filtered.filter(instruction => new Date(instruction.makingTime) <= new Date(filters.makingTimeTo));
-        }
         if (filters.startTimeFrom) {
             filtered = filtered.filter(instruction => new Date(instruction.startTime) >= new Date(filters.startTimeFrom));
         }
@@ -66,7 +58,6 @@ const useFilters = (instructions, statusMapping) => {
                 });
 
                 return (
-                    new Date(item.makingTime).toLocaleDateString().toLowerCase().includes(searchWords) ||
                     item.sourceOfInstruction.toLowerCase().includes(searchWords) ||
                     item.protocol.toLowerCase().includes(searchWords) ||
                     item.type.toLowerCase().includes(searchWords) ||

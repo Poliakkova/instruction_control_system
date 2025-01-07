@@ -8,11 +8,11 @@ jpa:
         time_zone: UTC
 
 
-#  liquibase:
-#    enabled: true
-#    drop-first: false
-#    change-log: classpath:db/changelog/db.changelog-master.yaml
-#    default-schema: public
+  liquibase:
+    enabled: true
+    drop-first: false
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: public
 
 spring:
   datasource:

@@ -12,6 +12,7 @@ const InstructionTableComponent = ({
     navigator
 }) => {
     const isAdmin = LoginService.isAdmin();
+    const isHeadAdmin = LoginService.isHeadAdmin();
     const isTeacher = LoginService.isTeacher();
 
     return (
@@ -24,8 +25,9 @@ const InstructionTableComponent = ({
                     <th>Напрям</th>
                     <th style={{ minWidth: 150 }}>Виконавець</th>
                     <th style={{ minWidth: 200 }}>Назва</th>
-                    <th style={{ minWidth: 200 }}>Короткий опис</th>
-                    <th>Виконати до</th>
+                    <th style={{ minWidth: 200 }}>Опис</th>
+                    <th>Кінцевий термін</th>
+                    <th>Ознайомлений</th>
                     <th>Коли виконали</th>
                     <th className="sticky-col">Статус</th>
                     <th className="sticky-col"></th>
@@ -36,7 +38,7 @@ const InstructionTableComponent = ({
                 {filteredInstructions.length > 0 ? (
                     filteredInstructions.map((instruction) => (
                         <tr key={instruction.id} onClick={() => handleRowClick(instruction.code)} style={{ cursor: 'pointer' }}>
-                            <td>{new Date(instruction.makingTime).toLocaleDateString()}</td>
+                            <td>{new Date(instruction.startTime).toLocaleDateString()}</td>
                             <td>{instruction.protocol}</td>
                             <td>{instruction.sourceOfInstruction}</td>
                             <td>{instruction.type}</td>
@@ -52,13 +54,16 @@ const InstructionTableComponent = ({
                             <td><div>{instruction.title}</div></td>
                             <td><div>{instruction.shortDescription}</div></td>
                             <td>{new Date(instruction.expTime).toLocaleDateString()}</td>
-                            <td>{instruction.startTime!="1970-01-01T00:00:00.000+00:00" ? new Date(instruction.startTime).toLocaleDateString() : ''}</td>
+                            <td style={{fontSize:16, textAlign: 'center'}}>
+                                {instruction.acquainted ? <i className="bi bi-check2-all"></i> 
+                                : '?'}</td>
+                            <td>{instruction.doneTime!=="1970-01-01T00:00:00.000+00:00" ? new Date(instruction.doneTime).toLocaleString() : null}</td>
                             <td className="sticky-col">
                                 <span className={`status ${getStatusClass(statusMapping[instruction.status] || 'Невідомий статус')}`}>
                                     {statusMapping[instruction.status] || 'Невідомий статус'}
                                 </span>
                             </td>
-                            {isAdmin ? <td className="sticky-col" style={{ padding: '10px 0' }}>
+                            {(isAdmin && instruction.status==="CREATED") || isHeadAdmin ? <td className="sticky-col" style={{ padding: '10px 0' }}>
                                 <i
                                     title="Редагувати"
                                     className="bi bi-pencil-square"
@@ -77,7 +82,7 @@ const InstructionTableComponent = ({
                             ></i>
                         </td>}
 
-                            {isAdmin ? <td className="sticky-col" style={{ padding: '10px 0' }}>
+                            {(isAdmin && instruction.status==="CREATED") || isHeadAdmin ? <td className="sticky-col" style={{ padding: '10px 0' }}>
                                 <i
                                     title="Видалити"
                                     className="bi bi-trash3"

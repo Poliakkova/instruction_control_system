@@ -133,11 +133,8 @@ public class InstructionsServiceImpl implements InstructionsService {
                 userRepository.save(updatedUser);
                 instructionsRepository.save(instructions);
 
-                System.out.printf("SEND INSTRUCTION FROM SERVICE TO %s %s%n",
-                        user.getUserEmail(), user.getUserLogin());
                 if (user.getUserEmail() != null && user.isNotifyNewInstruction()) {
                     String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-//                    String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                     String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
 
                     String message = String.format(
@@ -147,10 +144,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                     "Статус: %s\n\n" +
                                     "Джерело: %s\n\n" +
                                     "Тип доручення: %s\n\n" +
-                                    "Короткий опис: %s\n\n" +
-                                    "Повний опис: %s\n\n" +
-                                    "Текст доручення: %s\n\n" +
-//                                    "Початок роботи: %s\n\n" +
+                                    "Опис: %s\n\n" +
                                     "Виконати до: %s\n\n" +
                                     "Ознайомтеся детальніше на http://localhost:3000//instructions/%s\n" +
                                     "Гарного дня!",
@@ -161,9 +155,6 @@ public class InstructionsServiceImpl implements InstructionsService {
                             instructions.getSourceOfInstruction(),
                             instructions.getType(),
                             instructions.getShortDescription(),
-                            instructions.getFullDescription(),
-                            instructions.getText(),
-//                            formattedDateStart,
                             formattedDateExp,
                             instructions.getCode()
                     );
@@ -176,16 +167,15 @@ public class InstructionsServiceImpl implements InstructionsService {
         instructions.setStatus(instructionsDto.getStatus());
         instructions.setSourceOfInstruction(instructionsDto.getSourceOfInstruction());
         instructions.setShortDescription(instructionsDto.getShortDescription());
-        instructions.setFullDescription(instructionsDto.getFullDescription());
-        instructions.setText(instructionsDto.getText());
         instructions.setStartTime(instructionsDto.getStartTime().getTime()/1000);
-        instructions.setExpTime((instructionsDto.getExpTime().getTime()/1000));
         instructions.setExpTime(instructionsDto.getExpTime().getTime()/1000);
-        instructions.setMakingTime(instructionsDto.getMakingTime());
+        instructions.setDoneTime(instructionsDto.getDoneTime().getTime()/1000);
         instructions.setProtocol(instructionsDto.getProtocol());
         instructions.setMapProcess(instructionsDto.getMapProcess());
         instructions.setType(instructionsDto.getType());
         instructions.setComment(instructionsDto.getComment());
+        instructions.setAcquainted(instructionsDto.isAcquainted());
+        instructions.setReport(instructionsDto.getReport());
 
         instructionsRepository.save(instructions);
 
@@ -214,7 +204,6 @@ public class InstructionsServiceImpl implements InstructionsService {
                             if (userEntity.getUserEmail() != null && userEntity.isNotifyNewInstruction()) {
 
                                 String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-//                                String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                                 String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
 
                                 String message = String.format(
@@ -224,10 +213,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                                 "Статус: %s\n\n" +
                                                 "Джерело: %s\n\n" +
                                                 "Тип доручення: %s\n\n" +
-                                                "Короткий опис: %s\n\n" +
-                                                "Повний опис: %s\n\n" +
-                                                "Текст доручення: %s\n\n" +
-//                                                "Початок роботи: %s\n\n" +
+                                                "Опис: %s\n\n" +
                                                 "Виконати до: %s\n\n" +
                                                 "Ознайомтеся детальніше на http://localhost:3000//instructions/%s\n" +
                                                 "Гарного дня!",
@@ -238,9 +224,6 @@ public class InstructionsServiceImpl implements InstructionsService {
                                         instructions.getSourceOfInstruction(),
                                         instructions.getType(),
                                         instructions.getShortDescription(),
-                                        instructions.getFullDescription(),
-                                        instructions.getText(),
-//                                        formattedDateStart,
                                         formattedDateExp,
                                         instructions.getCode()
                                 );
@@ -291,6 +274,11 @@ public class InstructionsServiceImpl implements InstructionsService {
                 .orElseThrow(() -> new InstructionNotFoundException(String.format("No instruction with code %s was found", instructionsDto.getCode())));
         InstructionStatus instructionStatus = InstructionStatus.valueOf(instructionsDto.getStatus());
         instructions.setStatus(instructionStatus.name());
+        System.out.println(instructionStatus.name());
+        System.out.println(instructionStatus);
+        if (instructionStatus.name().equals("FINISHED")) {
+            instructions.setDoneTime(System.currentTimeMillis()/1000);
+        }
         instructionsRepository.save(instructions);
 
         instructionsDto.getUsers().stream()
@@ -303,7 +291,6 @@ public class InstructionsServiceImpl implements InstructionsService {
                         if (userEntity.getUserEmail() != null && userEntity.isNotifyStatusChange()) {
 
                             String formattedDateExp = unixDateToStringParser.unixDateToString(instructions.getExpTime());
-//                            String formattedDateStart = unixDateToStringParser.unixDateToString(instructions.getStartTime());
                             String translatedStatus = StatusMapper.getStatusName(instructions.getStatus());
                             String message = String.format(
                                     "Вітаю, %s!\n" +
@@ -311,10 +298,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                                             "Новий статус: %s\n\n" +
                                             "Джерело: %s\n\n" +
                                             "Тип доручення: %s\n\n" +
-                                            "Короткий опис: %s\n\n" +
-                                            "Повний опис: %s\n\n" +
-                                            "Текст доручення: %s\n\n" +
-//                                            "Початок роботи: %s\n\n" +
+                                            "Опис: %s\n\n" +
                                             "Виконати до: %s\n\n" +
                                             "Ознайомтеся детальніше на http://localhost:3000/instructions/%s\n" +
                                             "Гарного дня!",
@@ -324,9 +308,6 @@ public class InstructionsServiceImpl implements InstructionsService {
                                     instructions.getSourceOfInstruction(),
                                     instructions.getType(),
                                     instructions.getShortDescription(),
-                                    instructions.getFullDescription(),
-                                    instructions.getText(),
-//                                    formattedDateStart,
                                     formattedDateExp,
                                     instructions.getCode()
                             );
@@ -416,7 +397,7 @@ public class InstructionsServiceImpl implements InstructionsService {
                             String message = String.format(
                                     "Вітаю, %s!\n" +
                                             "Ви отримали новий коментар до доручення \"%s\"\n\n" +
-                                            "Короткий опис доручення: %s\n\n" +
+                                            "Опис доручення: %s\n\n" +
                                             "Статус доручення: %s\n\n" +
                                             "Виконати до: %s\n\n" +
                                             "Перегляньте коментар на http://localhost:3000/instructions/%s\n" +

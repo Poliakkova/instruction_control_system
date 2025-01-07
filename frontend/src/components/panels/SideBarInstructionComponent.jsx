@@ -7,6 +7,8 @@ import LoginService from '../../sevices/LoginService';
 const SideBarInstructionComponent = () => {
 
     const isAdmin = LoginService.isAdmin();
+    const isHeadAdmin = LoginService.isHeadAdmin();
+
 
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(true); // Стан для контролю видимості панелі
@@ -22,7 +24,7 @@ const SideBarInstructionComponent = () => {
     return (
         <>
             <div className={`sidebar ${isOpen ? 'open' : 'closed'}`}>
-                {isAdmin && <button onClick={() => createInstruction()}>Створити доручення</button>}
+                {(isAdmin || isHeadAdmin) && <button onClick={() => createInstruction()}>Створити доручення</button>}
                 <a className="menu-item" href='/instructions'><i className="bi bi-card-list"></i>Усі</a>
                 <a className="menu-item" href='/instructions/archived'><i className="bi bi-archive"></i>Архів</a>
             </div>

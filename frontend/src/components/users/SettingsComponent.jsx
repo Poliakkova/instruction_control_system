@@ -22,7 +22,11 @@ const SettingsComponent = () => {
     userEmail: '',
     userPassword: '',
     userLogin: userLogin,
-    enableNotification: true
+    notifyWeekReport: true,
+    notifyMissedDeadline: true,
+    notifyNewInstruction: true,
+    notifyStatusChange: true,
+    notifyNewComment: true
   });
 
   const [oldPass, setOldPass] = useState('')
@@ -85,10 +89,38 @@ const SettingsComponent = () => {
     }
   };
 
-  const handleToggleNotification = async () => {
+  const handleToggleMissedDeadline = async () => {
     setUser({
       ...user,
-      enableNotification: !user.enableNotification
+      notifyMissedDeadline: !user.notifyMissedDeadline
+    }); 
+  };
+
+  const handleToggleNewInstruction = async () => {
+    setUser({
+      ...user,
+      notifyNewInstruction: !user.notifyNewInstruction
+    }); 
+  };
+
+  const handleToggleStatusChange = async () => {
+    setUser({
+      ...user,
+      notifyStatusChange: !user.notifyStatusChange
+    }); 
+  };
+
+  const handleToggleNewComment = async () => {
+    setUser({
+      ...user,
+      notifyNewComment: !user.notifyNewComment
+    }); 
+  };
+
+  const handleToggleWeekReport = async () => {
+    setUser({
+      ...user,
+      notifyWeekReport: !user.notifyWeekReport
     }); 
   };
 
@@ -132,10 +164,42 @@ const SettingsComponent = () => {
         </div>
 
         <div className="" style={{margin: 10}}>
-          Сповіщення: 
-          {user.enableNotification ? <span title="Cповіщення увімкнено" onClick={handleToggleNotification} value={true}> 
+          Отримувати щотижневий звіт з дорученнями на тиждень: 
+          {user.notifyWeekReport ? <span title="Cповіщення увімкнено" onClick={handleToggleWeekReport} value={true}> 
             <i className="bi bi-bell-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>
-          : <span title="Cповіщення вимкнено" onClick={handleToggleNotification} value={false}> 
+          : <span title="Cповіщення вимкнено" onClick={handleToggleWeekReport} value={false}> 
+            <i className="bi bi-bell-slash-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>}
+        </div>
+
+        <div className="" style={{margin: 10}}>
+          Сповіщати про наближення кінцевого терміну за 7, 3 і 1 день: 
+          {user.notifyMissedDeadline ? <span title="Cповіщення увімкнено" onClick={handleToggleMissedDeadline} value={true}> 
+            <i className="bi bi-bell-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>
+          : <span title="Cповіщення вимкнено" onClick={handleToggleMissedDeadline} value={false}> 
+            <i className="bi bi-bell-slash-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>}
+        </div>
+
+        <div className="" style={{margin: 10}}>
+          Сповіщати про нове доручення: 
+          {user.notifyNewInstruction ? <span title="Cповіщення увімкнено" onClick={handleToggleNewInstruction} value={true}> 
+            <i className="bi bi-bell-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>
+          : <span title="Cповіщення вимкнено" onClick={handleToggleNewInstruction} value={false}> 
+            <i className="bi bi-bell-slash-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>}
+        </div>
+
+        <div className="" style={{margin: 10}}>
+          Сповіщати про зміну статуса доручення: 
+          {user.notifyStatusChange ? <span title="Cповіщення увімкнено" onClick={handleToggleStatusChange} value={true}> 
+            <i className="bi bi-bell-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>
+          : <span title="Cповіщення вимкнено" onClick={handleToggleStatusChange} value={false}> 
+            <i className="bi bi-bell-slash-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>}
+        </div>
+
+        <div className="" style={{margin: 10}}>
+          Сповіщати про нові коментарі: 
+          {user.notifyNewComment ? <span title="Cповіщення увімкнено" onClick={handleToggleNewComment} value={true}> 
+            <i className="bi bi-bell-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>
+          : <span title="Cповіщення вимкнено" onClick={handleToggleNewComment} value={false}> 
             <i className="bi bi-bell-slash-fill" style={{ fontSize: '18px', cursor: 'pointer', marginLeft: 10}}></i></span>}
         </div>
 
@@ -147,13 +211,13 @@ const SettingsComponent = () => {
         <div className="" style={{margin: 10, fontWeight: 600}}>Змінити пароль</div>
 
         <div className="form-floating mt-3">
-          <input type="password" className="form-control" id="oldPass" name="oldPass" placeholder="Старий пароль"
+          <input type="text" className="form-control" id="oldPass" name="oldPass" placeholder="Старий пароль"
           onChange={handleOldPassChange} maxLength={255}/>
           <label htmlFor="oldPass">Старий пароль</label>
         </div>
 
         <div className="form-floating mt-3">
-          <input type="password" className="form-control" id="newPass" name="newPass" placeholder="Новий пароль"
+          <input type="text" className="form-control" id="newPass" name="newPass" placeholder="Новий пароль"
           onChange={handleNewPassChange} maxLength={255}/>
           <label htmlFor="newPass">Новий пароль</label>
         </div>

@@ -17,6 +17,7 @@ import { getUserByLogin } from '../../sevices/UserService';
 const ListArchivedComponent = () => {
 
     const isAdmin = LoginService.isAdmin();
+    const isHeadAdmin = LoginService.isHeadAdmin();
     const isStudent = LoginService.isStudent();
     const isTeacher = LoginService.isTeacher();
 
@@ -33,7 +34,7 @@ const ListArchivedComponent = () => {
     const [instructions, setInstructions] = useState([])
 
     useEffect(() => {
-        if(isAdmin || isStudent) {
+        if(isAdmin || isStudent || isHeadAdmin) {
             archivedInstructions(localStorage.getItem("token")).then((response) => {
                 const sortedInstructions = response.data.sort((a, b) => {
                     return new Date(b.makingTime) - new Date(a.makingTime);

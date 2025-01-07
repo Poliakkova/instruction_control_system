@@ -18,15 +18,7 @@ const InstructionFiltersComponent = ({
                 </Dropdown.Toggle>
                 <Dropdown.Menu style={{ width: 340, boxShadow: '10px 5px 20px #e1eaf0' }}>
                     <div className="px-3">
-                        <span className="d-block" style={{ color: '#3782e2' }}>Дата створення</span>
-                        <label>
-                            з: <input className="filter-input" type="date" name="makingTimeFrom" onChange={handleFilterChange} />
-                        </label>
-                        <label>
-                            до: <input className="filter-input" type="date" name="makingTimeTo" onChange={handleFilterChange} />
-                        </label>
-                        <br />
-                        <span className="d-block mt-2" style={{ color: '#3782e2' }}>Дата початку</span>
+                        <span className="d-block mt-2" style={{ color: '#3782e2' }}>Дата створення</span>
                         <label>
                             з: <input className="filter-input" type="date" name="startTimeFrom" onChange={handleFilterChange} />
                         </label>

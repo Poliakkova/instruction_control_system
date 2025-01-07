@@ -23,6 +23,8 @@ import {ReactFlowProvider} from '@xyflow/react';
 import LoginService from './sevices/LoginService';
 import AccessDeniedComponent from './components/AccessDeniedComponent';
 import SettingsComponent from './components/users/SettingsComponent';
+import ForgotPasswordComponent from './components/ForgotPasswordComponent';
+import ResetPasswordComponent from './components/ResetPasswordComponent';
 
 
 function App() {
@@ -38,16 +40,18 @@ function App() {
             <Route path="/instructions/:code" element={LoginService.isAuthenticated() ? <InstructionComponent /> : <LoginComponent />} />
             <Route path='/users/settings/:userLogin' element={LoginService.isAuthenticated() ? <SettingsComponent /> : <LoginComponent />}></Route>
 
-            <Route path='/instructions/new' element={LoginService.isAdmin() || LoginService.isTeacher ? <CreateInstructionComponent /> : <AccessDeniedComponent />}></Route>
-            <Route path='/instructions/edit/:code' element={LoginService.isAdmin() || LoginService.isTeacher ? <EditInstructionComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/instructions/new' element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <CreateInstructionComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/instructions/edit/:code' element={LoginService.isAdmin() || LoginService.isHeadAdmin ? <EditInstructionComponent /> : <AccessDeniedComponent />}></Route>
             
             <Route path='/login' element={!LoginService.isAuthenticated() ? <LoginComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/forgot-password' element={!LoginService.isAuthenticated() ? <ForgotPasswordComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/reset-password' element={!LoginService.isAuthenticated() ? <ResetPasswordComponent /> : <AccessDeniedComponent />}></Route>
 
-            <Route path="/users" element={LoginService.isAdmin() ? <UsersComponent /> : <AccessDeniedComponent />}/>
-            <Route path='/users/new' element={LoginService.isAdmin() ? <AddUserComponent /> : <AccessDeniedComponent />}></Route>
-            <Route path='/users/edit/:userLogin' element={LoginService.isAdmin() ? <EditUserComponent /> : <AccessDeniedComponent />}></Route>
-            <Route path='/users/:userLogin' element={LoginService.isAdmin() ? <UserComponent /> : <AccessDeniedComponent />}></Route>
-            <Route path='/statistics' element={LoginService.isAdmin() ? <StatisticsComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path="/users" element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <UsersComponent /> : <AccessDeniedComponent />}/>
+            <Route path='/users/new' element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <AddUserComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/users/edit/:userLogin' element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <EditUserComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/users/:userLogin' element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <UserComponent /> : <AccessDeniedComponent />}></Route>
+            <Route path='/statistics' element={LoginService.isAdmin() || LoginService.isHeadAdmin() ? <StatisticsComponent /> : <AccessDeniedComponent />}></Route>
           </Routes>
         <FooterComponent />
       </BrowserRouter>

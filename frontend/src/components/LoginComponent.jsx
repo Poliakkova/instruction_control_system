@@ -101,7 +101,7 @@ const LoginComponent = () => {
                     </label>
                     
                     <div className="forgot-remember">
-                        <a href="#" className="forgot-password">Забули пароль?</a>
+                        <a href="/forgot-password" className="forgot-password">Забули пароль?</a>
                     </div>
                     
                     <button className='login-button' type="submit">Увійти</button>

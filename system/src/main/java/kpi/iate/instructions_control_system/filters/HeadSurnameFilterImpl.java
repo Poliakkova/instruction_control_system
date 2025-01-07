@@ -11,10 +11,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class HeadSurnameFilterImpl implements  HeadSurnameFilter {
 
-//    @Override
-//    public List<InstructionsDto> filterInstructionsByHeadSurname(final String headSurname, List<InstructionsDto> instructionsDtoList) {
-//        return instructionsDtoList.stream().filter( instructionsDto -> instructionsDto.getHeadSurname().equals(headSurname)).collect(Collectors.toList());
-//    }
 @Override
 public List<InstructionsDto> filterInstructionsByHeadSurname(final String headSurname, List<InstructionsDto> instructionsDtoList) {
     return null;

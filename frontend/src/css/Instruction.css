@@ -33,6 +33,14 @@
     color: #ff6969;
 }
 
+.acquanted-button {
+    background: #81b8ff;
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px 3px;
+    margin-left: 10px;
+}
+
 .instruction .status {
     margin: 0 0 0 auto;
     height: fit-content;
@@ -69,8 +77,16 @@
     padding: 10px;
     margin-top: 10px;
     box-shadow: 10px 5px 20px #e1eaf0;
-
 }
+
+.report-section {
+    background: #fff;
+    border-radius: 7px;
+    padding: 10px;
+    margin-top: 10px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+}
+
 
 .process-map {
     display: block;
@@ -197,7 +213,7 @@
     background: #cfe2ff;
 }
 
-.button-save {
+.button-save, .send-report-button {
     margin-top: 10px;
     padding: 6px 12px;
     border-radius: 7px;
@@ -209,7 +225,7 @@
     height: 40px;
 }
 
-.input-comment-block{
+.input-comment-block, .input-report-block{
     margin-left: 10px;
     width: 100%;
 }
@@ -222,6 +238,13 @@
     font-size: 14px;
 }
 
+.report-name {
+    margin: 5px 0 15px 10px;
+    font-weight: 600;
+    color: #3782e2;
+    font-size: 16px;
+}
+
 .input-comment-block textarea {
     padding: 10px;
     border: 1px solid #adb5bd;
@@ -230,7 +253,16 @@
     min-height: 100px;
 }
 
-.input-comment-block textarea:focus-visible{
+.report-section textarea {
+    display: block;
+    padding: 10px;
+    border: 1px solid #adb5bd;
+    border-radius: 5px;
+    width: 100%;
+    min-height: 100px;
+}
+
+.input-comment-block textarea:focus-visible, .report-section textarea:focus-visible{
     outline: none;
 }
 
@@ -246,7 +278,8 @@
     margin-bottom: 6px;
 }
 
-.send-button:hover, .button-save:hover{
+
+.send-button:hover, .button-save:hover, .acquanted-button:hover, .send-report-button:hover{
     background: #669ee7;
 }
 

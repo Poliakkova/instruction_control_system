@@ -179,7 +179,7 @@ export const updateInstructionComment = async (instruction, navigate, token) => 
 
 //Функція оновлення доручення
 export const updateInstruction = async (instruction, navigate, token) => {
-    console.log(JSON.stringify(instruction));
+    console.log("updateInstruction "+JSON.stringify(instruction));
 
     // Перевірка наявності хоча б одного користувача
     if (!instruction.users || instruction.users.length === 0) {
@@ -188,13 +188,11 @@ export const updateInstruction = async (instruction, navigate, token) => {
     }
     
     try {
-        console.log(JSON.stringify(instruction));
-
         // Отримання ключа
         const keyResponse = await getKey(token);
         const uuidKey = keyResponse.data;
 
-        console.log("uuidKey " + uuidKey);
+        console.log("updateInstruction uuidKey " + uuidKey);
 
         // Додавання ключа до HTTP-запиту
         const response = await axios.put("http://localhost:8090/instructions/update", instruction, {

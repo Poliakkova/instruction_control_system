@@ -139,7 +139,7 @@ const UsersComponent = () => {
                             <th>Ім'я</th>
                             <th>По-батькові</th>
                             <th>Пошта</th>
-                            <th>Сповіщення</th>
+                            {/* <th>Сповіщення</th> */}
                             <th></th>
                             <th></th>
                         </tr>
@@ -155,11 +155,11 @@ const UsersComponent = () => {
                                     <td>{user.userName}</td>
                                     <td>{user.userPatronymic}</td>
                                     <td>{user.userEmail}</td>
-                                    <td style={{textAlign: 'center'}}>{user.enableNotification ? (
+                                    {/* <td style={{textAlign: 'center'}}>{user.enableNotification ? (
                                         <i title="Сповіщення увімкнено" className="bi bi-bell-fill" style={{ color: 'green' }}></i> // іконка для увімкнених сповіщень
                                     ) : (
                                         <i title="Сповіщення вимкнено" className="bi bi-bell-slash-fill" style={{ color: 'red' }}></i> // іконка для вимкнених сповіщень
-                                    )}</td>
+                                    )}</td> */}
                                     <td><a onClick={(event) => {
                                         event.stopPropagation(); // Зупиняємо спливання події
                                         editUser(user.userLogin); // Викликаємо функцію редагування

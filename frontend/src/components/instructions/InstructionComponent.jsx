@@ -19,6 +19,7 @@ import { getStatusClassFromDBValue } from './js/statusUtils';
 const InstructionComponent = () => {
 
   const isAdmin = LoginService.isAdmin();
+  const isHeadAdmin = LoginService.isHeadAdmin();
   const isTeacher = LoginService.isTeacher();
 
   const navigator = useNavigate();
@@ -34,16 +35,10 @@ const InstructionComponent = () => {
     const fetchInstruction = async () => {
       // Отримання інструкції за кодом
       const instructionData = await getInstruction(code, localStorage.getItem("token"));
-      console.log("Response data: ", instructionData); 
       setInstruction(instructionData);
     };
     fetchInstruction();
   }, [code]);
-
-    // Цей useEffect буде викликаний кожного разу, коли зміниться instruction
-  useEffect(() => {
-    console.log("INSTRUCTION UPDATED: ", instruction);
-  }, [instruction]);
 
   const {
     nodes,
@@ -76,6 +71,11 @@ const InstructionComponent = () => {
       // Оновлюємо статус в об'єкті instruction і відправляємо на сервер
       const updatedInstruction = { ...instruction, status: newStatus };
       await updateInstructionStatus(updatedInstruction, localStorage.getItem("token")); // Передаємо об'єкт інструкції
+
+      // Після успішного оновлення, отримуємо актуальні дані з сервера
+      const updatedData = await getInstruction(code, localStorage.getItem("token"));
+      setInstruction(updatedData); // Оновлюємо локальний стан
+
     } catch (error) {
       console.error('Failed to update instruction status:', error);
     }
@@ -86,6 +86,8 @@ const InstructionComponent = () => {
   }, [instruction.status]);
 
   const [comment, setComment] = useState("")
+  const [report, setReport] = useState(instruction.report || "")
+
 
   const handleSubmitComment = async (e) => {
     e.preventDefault();
@@ -111,16 +113,44 @@ const InstructionComponent = () => {
 
   };
 
+  const handleSubmitReport = async (e) => {
+    e.preventDefault();
+    
+    // Оновлюємо стан перед запитом
+    const updatedInstruction = {
+      ...instruction,
+      report: report
+    };
+
+    setInstruction(updatedInstruction);
+
+    updateInstruction(updatedInstruction, navigator, localStorage.getItem("token"));
+    setIsEditing(false); // Вихід з режиму редагування
+
+  };
+
   const handleCommentChange = (e) => {
     const { id, value } = e.target;
-    console.log("ID, VALUE " + id + " " + value);
     setComment(value);
+  };
+
+  const handleReportChange = (e) => {
+    const { id, value } = e.target;
+    setReport(value);
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault(); // Запобігаємо переносу рядка
       handleSubmitComment(e); // Викликаємо функцію відправки коментаря
+    }
+  };
+
+  const handleKeyDownReport = (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault(); // Запобігаємо переносу рядка
+      handleSubmitReport(e); // Викликаємо функцію відправки 
+      setIsEditing(false); // Вихід з режиму редагування
     }
   };
 
@@ -136,7 +166,29 @@ const InstructionComponent = () => {
     });
   };
   
-  
+  const handleAcquanted = async (e) => {
+    e.preventDefault();
+    
+    // Оновлюємо стан перед запитом
+    const updatedInstruction = {
+      ...instruction,
+      acquainted: true 
+    };
+
+    setInstruction(updatedInstruction);
+
+    updateInstruction(updatedInstruction, navigator, localStorage.getItem("token"));
+  };
+
+  // Функція для перетворення тексту на клікабельні посилання
+const makeLinksClickable = (text) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g; // Пошук URL, які починаються з http або https
+  return text.replace(urlRegex, (url) => {
+    return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
+  });
+};
+
+  const [isEditing, setIsEditing] = useState(false); // Стан редагування
 
   return (
     <div className="wrapper">
@@ -145,13 +197,23 @@ const InstructionComponent = () => {
       <div className="main-content">
         <div className="instruction">
           <div className="instruction-control">
-            {isAdmin ? <a title="Редагувати" onClick={() => {editInstruction(instruction.code)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
+            {(isAdmin && instruction.status==="CREATED") || isHeadAdmin ? <a title="Редагувати" onClick={() => {editInstruction(instruction.code)}}><i className="bi bi-pencil-square" style={{ fontSize: '18px'}}></i></a>
             :<a title="Немає доступу"><i className="bi bi-pencil-square" style={{ fontSize: '18px', color: 'lightgray'}}></i></a>}
             
-            {isAdmin ? <a title="Видалити" onClick={() => {deleteInstruction(instruction.code, navigator, localStorage.getItem("token"))}}><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
+            {(isAdmin && instruction.status==="CREATED") || isHeadAdmin ? <a title="Видалити" onClick={() => {deleteInstruction(instruction.code, navigator, localStorage.getItem("token"))}}><i className="bi bi-trash3" style={{ fontSize: '18px'}}></i></a>
             :<a title="Немає доступу"><i className="bi bi-trash3" style={{ fontSize: '18px', color: 'lightgray'}}></i></a>}
 
-            {isAdmin || isTeacher ? <select className={`form-select status ${getStatusClassFromDBValue(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
+            {(isAdmin || isHeadAdmin) ? 
+              <div style={{marginLeft: 10}}>{instruction.acquainted ? 
+                <i className="bi bi-check2-all" style={{color: '#3782e2'}}> Виконавець ознайомився</i> 
+                : <i class="bi bi-ban" style={{color: '#ff6969'}}> Виконавець поки не ознайомився</i>}</div>
+            : isTeacher ? 
+              instruction.acquainted ? 
+                <i className="bi bi-check2-all" style={{color: '#3782e2'}}> З дорученням ознайомився</i>  
+                : <button className='acquanted-button' onClick={handleAcquanted}>Я ознайомився</button>
+              : <></>}
+
+            {isAdmin || isHeadAdmin || isTeacher ? <select className={`form-select status ${getStatusClassFromDBValue(selectedStatus)}`} id="floatingSelect" aria-label="Choose role"
             value={selectedStatus} onChange={handleChangeStatus}>
               <option value="CREATED" className='status orange'>Внесено</option>
               <option value="REGISTERED" className='status yellow'>Зареєстровано</option>
@@ -169,6 +231,9 @@ const InstructionComponent = () => {
             </select>}
           </div>
 
+          {instruction.status === "FINISHED" ? 
+              <div style={{marginBottom: 40, textAlign: 'right'}}><em>Виконано {new Date(instruction.doneTime).toLocaleString()}</em></div> : <></>}
+
           <div className="uni-name">
             <p>НАЦІОНАЛЬНИЙ ТЕХНІЧНИЙ УНІВЕРСИТЕТ УКРАЇНИ "КИЇВСЬКИЙ ПОЛІТЕХНІЧНИЙ ІНСТИТУТ ІМ.ІГОРЯ СІКОРСЬКОГО"</p>
             <p>Інститут атомної та теплової енергетики</p>
@@ -179,7 +244,8 @@ const InstructionComponent = () => {
           <div className="block">
             <p>Код доручення: {instruction.code}</p>
             <p>Протокол №{instruction.protocol} засідання кафедри</p>
-            <p>Дата видачі доручення: {new Date(instruction.makingTime).toLocaleDateString()}</p>
+            <p>Дата видачі доручення: {new Date(instruction.startTime).toLocaleDateString()}</p>
+
           </div>
 
           <br></br>
@@ -190,9 +256,7 @@ const InstructionComponent = () => {
           <p><span className='bold'>Джерело: </span>{instruction.sourceOfInstruction}</p>
           <p><span className='bold'>Напрям доручення: </span>{instruction.type}</p>
 
-          <p>Короткий опис: {instruction.shortDescription}</p>
-          <p>Повний опис: {instruction.fullDescription}</p>
-          <p>{instruction.text}</p>
+          <p><span className='bold'>Опис: </span> {instruction.shortDescription}</p>
 
           <br></br>
           <p><span className='bold'>До виконання:</span></p>
@@ -209,9 +273,31 @@ const InstructionComponent = () => {
           }
 
           <br></br>
-          <p><span className='bold'>Розпочати від: </span>{new Date(instruction.startTime).toLocaleDateString()}</p>
           <p><span className='bold'>Виконати до: </span>{new Date(instruction.expTime).toLocaleDateString()}</p>
         </div>
+
+        {isAdmin || isTeacher || isHeadAdmin ? <div className="report">
+          <div className="report-section" >
+            <div className='report-name'>Звіт про виконану роботу</div>
+            {isEditing || !instruction.report ? 
+              <form onSubmit={handleSubmitReport}>
+                <textarea type='text' placeholder='Напишіть звіт...' id='report'
+                onChange={handleReportChange} maxLength={2000} value={report} onKeyDown={handleKeyDownReport} ></textarea>
+                <button className='send-report-button' type='submit'>Відправити звіт</button>
+              </form>
+            : 
+              <div className="input-report-block">
+                <div className="report" style={{ whiteSpace: 'pre-line' }}>
+                  {instruction.report}
+                </div>
+                <button className='send-report-button' onClick={() => {
+                  setIsEditing(true);
+                  setReport(instruction.report || "");
+                }}>Виправити звіт</button>
+              </div>}
+          </div>
+        </div> 
+        :<></>}
 
         <div className="process-map">
         <Accordion>
@@ -273,7 +359,7 @@ const InstructionComponent = () => {
                 <Controls />
               </ReactFlow>
             </div>
-            {isAdmin || isTeacher ? <button className='button-save' onClick={handleSaveMap}>Зберегти карту</button>
+            {isAdmin || isTeacher || isHeadAdmin ? <button className='button-save' onClick={handleSaveMap}>Зберегти карту</button>
             : <button className='button-save' style={{background: 'lightgrey', cursor: 'default'}}>Зберегти карту</button>}
 
             </Accordion.Body>
@@ -281,7 +367,7 @@ const InstructionComponent = () => {
         </Accordion>
         </div>
 
-        {isAdmin || isTeacher ? <div className="comments">
+        {isAdmin || isTeacher || isHeadAdmin ? <div className="comments">
           <form className="comment-section" onSubmit={handleSubmitComment}>
             <div className="image"><img src="../user_icon.png"></img></div>
             <div className="input-comment-block">
@@ -292,13 +378,13 @@ const InstructionComponent = () => {
             <button className='send-button' type='submit'><i className="bi bi-send"></i></button>
           </form>
 
-          <div className="comment-section">
+          {instruction.comment ? <div className="comment-section">
             <div className="input-comment-block">
               <div className="comment" style={{ whiteSpace: 'pre-line' }}>
                 {instruction.comment}
               </div>
             </div>
-          </div>
+          </div> : <></>}
         </div> 
         :<></>}
 

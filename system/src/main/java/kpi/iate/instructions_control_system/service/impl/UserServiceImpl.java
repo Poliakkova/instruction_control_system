@@ -35,6 +35,10 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final UserRepository userRepository;
     private final InstructionsRepository instructionsRepository;
+
+    // Імітація збереження токенів (для прикладу, використовуємо Map)
+    private final Map<String, String> resetTokenStorage = new HashMap<>();
+
     @Override
     @Transactional(readOnly = true)
     public UserEntity findUserById(final String userId) {
@@ -80,13 +84,11 @@ public class UserServiceImpl implements UserService {
                     "Вітаю, %s %s %s!\n" +
                             "Вам було створено акаунт у Доручення НН ІАТЕ\n" +
                             "Логін: %s\n" +
-                            "Пароль: %s\n" +
                             "Ознайомтеся з особистим кабінетом http://127.0.0.1:3000/instructions\n" +
                             "Якщо виявили помилку, будь ласка, повідомте відповідального!\n" +
                             "Гарного дня!",
                     userEntity.getUserSurname(), userEntity.getUserName(), userEntity.getUserPatronymic(),
-                    userEntity.getUserLogin(),
-                    userEntity.getPassword()
+                    userEntity.getUserLogin()
             );
             mailService.send(userEntity.getUserEmail(), "Доручення НН ІАТЕ", message);
         }
@@ -241,32 +243,28 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    public UserEntity findByEmail(String email) {
+        return userRepository.findByUserEmail(email);
+    }
 
-//    @Override
-//    public LoginResponce loginUser(LoginDTO loginDTO) {
-//        String msg = "";
-//         UserEntity user1 = userRepository.findByUserEmail(loginDTO.getUserEmail());
-//
-//        if (user1 != null) {
-//            String password = loginDTO.getUserPassword();
-//            String encodedPassword = user1.getUserPassword();
-//            boolean isPwdRight = passwordEncoder.matches(password, encodedPassword);
-//
-//            if (isPwdRight) {
-//                Optional<UserEntity> user = userRepository.findOneByUserEmailAndUserPassword(loginDTO.getUserEmail(), encodedPassword);
-//
-//                if (user.isPresent()) {
-//                    return new LoginResponce("login success", true);
-//                } else {
-//                    return new LoginResponce("login failed", false);
-//                }
-//            } else {
-//                return new LoginResponce("incorrect password", false);
-//            }
-//        }else {
-//            return new LoginResponce("email does not exist", false);
-//        }
-//    }
-//
+    public void savePasswordResetToken(UserEntity user, String token) {
+        resetTokenStorage.put(token, user.getUserEmail());
+    }
+
+    public boolean resetPassword(String token, String newPassword) {
+        String email = resetTokenStorage.get(token);
+        if (email == null) {
+            return false; // Токен невалідний або не існує
+        }
+
+        UserEntity user = userRepository.findByUserEmail(email);
+        if (user != null) {
+            user.setUserPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            resetTokenStorage.remove(token); // Видаляємо використаний токен
+            return true;
+        }
+        return false;
+    }
 
 }

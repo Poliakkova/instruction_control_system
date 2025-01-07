@@ -38,14 +38,11 @@ public class Instructions {
     @Column(name = "instruction_source_of_instruction")
     private String sourceOfInstruction;
 
-    @Column(name = "instruction_short_description")
+    @Column(name = "instruction_short_description", length = 2000)
     private String shortDescription;
 
-    @Column(name = "instruction_full_description")
-    private String fullDescription;
-
-    @Column(name = "instruction_text", length = 2000)
-    private String text;
+    @Column(name = "instruction_report", length = 2000)
+    private String report;
 
     @Column(name = "start_time")
     private Long startTime;
@@ -53,8 +50,8 @@ public class Instructions {
     @Column(name = "exp_time")
     private Long expTime;
 
-    @Column(name = "making_time")
-    private Long makingTime;
+    @Column(name = "done_time")
+    private Long doneTime;
 
     @Column(name = "instruction_protocol")
     private String protocol;
@@ -68,4 +65,6 @@ public class Instructions {
     @Column(name = "instruction_comment", length = 5000)
     private String comment;
 
+    @Column(name = "instruction_acquainted")
+    private boolean acquainted;
 }

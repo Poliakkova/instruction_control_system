@@ -1,3 +1,25 @@
+.analyze-block {
+    background: #ffffff;
+    border-radius: 30px;
+    box-shadow: 10px 5px 20px #e1eaf0;
+    padding: 20px;
+    margin: 0;
+}
+
+
+.table-statistics {
+    width: 100%; /* Таблиця займатиме всю ширину контейнера */
+    border-collapse: collapse; /* Забирає зайві пробіли між комірками */
+    table-layout: fixed; /* Фіксований розмір стовпців */
+  }
+
+  
+.table-statistics th, .table-statistics td{
+    overflow: hidden; /* Ховає зайвий текст */
+    padding: 2px;
+    text-align: center;
+}
+
 .pie {
     max-height: auto;
 }

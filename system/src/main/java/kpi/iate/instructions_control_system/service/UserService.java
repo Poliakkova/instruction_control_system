@@ -28,4 +28,12 @@ public interface UserService {
     ReqRes refreshToken(ReqRes req);
 
     ReqRes getMyInfo(String email);
+
+    UserEntity findByEmail(String email);
+
+    void savePasswordResetToken(UserEntity user, String token);
+
+    boolean resetPassword(String token, String newPassword);
+
+
 }

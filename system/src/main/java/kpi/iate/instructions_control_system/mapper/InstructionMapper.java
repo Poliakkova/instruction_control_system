@@ -17,11 +17,13 @@ public interface InstructionMapper {
 
     @Mapping(target = "startTime", source = "startTime", qualifiedByName = "mapDate")
     @Mapping(target = "expTime", source = "expTime", qualifiedByName = "mapDate")
+    @Mapping(target = "doneTime", source = "doneTime", qualifiedByName = "mapDate")
     @Mapping(target = "users", source = "heads", qualifiedByName = "mapUsers")
     InstructionsDto instructionToDto (Instructions instructions);
 
     @Mapping(target = "startTime", source = "startTime", qualifiedByName = "mapFromDate")
     @Mapping(target = "expTime", source = "expTime", qualifiedByName = "mapFromDate")
+    @Mapping(target = "doneTime", source = "doneTime", qualifiedByName = "mapFromDate")
     Instructions instructionDtoToEntity (InstructionsDto instructionsDto);
 
     @Named("mapDate")

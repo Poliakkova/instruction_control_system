@@ -25,15 +25,13 @@ public class InstructionsDto {
 
     private String shortDescription;
 
-    private String fullDescription;
-
-    private String text;
+    private String report;
 
     private Date startTime;
 
     private Date expTime;
 
-    private Long makingTime;
+    private Date doneTime;
 
     private String protocol;
 
@@ -42,4 +40,6 @@ public class InstructionsDto {
     private String type;
 
     private String comment;
+
+    private boolean acquainted;
 }

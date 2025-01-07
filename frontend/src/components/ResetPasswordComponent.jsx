@@ -1,16 +1,19 @@
 import React, { useState } from 'react'
-import {useNavigate} from 'react-router-dom'
+import {useNavigate, useSearchParams} from 'react-router-dom'
 import { Alert } from 'react-bootstrap'
 import axios from 'axios';
+
 
 import LoginService from '../sevices/LoginService'
 import { useAuth } from '../AuthContext';
 
 import '../css/Login.css'
 
-const ForgotPasswordComponent = () => {
+const ResetPasswordComponent = () => {
 
-    const [email, setEmail] = useState("");
+    const [searchParams] = useSearchParams();
+    const token = searchParams.get('token');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState("");
 
     const navigate = useNavigate();
@@ -18,8 +21,8 @@ const ForgotPasswordComponent = () => {
     const handleSubmit = async(e) => {
         e.preventDefault();
         try {
-        const response = await axios.post('http://localhost:8090/auth/forgot-password', null, {
-            params: { email },
+        const response = await axios.post('http://localhost:8090/auth/reset-password', null, {
+            params: { token, newPassword: password },
         });
         setError(response.data);
         } catch (error) {
@@ -34,7 +37,7 @@ const ForgotPasswordComponent = () => {
             <div className="login-section">
                 <h1>Керування дорученнями</h1>
                 <h3>Відновлення паролю </h3>
-                <p style={{marginBottom: 20}}>Будь ласка, введіть Вашу електронну адресу</p>
+                <p style={{marginBottom: 20}}>Будь ласка, придумайте новий пароль</p>
 
                 {error && <Alert key="danger" variant="primary" style={{
                     marginBottom: 0,
@@ -43,15 +46,15 @@ const ForgotPasswordComponent = () => {
                 }}>{error}</Alert>}
 
                 <form onSubmit={handleSubmit}>
-                    <label className='login-label'>Електронна адреса
-                        <input className="login" type="email" id="email" name="email" required
-                        value={email}
+                    <label className='login-label'>Новий пароль
+                        <input className="login" type="text" id="password" name="password" required
+                        value={password}
                         onChange={(event) => {
-                            setEmail(event.target.value)
+                            setPassword(event.target.value)
                         }}/>
                     </label>
                     
-                    <button className='login-button' type="submit">Отримати інструкцію по відновленню</button>
+                    <button className='login-button' type="submit">Змінити пароль</button>
                 </form>
             </div>
             <div className="image-section">
@@ -65,4 +68,4 @@ const ForgotPasswordComponent = () => {
   )
 }
 
-export default ForgotPasswordComponent
+export default ResetPasswordComponent
